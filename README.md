@@ -19,8 +19,7 @@ This handbook is organized as a progressive learning path — each section build
 ### 📘 Part 1 — Foundations
 | Guide | Description |
 |---|---|
-| [Prompt Engineering Fundamentals](docs/01-prompt-engineering.md) | Role assignment, Chain of Thought, Few-Shot prompting, and why how you ask determines what you get |
-| [Context Engineering](docs/02-context-engineering.md) | The 2026 evolution: memory management, state, tools, guardrails, and why prompt engineering is now one component of a larger discipline |
+| [From Prompt Engineering to Context Engineering](docs/01-prompt-engineering-to-context-engineering.md) | Role assignment, Chain of Thought, Few-Shot prompting, then the 2026 evolution: memory, state, tools, guardrails, and why prompt engineering is now one component of context engineering |
 | [LLMs Explained](docs/03-llms-explained.md) | How language models work, tokens, context windows, temperature, inference — the mental model every engineer needs |
 
 ### 🔍 Part 2 — Retrieval & Knowledge
@@ -107,8 +106,7 @@ genai-engineering-handbook/
 ├── .gitignore
 │
 ├── docs/                              ← Written guides (markdown)
-│   ├── 01-prompt-engineering.md
-│   ├── 02-context-engineering.md
+│   ├── 01-prompt-engineering-to-context-engineering.md
 │   ├── 03-llms-explained.md
 │   ├── 04-rag-deep-dive.md
 │   ├── 05-rag-vs-long-context.md
@@ -139,13 +137,12 @@ genai-engineering-handbook/
 
 ```
 Week 1: Foundations
-├── Read: Prompt Engineering Fundamentals
+├── Read: From Prompt Engineering to Context Engineering
 ├── Read: LLMs Explained
 ├── Notebook: Prompt Engineering Techniques
-└── Milestone: Can explain role assignment, CoT, few-shot with examples
+└── Milestone: Can explain role assignment, CoT, few-shot, and context engineering
 
 Week 2: Context & Retrieval
-├── Read: Context Engineering
 ├── Read: RAG Deep Dive
 ├── Notebook: Semantic Search Visualized
 ├── Notebook: Embeddings Explorer
