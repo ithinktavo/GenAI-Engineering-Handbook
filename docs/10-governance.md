@@ -107,19 +107,20 @@ In a traditional application, access controls are straightforward — users have
 **The tiered access model:**
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  PARTNER asks: "Show me all practice area revenue"          │
-│  → AI returns: Revenue for ALL practice areas               │
-│    (Defense $15.2M, FinServ $12.8M, Health $8.1M, E&I $6.2M)│
-├─────────────────────────────────────────────────────────────┤
-│  DIRECTOR asks: "Show me all practice area revenue"         │
-│  → AI returns: Revenue for THEIR practice area only         │
-│    (Defense $15.2M — other practices: [Access Restricted])  │
-├─────────────────────────────────────────────────────────────┤
-│  JUNIOR ANALYST asks: "Show me all practice area revenue"   │
-│  → AI returns: "This data requires Director-level access.   │
-│    Please contact your practice lead."                      │
-└─────────────────────────────────────────────────────────────┘
+╔═════════════════════════════════════════════════════════════════╗
+║  🟢 PARTNER asks: "Show me all practice area revenue"          ║
+║     → AI returns: Revenue for ALL practice areas               ║
+║       (Defense $15.2M, FinServ $12.8M, Health $8.1M, E&I $6.2M)║
+╠═════════════════════════════════════════════════════════════════╣
+║  🟡 DIRECTOR asks: "Show me all practice area revenue"         ║
+║     → AI returns: Revenue for THEIR practice area only         ║
+║       (Defense $15.2M — other practices: [Access Restricted])  ║
+╠═════════════════════════════════════════════════════════════════╣
+║  🔴 JUNIOR ANALYST asks: "Show me all practice area revenue"   ║
+║     → AI returns: "This data requires Director-level access.   ║
+║       Please contact your practice lead."                      ║
+╚═════════════════════════════════════════════════════════════════╝
+     ▲ Full access         ▲ Filtered access      ▲ Denied
 ```
 
 **Implementation:** Per-operation authorization through the MCP layer. Every query carries the user's identity token. The RAG retrieval pipeline filters results based on the user's clearance level. The system prompt includes role-specific constraints. See [MCP Security for Enterprise](11-mcp-security.md) for the technical architecture.
@@ -147,20 +148,26 @@ In a traditional application, access controls are straightforward — users have
 **The audit pipeline:**
 
 ```
-┌──────────┐    ┌──────────┐    ┌──────────────┐    ┌──────────┐
-│  USER    │    │ AI SYSTEM│    │  AUDIT LOG   │    │  SIEM    │
-│  ACTION  │───►│ processes│───►│  (immutable) │───►│ Analysis │
-│          │    │  request │    │  Write-once   │    │ Alerts   │
-│          │    │          │    │  storage      │    │ Reports  │
-└──────────┘    └──────────┘    └──────────────┘    └──────────┘
-                                       │
-                                       ▼
-                                ┌──────────────┐
-                                │  COMPLIANCE  │
-                                │  DASHBOARD   │
-                                │  For auditors│
-                                │  and GRC team│
-                                └──────────────┘
+┌──────────────┐    ┌──────────────┐    ┌────────────────┐    ┌──────────────┐
+│              │    │              │    │                │    │              │
+│     USER     │    │  AI SYSTEM   │    │   AUDIT LOG    │    │     SIEM     │
+│    ACTION    │───►│  processes   │───►│  (immutable)   │───►│   Analysis   │
+│              │    │   request    │    │                │    │              │
+│  Query,      │    │  Retrieval,  │    │  Write-once    │    │  Alerts,     │
+│  Tool call   │    │  Generation  │    │  storage only  │    │  Reports     │
+│              │    │              │    │                │    │              │
+└──────────────┘    └──────────────┘    └───────┬────────┘    └──────────────┘
+                                                │
+                                                ▼
+                                     ┌────────────────────┐
+                                     │     COMPLIANCE     │
+                                     │     DASHBOARD      │
+                                     │                    │
+                                     │  • Auditor access  │
+                                     │  • GRC reporting   │
+                                     │  • Query history   │
+                                     │  • Risk indicators │
+                                     └────────────────────┘
 ```
 
 **Critical requirement:** Audit logs must be **immutable**. Once written, they cannot be modified or deleted (even by administrators). Use write-once storage (Azure Immutable Blob, AWS S3 Object Lock) to prevent tampering.

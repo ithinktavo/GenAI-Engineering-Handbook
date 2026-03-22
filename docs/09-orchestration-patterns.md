@@ -131,32 +131,32 @@ In production, some agents will fail while others succeed. The key decision: **d
 A central "supervisor" agent receives every request, analyzes it, and delegates to the right specialized agent.
 
 ```
-                    ┌───────────────────┐
-        User ──────►│    SUPERVISOR     │
-        query       │                   │
-                    │  Analyzes intent  │
-                    │  Routes to the    │
-                    │  right specialist │
-                    └─────┬─────────────┘
-                    ┌─────┼──────────────────┐
-                    ▼     ▼                  ▼
-             ┌──────────┐ ┌──────────┐ ┌──────────┐
-             │ FINANCE  │ │   HR     │ │  CLIENT  │
-             │ EXPERT   │ │ EXPERT   │ │ EXPERT   │
-             │          │ │          │ │          │
-             │ Revenue  │ │ Headcount│ │ Pipeline │
-             │ Margin   │ │ Attrition│ │ NPS      │
-             │ Backlog  │ │ Hiring   │ │ Retention│
-             └────┬─────┘ └────┬─────┘ └────┬─────┘
-                  │            │             │
-                  └────────────┼─────────────┘
+                    ╔═══════════════════════╗
+        User ──────►║     SUPERVISOR        ║
+        query       ║                       ║
+                    ║  • Analyzes intent    ║
+                    ║  • Routes to the      ║
+                    ║    right specialist   ║
+                    ╚═══════════╤═══════════╝
+                    ┌───────────┼───────────────────┐
+                    ▼           ▼                   ▼
+             ┌──────────┐ ┌──────────┐ ┌──────────────┐
+             │ FINANCE  │ │    HR    │ │    CLIENT    │
+             │ EXPERT   │ │  EXPERT  │ │    EXPERT    │
+             │          │ │          │ │              │
+             │ Revenue  │ │ Headcount│ │ Pipeline     │
+             │ Margin   │ │ Attrition│ │ NPS          │
+             │ Backlog  │ │ Hiring   │ │ Retention    │
+             └────┬─────┘ └────┬─────┘ └──────┬───────┘
+                  │            │               │
+                  └────────────┼───────────────┘
                                ▼
-                    ┌───────────────────┐
-                    │    SUPERVISOR     │
-                    │  Receives result  │
-                    │  Formats for user │
-                    │  May route again  │
-                    └───────────────────┘
+                    ╔═══════════════════════╗
+                    ║     SUPERVISOR        ║
+                    ║  • Receives result    ║
+                    ║  • Formats for user   ║
+                    ║  • May route again    ║
+                    ╚═══════════════════════╝
 ```
 
 ### The Routing Decision
@@ -205,16 +205,18 @@ Supervisor detects: needs both HR data (utilization) and Finance data (revenue)
 Agents handle different **phases** of a workflow, explicitly passing context at transition points.
 
 ```
-┌────────────┐        ┌────────────┐        ┌────────────┐
-│   INTAKE   │──────►│  RESEARCH  │──────►│   ACTION   │
-│   AGENT    │context │   AGENT    │context │   AGENT    │
-│            │────────│            │────────│            │
-│ Understand │ what:  │ Analyze    │ what:  │ Draft      │
-│ the request│ parsed │ data,      │ findings│ deliverable│
-│ Classify   │ intent │ generate   │ + rec. │ Get human  │
-│ Gather     │ + data │ options,   │        │ approval   │
-│ context    │ needs  │ recommend  │        │            │
-└────────────┘        └────────────┘        └────────────┘
+┌──────────────────┐          ┌──────────────────┐          ┌──────────────────┐
+│  ░░░ PHASE 1 ░░░ │          │  ░░░ PHASE 2 ░░░ │          │  ░░░ PHASE 3 ░░░ │
+│                  │          │                  │          │                  │
+│   INTAKE AGENT   │  context │  RESEARCH AGENT  │  context │   ACTION AGENT   │
+│                  ├─────────►│                  ├─────────►│                  │
+│  • Understand    │  ┌─────┐ │  • Analyze data  │  ┌─────┐ │  • Draft output  │
+│    the request   │  │parsed│ │  • Generate      │  │find-│ │  • Format for    │
+│  • Classify type │  │intent│ │    options       │  │ings │ │    audience      │
+│  • Gather data   │  │+data │ │  • Make          │  │+rec.│ │  • Get human     │
+│    requirements  │  │needs │ │    recommendation│  │     │ │    approval ⏸️   │
+│                  │  └─────┘ │                  │  └─────┘ │                  │
+└──────────────────┘          └──────────────────┘          └──────────────────┘
 ```
 
 ### The Handoff Protocol
@@ -260,20 +262,26 @@ What gets passed between agents matters enormously. Too little context and the n
 A lead agent delegates to department-level supervisors, who each manage their own team of workers. This scales to complex organizations.
 
 ```
-                    ┌──────────────────┐
-                    │   LEAD AGENT     │
-                    │   (Executive)    │
-                    └────────┬─────────┘
-               ┌─────────────┼─────────────┐
-               ▼             ▼             ▼
-        ┌──────────┐  ┌──────────┐  ┌──────────┐
-        │ FINANCE  │  │    HR    │  │  CLIENT  │
-        │ SUPERVISOR│  │SUPERVISOR│  │SUPERVISOR│
-        └─────┬────┘  └─────┬────┘  └─────┬────┘
-          ┌───┼───┐     ┌───┼───┐     ┌───┼───┐
-          ▼   ▼   ▼     ▼   ▼   ▼     ▼   ▼   ▼
-        Rev  Mrg  Bklg  HC  Atr  Utl  NPS  Pip  Ret
-        Agent Agt  Agt  Agt  Agt  Agt  Agt  Agt  Agt
+                         TIER 1: EXECUTIVE
+                    ╔══════════════════════╗
+                    ║     LEAD AGENT       ║
+                    ║   Delegates to       ║
+                    ║   department heads   ║
+                    ╚══════════╤═══════════╝
+               ┌───────────────┼───────────────┐
+               ▼               ▼               ▼
+                         TIER 2: SUPERVISORS
+        ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+        │   FINANCE    │ │      HR      │ │    CLIENT    │
+        │  SUPERVISOR  │ │  SUPERVISOR  │ │  SUPERVISOR  │
+        └───────┬──────┘ └───────┬──────┘ └───────┬──────┘
+          ┌─────┼─────┐    ┌─────┼─────┐    ┌─────┼─────┐
+          ▼     ▼     ▼    ▼     ▼     ▼    ▼     ▼     ▼
+                         TIER 3: WORKERS
+        ┌─────┐┌────┐┌────┐┌───┐┌────┐┌───┐┌────┐┌───┐┌────┐
+        │ Rev ││Mrgn││Bklg││ HC││Attr││Utl││NPS ││Pip││Retn│
+        │Agent││Agt ││Agt ││Agt││Agt ││Agt││Agt ││Agt││Agt │
+        └─────┘└────┘└────┘└───┘└────┘└───┘└────┘└───┘└────┘
 ```
 
 **When to use:** Enterprise-scale workflows where the complexity exceeds what a single supervisor can manage. The lead agent never interacts with individual workers — it works through department-level supervisors who each manage their domain.

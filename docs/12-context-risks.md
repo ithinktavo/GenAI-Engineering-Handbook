@@ -108,24 +108,26 @@ Too much irrelevant information in the context window causes the model to lose f
 Stanford's research demonstrated that LLM accuracy follows a U-shaped curve based on where relevant information appears in the context:
 
 ```
-Accuracy vs. Position of Relevant Information
-──────────────────────────────────────────────
-
-  100% │ ●                                 ●
-       │   ●                             ●
-   90% │     ●                         ●
-       │       ●                     ●
-   80% │         ●                 ●
-       │           ●             ●
-   70% │             ●         ●
-       │               ●     ●
-   60% │                 ● ●
-       └───────────────────────────────────
-       Beginning       Middle          End
-
-  Models perform well when relevant info is at
-  the beginning or end. Performance drops 30%+
-  when it's buried in the middle.
+┌──────────────────────────────────────────────────────────┐
+│     Accuracy vs. Position of Relevant Information        │
+│     (Stanford "Lost in the Middle" finding)              │
+│                                                          │
+│  100% ┤ ●●                                         ●●   │
+│       │    ●●                                   ●●       │
+│   90% ┤       ●●                             ●●          │
+│       │          ●●                       ●●             │
+│   80% ┤             ●●                 ●●                │
+│       │                ●●           ●●                   │
+│   70% ┤                   ●●     ●●                      │
+│       │                      ●●●   ◄── 30%+ accuracy    │
+│   60% ┤                    ●●●●●       drop here         │
+│       │                                                  │
+│   50% ┤                                                  │
+│       └──────────┬──────────┬──────────┬──────────┤      │
+│              Beginning   Middle      End                 │
+│                                                          │
+│  ✅ Strong accuracy       ❌ Weak accuracy (danger zone) │
+└──────────────────────────────────────────────────────────┘
 ```
 
 ### How RAG Chunk Count Affects Distraction

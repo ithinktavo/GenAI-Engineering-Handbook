@@ -148,13 +148,20 @@ This is where prompt engineering alone breaks down — and why Context Engineeri
 Every LLM has a **knowledge cutoff date** — the point at which its training data ends. After that date, the model knows nothing. It doesn't know today's stock price, last quarter's revenue, your company's policies, or the email your CEO sent this morning.
 
 ```
-The Knowledge Gap:
-
-  Training Data          Knowledge Cutoff       Today
-  ─────────────────────────────┼──────────────────┤
-  (Knows everything)          (Knows nothing)    (Your questions
-   Books, internet,            ← FROZEN →         are about THIS)
-   code, Wikipedia...)
+┌─────────────────────────── THE KNOWLEDGE GAP ───────────────────────────┐
+│                                                                         │
+│  ┌─────────────────────────┐   ┌──────────────────┐   ┌─────────────┐  │
+│  │     TRAINING DATA       │   │  KNOWLEDGE       │   │    TODAY    │  │
+│  │                         │   │  CUTOFF          │   │             │  │
+│  │  ✅ Books, internet,    │   │  ❌ Model knows  │   │  ❓ Your    │  │
+│  │     code, Wikipedia,    │   │     NOTHING after │   │   questions │  │
+│  │     research papers     │   │     this date     │   │   are about │  │
+│  │                         │   │                  │   │   THIS      │  │
+│  │  "Knows everything"     │   │  ◄── FROZEN ──► │   │             │  │
+│  └─────────────────────────┘   └──────────────────┘   └─────────────┘  │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
+│  ◄──────── Model's knowledge ─────────►◄──── Gap ────►◄── Need ────►  │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 **This creates two problems for enterprise AI:**
