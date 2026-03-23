@@ -33,7 +33,7 @@ The techniques below are the building blocks that every AI practitioner should k
 
 ```
 SYSTEM PROMPT:
-You are a senior financial analyst at Guidehouse.
+You are a senior financial analyst at CorpX.
 You have access to the firm's quarterly performance data.
 When answering questions:
 - Always cite the specific data source
@@ -418,7 +418,7 @@ A specialized database that stores vectors and enables fast similarity search. W
 **Key vector databases:**
 - **Pinecone** — fully managed, easy to start, strong at scale
 - **Weaviate** — open-source, hybrid search (vector + keyword)
-- **Azure AI Search** — integrated with Azure ecosystem (likely Guidehouse's choice)
+- **Azure AI Search** — integrated with Azure ecosystem (likely CorpX's choice)
 - **ChromaDB** — lightweight, good for prototyping
 - **Qdrant** — open-source, high performance
 
@@ -471,7 +471,7 @@ As context grows larger, the model's ability to find and use specific informatio
 Gemini 2.0 Pro maintains ~77% accuracy at full 1M token load. That means roughly 1 in 4 retrievals may miss the mark. For a C-suite dashboard where executives need accurate numbers: not acceptable.
 
 **3. Infinite Dataset Problem**
-Most organizations' data lakes are measured in terabytes or petabytes. No context window — even at 2M tokens (~1,500 pages) — can hold a Fortune 500's worth of documents. Long context works for "this specific document" or "this small collection of reports." It does not work for "all of Guidehouse's financial data across all practice areas for the last 5 years."
+Most organizations' data lakes are measured in terabytes or petabytes. No context window — even at 2M tokens (~1,500 pages) — can hold a Fortune 500's worth of documents. Long context works for "this specific document" or "this small collection of reports." It does not work for "all of CorpX's financial data across all practice areas for the last 5 years."
 
 At enterprise scale, RAG isn't optional — it's the only viable architecture.
 

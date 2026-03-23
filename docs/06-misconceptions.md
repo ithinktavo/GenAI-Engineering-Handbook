@@ -51,7 +51,7 @@ A compliance team reviewing 500 documents manually:
 - **Result:** Same output, 94% less time. Nobody was fired. The analysts now spend their time on the complex cases that actually need expertise.
 
 ### Why Framing Matters
-In government consulting — Guidehouse's primary market — "AI replaces workers" is politically toxic. Government clients are accountable to taxpayers and elected officials. The correct framing is always:
+In government consulting — CorpX's primary market — "AI replaces workers" is politically toxic. Government clients are accountable to taxpayers and elected officials. The correct framing is always:
 
 > "AI augments your workforce. It handles the routine work so your most experienced people can focus on the cases that require human judgment. You're not losing headcount — you're gaining capacity."
 
