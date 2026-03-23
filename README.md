@@ -27,6 +27,7 @@ This handbook is organized as a progressive learning path — each section build
 |---|---|
 | [RAG Deep Dive](docs/04-rag-deep-dive.md) | The full RAG pipeline: documents, chunking, embeddings, vectors, vector databases, semantic search, and reranking |
 | [RAG vs Long Context](docs/05-rag-vs-long-context.md) | The real trade-offs — when to use RAG, when long context wins, and why production teams use both |
+| [Vector Databases Deep Dive](docs/15-vector-db-deep-dive.md) | How vector DBs work vs traditional databases, similarity metrics, deterministic vs non-deterministic retrieval, and what happens when retrieval goes wrong |
 | [Common GenAI Misconceptions](docs/06-misconceptions.md) | RAG is not training. More data ≠ better AI. You don't need your own model. The corrections that signal real expertise |
 
 ### 🤖 Part 3 — Agents & Orchestration
@@ -55,6 +56,7 @@ This handbook is organized as a progressive learning path — each section build
 | [RAG vs Long Context Benchmark](notebooks/05-rag-vs-long-context.ipynb) | Run the same queries against RAG and long-context approaches — compare accuracy, latency, and cost |
 | [Build a Simple Agent](notebooks/06-build-a-simple-agent.ipynb) | Create an agent that can reason, use tools, and execute multi-step tasks with human-in-the-loop |
 | [Prompt Engineering Techniques](notebooks/07-prompt-techniques.ipynb) | Interactive examples of zero-shot, few-shot, chain-of-thought, and their impact on output quality |
+| [Vector DB Explorer](notebooks/08-vector-db-explorer.ipynb) | Build a mini vector DB, compare similarity metrics, see deterministic vs non-deterministic retrieval, and visualize retrieval failures and fixes |
 
 ---
 
@@ -120,7 +122,8 @@ genai-engineering-handbook/
 │   ├── 11-mcp-security.md
 │   ├── 12-context-risks.md
 │   ├── 13-mcp-vs-api.md
-│   └── 14-ai-dashboard-architecture.md
+│   ├── 14-ai-dashboard-architecture.md
+│   └── 15-vector-db-deep-dive.md
 │
 ├── notebooks/                         ← Jupyter notebooks (hands-on)
 │   ├── 01-semantic-search-visualized.ipynb
@@ -129,7 +132,8 @@ genai-engineering-handbook/
 │   ├── 04-embeddings-explorer.ipynb
 │   ├── 05-rag-vs-long-context.ipynb
 │   ├── 06-build-a-simple-agent.ipynb
-│   └── 07-prompt-techniques.ipynb
+│   ├── 07-prompt-techniques.ipynb
+│   └── 08-vector-db-explorer.ipynb
 │
 └── assets/
     └── images/                        ← Diagrams and visuals
