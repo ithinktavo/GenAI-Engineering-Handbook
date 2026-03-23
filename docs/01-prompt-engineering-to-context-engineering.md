@@ -150,9 +150,9 @@ Every LLM has a **knowledge cutoff date** — the point at which its training da
 ```mermaid
 block-beta
     columns 3
-    A["🟢 TRAINING DATA\nBooks, internet, code,\nWikipedia, research papers\n\nKnows everything"]:1
-    B["🔴 KNOWLEDGE CUTOFF\nModel knows NOTHING\nafter this date\n\n← FROZEN →"]:1
-    C["🟡 TODAY\nYour questions\nare about THIS\n\nNeeds context injection"]:1
+    A["🟢 TRAINING DATA - Books, internet, code, research"]:1
+    B["🔴 KNOWLEDGE CUTOFF - Model knows nothing after this"]:1
+    C["🟡 TODAY - Your questions need context injection"]:1
 
     style A fill:#d4edda,stroke:#28a745
     style B fill:#f8d7da,stroke:#dc3545
@@ -210,16 +210,16 @@ graph TB
     subgraph CE["CONTEXT ENGINEERING"]
         direction TB
         subgraph row1[" "]
-            SP["🎯 SYSTEM PROMPT\nRole, rules, constraints\n(Prompt Engineering)"]
-            MM["🧠 MEMORY MANAGEMENT\nShort-term · Long-term · Working"]
+            SP["🎯 SYSTEM PROMPT - Role, rules, constraints"]
+            MM["🧠 MEMORY - Short-term, Long-term, Working"]
         end
         subgraph row2[" "]
-            RAG["📄 RAG\nRetrieved documents\nand data chunks"]
-            SM["📊 STATE MANAGEMENT\nWorkflow tracking\nWhat's done, what's next"]
+            RAG["📄 RAG - Retrieved documents and data chunks"]
+            SM["📊 STATE MGMT - Workflow tracking"]
         end
         subgraph row3[" "]
-            TOOLS["🔧 TOOLS\nAPIs, DBs, functions\nvia MCP"]
-            GUARD["🛡️ GUARDRAILS\nAccess controls, safety\nboundaries, output rules"]
+            TOOLS["🔧 TOOLS - APIs, DBs, functions via MCP"]
+            GUARD["🛡️ GUARDRAILS - Access controls, safety"]
         end
     end
 
@@ -354,23 +354,23 @@ The context window isn't infinite. Even at 1M tokens, you have to be strategic a
 
 ```mermaid
 graph TD
-    subgraph indexing["📥 INDEXING PATH (one-time)"]
-        D["📁 Document Store\nPDFs, DBs, APIs"] --> CH["✂️ Chunking\nSplit docs into\nsmall pieces"]
-        CH --> EMB1["🔢 Embedding\nConvert chunks\nto vectors"]
+    subgraph indexing["INDEXING PATH - one-time"]
+        D["📁 Document Store - PDFs, DBs, APIs"] --> CH["✂️ Chunking - Split docs into pieces"]
+        CH --> EMB1["🔢 Embedding - Convert chunks to vectors"]
         EMB1 --> VDB
     end
 
-    subgraph query["🔍 QUERY PATH (every question)"]
-        Q["❓ User Question\nWhat was Q3 revenue\nby area?"] --> EMB2["🔢 Embedding\nConvert question\nto vector"]
+    subgraph query["QUERY PATH - every question"]
+        Q["❓ User Question - What was Q3 revenue?"] --> EMB2["🔢 Embedding - Convert question to vector"]
         EMB2 --> VDB
     end
 
-    VDB[("🗄️ VECTOR DATABASE\nStore & search by meaning")]
+    VDB[("🗄️ VECTOR DATABASE - Store and search by meaning")]
 
-    VDB --> TOP["🎯 Top Results\n3-10 most relevant chunks"]
-    TOP --> AUG["📋 Augmented Prompt\nSystem prompt + Retrieved chunks\n+ User question"]
-    AUG --> LLM["🤖 LLM\nGenerates answer\ngrounded in data"]
-    LLM --> RESP["💬 Response\nQ3 revenue by practice\narea was..."]
+    VDB --> TOP["🎯 Top Results - 3-10 most relevant chunks"]
+    TOP --> AUG["📋 Augmented Prompt - System prompt + chunks + question"]
+    AUG --> LLM["🤖 LLM - Generates answer grounded in data"]
+    LLM --> RESP["💬 Response - Q3 revenue by practice area was..."]
 
     style indexing fill:#f0f4ff,stroke:#2E86C1
     style query fill:#fff8e1,stroke:#ffc107
@@ -518,28 +518,28 @@ For the C-suite dashboard?
 
 ```mermaid
 graph TD
-    UI["🖥️ USER INTERFACE\nC-Suite Dashboard · React + Chat UI"]
+    UI["🖥️ USER INTERFACE - C-Suite Dashboard"]
 
     UI --> CEL
 
     subgraph CEL["CONTEXT ENGINEERING LAYER"]
         direction TB
-        SP["🎯 System Prompt\nRole, rules"]
-        MEM["🧠 Memory\nHistory, prefs"]
-        RAGP["📄 RAG Pipeline\nRetrieve relevant data"]
-        MCP["🔧 Tools · MCP\nQuery DBs, run calcs"]
+        SP["🎯 System Prompt - Role, rules"]
+        MEM["🧠 Memory - History, prefs"]
+        RAGP["📄 RAG Pipeline - Retrieve relevant data"]
+        MCP["🔧 Tools / MCP - Query DBs, run calcs"]
 
         SP --> ASM
         MEM --> ASM
         RAGP --> ASM
         MCP --> ASM
 
-        ASM["📋 ASSEMBLED CONTEXT\nSystem prompt + Memory + Retrieved data +\nTool results + User question"]
-        ASM --> GR["🛡️ GUARDRAILS\nInput sanitization · Access controls\nOutput validation · Safety boundaries"]
+        ASM["📋 ASSEMBLED CONTEXT - Prompt + Memory + Data + Tools + Question"]
+        ASM --> GR["🛡️ GUARDRAILS - Input sanitization, access controls"]
     end
 
-    GR --> LLM["🤖 LLM (via Azure OpenAI)\nGenerates response grounded in context"]
-    LLM --> OUT["✅ OUTPUT VALIDATION\nHallucination check · Data accuracy\nAccess controls · C-suite formatting"]
+    GR --> LLM["🤖 LLM via Azure OpenAI - Response grounded in context"]
+    LLM --> OUT["✅ OUTPUT VALIDATION - Hallucination check, data accuracy"]
 
     style UI fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
     style CEL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px

@@ -20,20 +20,20 @@ Agents execute in a fixed, linear order. Each agent's output becomes the next ag
 
 ```mermaid
 graph LR
-    subgraph Pipeline ["📦 STATE passed forward through each step"]
-        Data["📁 DATA AGENT\nPull Q3 data from\ndata warehouse"]
-        Analysis["📊 ANALYSIS AGENT\nCompare to Q2\nand YoY benchmarks"]
-        Chart["📈 CHART AGENT\nGenerate visualizations\nfrom analysis"]
-        Report["📄 REPORT AGENT\nAssemble final\ndeck with narrative"]
+    subgraph Pipeline ["STATE passed forward through each step"]
+        Data["📁 DATA AGENT - Pull Q3 data from warehouse"]
+        Analysis["📊 ANALYSIS AGENT - Compare to Q2 and YoY"]
+        Chart["📈 CHART AGENT - Generate visualizations"]
+        Report["📄 REPORT AGENT - Assemble final deck"]
     end
 
     Data --> Analysis --> Chart --> Report
 
-    style Data fill:#fff3cd,stroke:#ffc107,color:#000
-    style Analysis fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Chart fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Report fill:#d4edda,stroke:#28a745,color:#000
-    style Pipeline fill:#f9f9f9,stroke:#ccc,color:#000
+    style Data fill:#fff3cd,stroke:#ffc107
+    style Analysis fill:#f0f4ff,stroke:#2E86C1
+    style Chart fill:#f0f4ff,stroke:#2E86C1
+    style Report fill:#d4edda,stroke:#28a745
+    style Pipeline fill:#f9f9f9,stroke:#ccc
 ```
 
 ### Error Handling in Sequential Pipelines
@@ -49,14 +49,14 @@ What happens when Step 3 fails? Three strategies:
 ```mermaid
 graph TD
     S1["Step 1"] --> S2["Step 2"] --> S3["❌ Step 3 FAILS"]
-    S3 --> Retry["🔄 Retry?\nRetry 1x then fallback"]
-    S3 --> Fallback["🔀 Fallback?\nUse simpler chart type\nand continue"]
+    S3 --> Retry["🔄 Retry? Retry 1x then fallback"]
+    S3 --> Fallback["🔀 Fallback? Use simpler chart type"]
 
-    style S1 fill:#d4edda,stroke:#28a745,color:#000
-    style S2 fill:#d4edda,stroke:#28a745,color:#000
-    style S3 fill:#f8d7da,stroke:#dc3545,color:#000
-    style Retry fill:#fff3cd,stroke:#ffc107,color:#000
-    style Fallback fill:#fff3cd,stroke:#ffc107,color:#000
+    style S1 fill:#d4edda,stroke:#28a745
+    style S2 fill:#d4edda,stroke:#28a745
+    style S3 fill:#f8d7da,stroke:#dc3545
+    style Retry fill:#fff3cd,stroke:#ffc107
+    style Fallback fill:#fff3cd,stroke:#ffc107
 ```
 
 **Enterprise principle:** Never silently swallow errors. Every failure must be logged, and the final output must indicate if any step used a fallback. An executive reading a report with degraded charts needs to know.
@@ -76,22 +76,22 @@ Multiple agents work independently on different sub-tasks. Results are aggregate
 
 ```mermaid
 graph TD
-    Coord["🎯 COORDINATOR\nSplit task into parts"]
-    Fin["💰 FINANCIAL AGENT\nPull Q3 revenue,\nmargin, backlog"]
-    HR["👥 HR AGENT\nPull Q3 headcount,\nattrition, hiring"]
-    Client["🤝 CLIENT AGENT\nPull Q3 pipeline,\nNPS, retention"]
-    Agg["📊 AGGREGATOR\nCombine all results\nWait: 3.2s (slowest)"]
+    Coord["🎯 COORDINATOR - Split task into parts"]
+    Fin["💰 FINANCIAL AGENT - Revenue, margin, backlog"]
+    HR["👥 HR AGENT - Headcount, attrition, hiring"]
+    Client["🤝 CLIENT AGENT - Pipeline, NPS, retention"]
+    Agg["📊 AGGREGATOR - Combine all results"]
 
     Coord --> Fin & HR & Client
     Fin -- "2.1s" --> Agg
     HR -- "1.8s" --> Agg
     Client -- "3.2s" --> Agg
 
-    style Coord fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style HR fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Client fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Agg fill:#d4edda,stroke:#28a745,color:#000
+    style Coord fill:#e2d5f1,stroke:#6f42c1
+    style Fin fill:#f0f4ff,stroke:#2E86C1
+    style HR fill:#f0f4ff,stroke:#2E86C1
+    style Client fill:#f0f4ff,stroke:#2E86C1
+    style Agg fill:#d4edda,stroke:#28a745
 ```
 
 ### Handling Partial Failures
@@ -123,23 +123,23 @@ A central "supervisor" agent receives every request, analyzes it, and delegates 
 ```mermaid
 graph TD
     User["👤 User query"] --> Sup1
-    Sup1["🤖 SUPERVISOR\nAnalyzes intent\nRoutes to right specialist"]
-    Fin["💰 FINANCE EXPERT\nRevenue, Margin, Backlog"]
-    HR["👥 HR EXPERT\nHeadcount, Attrition, Hiring"]
-    Client["🤝 CLIENT EXPERT\nPipeline, NPS, Retention"]
-    Sup2["🤖 SUPERVISOR\nReceives result\nFormats for user\nMay route again"]
+    Sup1["🤖 SUPERVISOR - Analyzes intent, routes to specialist"]
+    Fin["💰 FINANCE EXPERT - Revenue, Margin, Backlog"]
+    HR["👥 HR EXPERT - Headcount, Attrition, Hiring"]
+    Client["🤝 CLIENT EXPERT - Pipeline, NPS, Retention"]
+    Sup2["🤖 SUPERVISOR - Receives result, formats for user"]
 
     Sup1 --> Fin & HR & Client
     Fin --> Sup2
     HR --> Sup2
     Client --> Sup2
 
-    style User fill:#fff3cd,stroke:#ffc107,color:#000
-    style Sup1 fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style Sup2 fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style HR fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Client fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style User fill:#fff3cd,stroke:#ffc107
+    style Sup1 fill:#e2d5f1,stroke:#6f42c1
+    style Sup2 fill:#e2d5f1,stroke:#6f42c1
+    style Fin fill:#f0f4ff,stroke:#2E86C1
+    style HR fill:#f0f4ff,stroke:#2E86C1
+    style Client fill:#f0f4ff,stroke:#2E86C1
 ```
 
 ### The Routing Decision
@@ -189,27 +189,27 @@ Agents handle different **phases** of a workflow, explicitly passing context at 
 
 ```mermaid
 graph LR
-    subgraph P1 ["🔷 PHASE 1"]
-        Intake["📥 INTAKE AGENT\nUnderstand the request\nClassify type\nGather data requirements"]
+    subgraph P1 ["PHASE 1"]
+        Intake["📥 INTAKE AGENT - Understand, classify, gather"]
     end
 
-    subgraph P2 ["🔷 PHASE 2"]
-        Research["🔍 RESEARCH AGENT\nAnalyze data\nGenerate options\nMake recommendation"]
+    subgraph P2 ["PHASE 2"]
+        Research["🔍 RESEARCH AGENT - Analyze, recommend"]
     end
 
-    subgraph P3 ["🔷 PHASE 3"]
-        Action["⚡ ACTION AGENT\nDraft output\nFormat for audience\nGet human approval ⏸️"]
+    subgraph P3 ["PHASE 3"]
+        Action["⚡ ACTION AGENT - Draft, format, get approval"]
     end
 
-    Intake -- "context:\nparsed intent\n+ data needs" --> Research
-    Research -- "context:\nfindings\n+ recommendation" --> Action
+    Intake -- "context: parsed intent + data needs" --> Research
+    Research -- "context: findings + recommendation" --> Action
 
-    style Intake fill:#fff3cd,stroke:#ffc107,color:#000
-    style Research fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Action fill:#d4edda,stroke:#28a745,color:#000
-    style P1 fill:#f9f9f9,stroke:#2E86C1,color:#000
-    style P2 fill:#f9f9f9,stroke:#2E86C1,color:#000
-    style P3 fill:#f9f9f9,stroke:#2E86C1,color:#000
+    style Intake fill:#fff3cd,stroke:#ffc107
+    style Research fill:#f0f4ff,stroke:#2E86C1
+    style Action fill:#d4edda,stroke:#28a745
+    style P1 fill:#f9f9f9,stroke:#2E86C1
+    style P2 fill:#f9f9f9,stroke:#2E86C1
+    style P3 fill:#f9f9f9,stroke:#2E86C1
 ```
 
 ### The Handoff Protocol
@@ -256,17 +256,17 @@ A lead agent delegates to department-level supervisors, who each manage their ow
 
 ```mermaid
 graph TD
-    subgraph T1 ["👑 TIER 1: EXECUTIVE"]
-        Lead["🎯 LEAD AGENT\nDelegates to department heads"]
+    subgraph T1 ["TIER 1: EXECUTIVE"]
+        Lead["🎯 LEAD AGENT - Delegates to department heads"]
     end
 
-    subgraph T2 ["📋 TIER 2: SUPERVISORS"]
-        FinSup["💰 FINANCE\nSUPERVISOR"]
-        HRSup["👥 HR\nSUPERVISOR"]
-        CliSup["🤝 CLIENT\nSUPERVISOR"]
+    subgraph T2 ["TIER 2: SUPERVISORS"]
+        FinSup["💰 FINANCE SUPERVISOR"]
+        HRSup["👥 HR SUPERVISOR"]
+        CliSup["🤝 CLIENT SUPERVISOR"]
     end
 
-    subgraph T3 ["⚙️ TIER 3: WORKERS"]
+    subgraph T3 ["TIER 3: WORKERS"]
         Rev["Rev Agent"]
         Mrgn["Margin Agent"]
         Bklg["Backlog Agent"]
@@ -283,22 +283,22 @@ graph TD
     HRSup --> HC & Attr & Utl
     CliSup --> NPS & Pip & Retn
 
-    style Lead fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style FinSup fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style HRSup fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style CliSup fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Rev fill:#fff3cd,stroke:#ffc107,color:#000
-    style Mrgn fill:#fff3cd,stroke:#ffc107,color:#000
-    style Bklg fill:#fff3cd,stroke:#ffc107,color:#000
-    style HC fill:#fff3cd,stroke:#ffc107,color:#000
-    style Attr fill:#fff3cd,stroke:#ffc107,color:#000
-    style Utl fill:#fff3cd,stroke:#ffc107,color:#000
-    style NPS fill:#fff3cd,stroke:#ffc107,color:#000
-    style Pip fill:#fff3cd,stroke:#ffc107,color:#000
-    style Retn fill:#fff3cd,stroke:#ffc107,color:#000
-    style T1 fill:#f3e8ff,stroke:#6f42c1,color:#000
-    style T2 fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style T3 fill:#fff3cd,stroke:#ffc107,color:#000
+    style Lead fill:#e2d5f1,stroke:#6f42c1
+    style FinSup fill:#f0f4ff,stroke:#2E86C1
+    style HRSup fill:#f0f4ff,stroke:#2E86C1
+    style CliSup fill:#f0f4ff,stroke:#2E86C1
+    style Rev fill:#fff3cd,stroke:#ffc107
+    style Mrgn fill:#fff3cd,stroke:#ffc107
+    style Bklg fill:#fff3cd,stroke:#ffc107
+    style HC fill:#fff3cd,stroke:#ffc107
+    style Attr fill:#fff3cd,stroke:#ffc107
+    style Utl fill:#fff3cd,stroke:#ffc107
+    style NPS fill:#fff3cd,stroke:#ffc107
+    style Pip fill:#fff3cd,stroke:#ffc107
+    style Retn fill:#fff3cd,stroke:#ffc107
+    style T1 fill:#f3e8ff,stroke:#6f42c1
+    style T2 fill:#f0f4ff,stroke:#2E86C1
+    style T3 fill:#fff3cd,stroke:#ffc107
 ```
 
 **When to use:** Enterprise-scale workflows where the complexity exceeds what a single supervisor can manage. The lead agent never interacts with individual workers — it works through department-level supervisors who each manage their domain.
@@ -313,26 +313,26 @@ Agents need to track where they are, what's been done, and what's next. Without 
 
 ```mermaid
 graph TD
-    subgraph State ["📋 WORKFLOW STATE — q3-report-2025 — in_progress — step 3 of 5"]
-        S1["✅ 1. pull_financial_data\ncompleted (2.1s)"]
-        S2["✅ 2. pull_hr_data\ncompleted (1.8s)"]
-        S3["🔄 3. generate_analysis\nin_progress"]
-        S4["⏳ 4. create_charts\npending"]
-        S5["⏳ 5. assemble_report\npending"]
+    subgraph State ["WORKFLOW STATE - q3-report-2025 - in_progress - step 3/5"]
+        S1["✅ 1. pull_financial_data - completed (2.1s)"]
+        S2["✅ 2. pull_hr_data - completed (1.8s)"]
+        S3["🔄 3. generate_analysis - in_progress"]
+        S4["⏳ 4. create_charts - pending"]
+        S5["⏳ 5. assemble_report - pending"]
     end
 
     S1 --> S2 --> S3 --> S4 --> S5
 
-    Checkpoint["💾 checkpoint: 2025-10-14T14:23:00Z\ncan_resume_from: step_3"]
+    Checkpoint["💾 checkpoint: 2025-10-14T14:23:00Z - resume from step_3"]
     S3 -.- Checkpoint
 
-    style S1 fill:#d4edda,stroke:#28a745,color:#000
-    style S2 fill:#d4edda,stroke:#28a745,color:#000
-    style S3 fill:#fff3cd,stroke:#ffc107,color:#000
-    style S4 fill:#f9f9f9,stroke:#ccc,color:#000
-    style S5 fill:#f9f9f9,stroke:#ccc,color:#000
-    style Checkpoint fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style State fill:#f9f9f9,stroke:#333,color:#000
+    style S1 fill:#d4edda,stroke:#28a745
+    style S2 fill:#d4edda,stroke:#28a745
+    style S3 fill:#fff3cd,stroke:#ffc107
+    style S4 fill:#f9f9f9,stroke:#ccc
+    style S5 fill:#f9f9f9,stroke:#ccc
+    style Checkpoint fill:#f0f4ff,stroke:#2E86C1
+    style State fill:#f9f9f9,stroke:#333
 ```
 
 ### Checkpointing
@@ -375,17 +375,17 @@ Every agent workflow will encounter failures. The question is how you handle the
 ```mermaid
 graph TD
     Call["🔧 Agent calls external API"]
-    Ok1["✅ Success — continue"]
+    Ok1["✅ Success - continue"]
     F1["❌ Failure (attempt 1)"]
     R1["🔄 Retry (1s backoff)"]
-    Ok2["✅ Success — continue"]
+    Ok2["✅ Success - continue"]
     F2["❌ Failure (attempt 2)"]
     R2["🔄 Retry (2s backoff)"]
-    Ok3["✅ Success — continue"]
+    Ok3["✅ Success - continue"]
     F3["❌ Failure (attempt 3)"]
     CB["🚫 Circuit breaker opens"]
-    Fallback["🔀 Fallback agent available?\nUse fallback"]
-    Human["👤 Human escalation\nStep 3 failed after 3 retries.\nProceed without chart generation?"]
+    Fallback["🔀 Fallback agent available? Use fallback"]
+    Human["👤 Human escalation - Step 3 failed, proceed?"]
 
     Call --> Ok1
     Call --> F1 --> R1
@@ -396,18 +396,18 @@ graph TD
     CB --> Fallback
     CB --> Human
 
-    style Call fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Ok1 fill:#d4edda,stroke:#28a745,color:#000
-    style Ok2 fill:#d4edda,stroke:#28a745,color:#000
-    style Ok3 fill:#d4edda,stroke:#28a745,color:#000
-    style F1 fill:#f8d7da,stroke:#dc3545,color:#000
-    style F2 fill:#f8d7da,stroke:#dc3545,color:#000
-    style F3 fill:#f8d7da,stroke:#dc3545,color:#000
-    style R1 fill:#fff3cd,stroke:#ffc107,color:#000
-    style R2 fill:#fff3cd,stroke:#ffc107,color:#000
-    style CB fill:#f8d7da,stroke:#dc3545,color:#000
-    style Fallback fill:#fff3cd,stroke:#ffc107,color:#000
-    style Human fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Call fill:#f0f4ff,stroke:#2E86C1
+    style Ok1 fill:#d4edda,stroke:#28a745
+    style Ok2 fill:#d4edda,stroke:#28a745
+    style Ok3 fill:#d4edda,stroke:#28a745
+    style F1 fill:#f8d7da,stroke:#dc3545
+    style F2 fill:#f8d7da,stroke:#dc3545
+    style F3 fill:#f8d7da,stroke:#dc3545
+    style R1 fill:#fff3cd,stroke:#ffc107
+    style R2 fill:#fff3cd,stroke:#ffc107
+    style CB fill:#f8d7da,stroke:#dc3545
+    style Fallback fill:#fff3cd,stroke:#ffc107
+    style Human fill:#e2d5f1,stroke:#6f42c1
 ```
 
 ---

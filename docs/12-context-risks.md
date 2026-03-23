@@ -58,31 +58,31 @@ the model may use either number — unpredictably.
 
 ```mermaid
 graph TD
-    subgraph defenses["🛡️ CONTEXT POISONING DEFENSES"]
-        subgraph L1["🧹 LAYER 1: INPUT SANITIZATION"]
-            L1D["Scan all documents before indexing for:\n• Embedded instructions — ignore, override\n• Unusual formatting — hidden text, zero-width\n• Content that contradicts known facts"]
+    subgraph defenses["CONTEXT POISONING DEFENSES"]
+        subgraph L1["LAYER 1: INPUT SANITIZATION"]
+            L1D["Scan docs for embedded instructions, hidden text, contradictions"]
         end
-        subgraph L2["✅ LAYER 2: TRUSTED SOURCE REGISTRY"]
-            L2D["Only index documents from approved sources:\n• Official reports — financial system exports\n• Approved databases — HR system, CRM\n• Vetted MCP servers — from trusted registry"]
+        subgraph L2["LAYER 2: TRUSTED SOURCE REGISTRY"]
+            L2D["Only index from approved sources: official reports, approved DBs, vetted MCP"]
         end
-        subgraph L3["🔍 LAYER 3: CONTENT VALIDATION"]
-            L3D["Before injecting into the prompt:\n• Cross-reference retrieved data against baselines\n• Flag anomalies — revenue doubled overnight?\n• Tag source and timestamp for the LLM"]
+        subgraph L3["LAYER 3: CONTENT VALIDATION"]
+            L3D["Cross-reference against baselines, flag anomalies, tag source and timestamp"]
         end
-        subgraph L4["📋 LAYER 4: OUTPUT VERIFICATION"]
-            L4D["After LLM generates response:\n• Check that cited numbers match retrieved data\n• Detect hallucinated entities or figures\n• Flag responses that deviate from source data"]
+        subgraph L4["LAYER 4: OUTPUT VERIFICATION"]
+            L4D["Check cited numbers match sources, detect hallucinations, flag deviations"]
         end
 
         L1 --> L2 --> L3 --> L4
     end
 
-    style L1 fill:#f8d7da,stroke:#dc3545,color:#000
-    style L2 fill:#fff3cd,stroke:#ffc107,color:#000
-    style L3 fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style L4 fill:#d4edda,stroke:#28a745,color:#000
-    style L1D fill:#f8d7da,stroke:#dc3545,color:#000
-    style L2D fill:#fff3cd,stroke:#ffc107,color:#000
-    style L3D fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style L4D fill:#d4edda,stroke:#28a745,color:#000
+    style L1 fill:#f8d7da,stroke:#dc3545
+    style L2 fill:#fff3cd,stroke:#ffc107
+    style L3 fill:#f0f4ff,stroke:#2E86C1
+    style L4 fill:#d4edda,stroke:#28a745
+    style L1D fill:#f8d7da,stroke:#dc3545
+    style L2D fill:#fff3cd,stroke:#ffc107
+    style L3D fill:#f0f4ff,stroke:#2E86C1
+    style L4D fill:#d4edda,stroke:#28a745
     style defenses fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
@@ -100,18 +100,18 @@ Stanford's research demonstrated that LLM accuracy follows a U-shaped curve base
 
 ```mermaid
 graph LR
-    subgraph chart["📊 Accuracy vs. Position of Relevant Information\nStanford — Lost in the Middle finding"]
+    subgraph chart["Accuracy vs Position - Lost in the Middle"]
         direction LR
-        B["✅ BEGINNING\n\n~95-100% accuracy\nStrong performance"]
-        M["❌ MIDDLE\n\n~60-65% accuracy\n30%+ accuracy drop\nDanger zone"]
-        E["✅ END\n\n~95-100% accuracy\nStrong performance"]
+        B["✅ BEGINNING - 95-100% accuracy"]
+        M["❌ MIDDLE - 60-65% accuracy, danger zone"]
+        E["✅ END - 95-100% accuracy"]
 
         B -.->|"accuracy drops"| M -.->|"accuracy recovers"| E
     end
 
-    style B fill:#d4edda,stroke:#28a745,color:#000
-    style M fill:#f8d7da,stroke:#dc3545,color:#000
-    style E fill:#d4edda,stroke:#28a745,color:#000
+    style B fill:#d4edda,stroke:#28a745
+    style M fill:#f8d7da,stroke:#dc3545
+    style E fill:#d4edda,stroke:#28a745
     style chart fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
@@ -205,28 +205,28 @@ When the total context (system prompt + memory + retrieved data + conversation h
 
 ```mermaid
 graph TD
-    subgraph budget["📐 CONTEXT WINDOW BUDGET — 128K tokens"]
+    subgraph budget["CONTEXT WINDOW BUDGET - 128K tokens"]
         direction TB
-        S["🔒 SYSTEM PROMPT — fixed\n~500 tokens — guardrails, role, rules"]
-        R["📚 RETRIEVED CONTEXT — variable\n~2,000-8,000 tokens — RAG chunks, MCP tool results"]
-        H["💬 CONVERSATION HISTORY — growing\n~1,000-10,000 tokens — previous messages in this chat"]
-        Q["❓ USER QUESTION — small\n~50-200 tokens"]
-        RS["✍️ RESPONSE SPACE — reserved\n~500-2,000 tokens — room for the LLM to generate"]
-        B["🛡️ BUFFER — safety margin\n~1,000 tokens"]
+        S["🔒 SYSTEM PROMPT - fixed, ~500 tokens"]
+        R["📚 RETRIEVED CONTEXT - variable, ~2K-8K tokens"]
+        H["💬 CONVERSATION HISTORY - growing, ~1K-10K tokens"]
+        Q["❓ USER QUESTION - small, ~50-200 tokens"]
+        RS["✍️ RESPONSE SPACE - reserved, ~500-2K tokens"]
+        B["🛡️ BUFFER - safety margin, ~1K tokens"]
 
         S --> R --> H --> Q --> RS --> B
     end
 
-    TRIM["⚠️ Priority when trimming:\n1. Never trim system prompt or current question\n2. Summarize old conversation history first\n3. Reduce retrieved context — fewer chunks — second\n4. Never reduce response space"]
+    TRIM["⚠️ Trim priority: 1. Never trim system prompt 2. Summarize history 3. Reduce chunks 4. Keep response space"]
     budget --> TRIM
 
-    style S fill:#f8d7da,stroke:#dc3545,color:#000
-    style R fill:#fff3cd,stroke:#ffc107,color:#000
-    style H fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Q fill:#fff3cd,stroke:#ffc107,color:#000
-    style RS fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style B fill:#d4edda,stroke:#28a745,color:#000
-    style TRIM fill:#fff3cd,stroke:#ffc107,color:#000
+    style S fill:#f8d7da,stroke:#dc3545
+    style R fill:#fff3cd,stroke:#ffc107
+    style H fill:#f0f4ff,stroke:#2E86C1
+    style Q fill:#fff3cd,stroke:#ffc107
+    style RS fill:#e2d5f1,stroke:#6f42c1
+    style B fill:#d4edda,stroke:#28a745
+    style TRIM fill:#fff3cd,stroke:#ffc107
     style budget fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
@@ -248,41 +248,41 @@ All four risks require a unified defense. Here's how the layers work together:
 
 ```mermaid
 graph TD
-    subgraph arch["🏗️ CONTEXT SECURITY ARCHITECTURE"]
-        subgraph L1_ing["📥 1. DATA INGESTION"]
-            I1["Input sanitization → Trusted source check →\nDeduplication → Timestamp tagging"]
+    subgraph arch["CONTEXT SECURITY ARCHITECTURE"]
+        subgraph L1_ing["1. DATA INGESTION"]
+            I1["Sanitization, trusted source check, dedup, timestamp tagging"]
         end
-        subgraph L2_ret["🔎 2. RETRIEVAL"]
-            I2["Hybrid search → Relevance threshold →\nReranking → Chunk count limit"]
+        subgraph L2_ret["2. RETRIEVAL"]
+            I2["Hybrid search, relevance threshold, reranking, chunk limit"]
         end
-        subgraph L3_asm["🧩 3. CONTEXT ASSEMBLY"]
-            I3["Budget allocation → Strategic placement →\nConflict detection → Source attribution"]
+        subgraph L3_asm["3. CONTEXT ASSEMBLY"]
+            I3["Budget allocation, placement, conflict detection, attribution"]
         end
-        subgraph L4_guard["🛡️ 4. GUARDRAILS"]
-            I4["System prompt constraints → Access filtering →\nPII redaction → Instruction detection"]
+        subgraph L4_guard["4. GUARDRAILS"]
+            I4["System prompt constraints, access filtering, PII redaction"]
         end
-        subgraph L5_llm["🤖 5. LLM GENERATION"]
+        subgraph L5_llm["5. LLM GENERATION"]
             I5["Model processes cleaned, structured context"]
         end
-        subgraph L6_val["✅ 6. OUTPUT VALIDATION"]
-            I6["Fact-check against sources → PII scan →\nHallucination detection → Audit logging"]
+        subgraph L6_val["6. OUTPUT VALIDATION"]
+            I6["Fact-check, PII scan, hallucination detection, audit logging"]
         end
 
         L1_ing --> L2_ret --> L3_asm --> L4_guard --> L5_llm --> L6_val
     end
 
-    style L1_ing fill:#fff3cd,stroke:#ffc107,color:#000
-    style L2_ret fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style L3_asm fill:#fff3cd,stroke:#ffc107,color:#000
-    style L4_guard fill:#f8d7da,stroke:#dc3545,color:#000
-    style L5_llm fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style L6_val fill:#d4edda,stroke:#28a745,color:#000
-    style I1 fill:#fff3cd,stroke:#ffc107,color:#000
-    style I2 fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style I3 fill:#fff3cd,stroke:#ffc107,color:#000
-    style I4 fill:#f8d7da,stroke:#dc3545,color:#000
-    style I5 fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style I6 fill:#d4edda,stroke:#28a745,color:#000
+    style L1_ing fill:#fff3cd,stroke:#ffc107
+    style L2_ret fill:#f0f4ff,stroke:#2E86C1
+    style L3_asm fill:#fff3cd,stroke:#ffc107
+    style L4_guard fill:#f8d7da,stroke:#dc3545
+    style L5_llm fill:#e2d5f1,stroke:#6f42c1
+    style L6_val fill:#d4edda,stroke:#28a745
+    style I1 fill:#fff3cd,stroke:#ffc107
+    style I2 fill:#f0f4ff,stroke:#2E86C1
+    style I3 fill:#fff3cd,stroke:#ffc107
+    style I4 fill:#f8d7da,stroke:#dc3545
+    style I5 fill:#e2d5f1,stroke:#6f42c1
+    style I6 fill:#d4edda,stroke:#28a745
     style arch fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 

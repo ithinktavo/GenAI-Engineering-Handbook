@@ -22,19 +22,19 @@ Load all your data directly into the prompt. The model reads everything and answ
 
 ```mermaid
 graph TD
-    subgraph LC["🧠 LONG CONTEXT WINDOW"]
+    subgraph LC["LONG CONTEXT WINDOW"]
         S["📋 System prompt ~500 tk"]
-        D1["📄 Document 1 — full text — 5,000 tk"]
-        D2["📄 Document 2 — full text — 8,000 tk"]
-        D3["📄 Document 3 — full text — 3,000 tk"]
-        D4["📄 Document 4 — full text — 6,000 tk"]
-        DN["📄 ... every document you have ...\nDocument N — full text — 12,000 tk"]
+        D1["📄 Document 1 - full text - 5,000 tk"]
+        D2["📄 Document 2 - full text - 8,000 tk"]
+        D3["📄 Document 3 - full text - 3,000 tk"]
+        D4["📄 Document 4 - full text - 6,000 tk"]
+        DN["📄 ... Document N - full text - 12,000 tk"]
         UQ["❓ User question ~100 tk"]
 
         S --> D1 --> D2 --> D3 --> D4 --> DN --> UQ
     end
 
-    T["📊 Total: potentially 100K–2M tokens\nModel reads ALL of it. Every single query."]
+    T["📊 Total: 100K-2M tokens. Model reads ALL of it every query."]
     UQ --> T
 
     style LC fill:#fff3cd,stroke:#ffc107,stroke-width:2px
@@ -56,7 +56,7 @@ Retrieve only the specific pieces relevant to each question. The model reads a f
 
 ```mermaid
 graph TD
-    subgraph RAG["🎯 RAG CONTEXT WINDOW"]
+    subgraph RAG["RAG CONTEXT WINDOW"]
         S["📋 System prompt ~500 tk"]
         C7["✅ Retrieved Chunk 7: Revenue by practice..."]
         C12["✅ Retrieved Chunk 12: Q3 vs Q2 comparison..."]
@@ -66,7 +66,7 @@ graph TD
         S --> C7 --> C12 --> C3 --> UQ
     end
 
-    T["📊 Total: ~3,000–5,000 tokens\nModel reads ONLY what's relevant. Focused."]
+    T["📊 Total: ~3,000-5,000 tokens. Model reads ONLY what's relevant."]
     UQ --> T
 
     style RAG fill:#d4edda,stroke:#28a745,stroke-width:2px
@@ -160,13 +160,13 @@ The 2026 consensus among production teams: **use RAG for retrieval, long context
 
 ```mermaid
 graph TD
-    subgraph HYBRID["🏗️ HYBRID ARCHITECTURE"]
-        DC["💾 FULL DATA CORPUS\nTerabytes of enterprise data\nfinancial, HR, client, tech"]
-        RL["🔍 RAG LAYER — Retrieve\nVector search finds the 10–20 most\nrelevant chunks from the entire corpus"]
+    subgraph HYBRID["HYBRID ARCHITECTURE"]
+        DC["💾 FULL DATA CORPUS - Terabytes of enterprise data"]
+        RL["🔍 RAG LAYER - Find 10-20 most relevant chunks"]
 
-        subgraph CTX["🧠 GENEROUS CONTEXT WINDOW"]
+        subgraph CTX["GENEROUS CONTEXT WINDOW"]
             S["🛡️ System prompt + guardrails"]
-            CH["📁 Retrieved chunks — full sections, not fragments"]
+            CH["📁 Retrieved chunks - full sections, not fragments"]
             HI["💬 Conversation history"]
             UQ["❓ User question"]
         end
@@ -174,7 +174,7 @@ graph TD
         DC --> RL --> CTX
     end
 
-    P["🎯 RAG handles: 'Find the needle' — precision\n🧠 Long context handles: 'Understand the section' — depth"]
+    P["RAG = Find the needle. Long context = Understand the section."]
     CTX --> P
 
     style HYBRID fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
@@ -201,23 +201,23 @@ This combination outperforms either approach alone. RAG provides precision (find
 
 ```mermaid
 graph TD
-    Q1{"📏 How large is your dataset?"}
+    Q1{"How large is your dataset?"}
 
-    Q1 -->|"< 100K tokens\n< 75 pages"| A1["✅ Start with long context\nSimpler, sufficient\nMigrate to RAG when data grows"]
+    Q1 -->|"Under 100K tokens"| A1["✅ Start with long context - simpler, sufficient"]
 
-    Q1 -->|"100K–2M tokens\n75–1,500 pages"| Q2{"🔍 Query type?"}
-    Q2 -->|"Cross-document reasoning"| A2["🔀 Hybrid\nRAG retrieval + long context reasoning"]
-    Q2 -->|"Factual lookups"| A3["🎯 RAG\nFaster, cheaper, more accurate"]
+    Q1 -->|"100K to 2M tokens"| Q2{"Query type?"}
+    Q2 -->|"Cross-document reasoning"| A2["🔀 Hybrid - RAG retrieval + long context reasoning"]
+    Q2 -->|"Factual lookups"| A3["🎯 RAG - Faster, cheaper, more accurate"]
 
-    Q1 -->|"> 2M tokens\n> 1,500 pages"| A4["🎯 RAG is the only option\nNo context window fits this"]
+    Q1 -->|"Over 2M tokens"| A4["🎯 RAG is the only option"]
 
-    subgraph FACTORS["📋 Additional Factors"]
-        F1["🔄 Data changes daily? → RAG"]
-        F2["⚡ Sub-second responses? → RAG"]
-        F3["💰 Cost-sensitive at scale? → RAG"]
-        F4["📖 Need whole-doc reasoning? → Long context or hybrid"]
-        F5["🚀 Building first prototype? → Long context"]
-        F6["🛡️ Regulated environment? → Hybrid with audit trail"]
+    subgraph FACTORS["Additional Factors"]
+        F1["🔄 Data changes daily? Use RAG"]
+        F2["⚡ Sub-second responses? Use RAG"]
+        F3["💰 Cost-sensitive at scale? Use RAG"]
+        F4["📖 Need whole-doc reasoning? Long context or hybrid"]
+        F5["🚀 Building first prototype? Long context"]
+        F6["🛡️ Regulated environment? Hybrid with audit trail"]
     end
 
     style Q1 fill:#fff3cd,stroke:#ffc107,stroke-width:2px

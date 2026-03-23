@@ -20,27 +20,27 @@ Before building defenses, you need to understand what you're defending against.
 
 ```mermaid
 graph TD
-    subgraph threats["🛡️ MCP THREAT MODEL"]
+    subgraph threats["MCP THREAT MODEL"]
         direction LR
         subgraph row1[" "]
             direction LR
-            T1["💉 PROMPT INJECTION\n\nAttacker plants\ninstructions in\ndocuments that\nRAG retrieves"]
-            T2["🔑 CREDENTIAL THEFT\n\nAttacker extracts\nAPI keys from MCP\nconfig via prompt"]
-            T3["📤 DATA EXFILTRATION\n\nAttacker uses tool\ncalls to send data\nto external endpoints"]
+            T1["💉 PROMPT INJECTION - Attacker plants instructions in docs"]
+            T2["🔑 CREDENTIAL THEFT - Attacker extracts API keys via prompt"]
+            T3["📤 DATA EXFILTRATION - Tool calls send data externally"]
         end
         subgraph row2[" "]
             direction LR
-            T4["🚪 UNAUTHED TOOL USE\n\nAI calls tools that\nthe user should not\nhave access to"]
-            T5["👻 SHADOW MCP SERVERS\n\nUnvetted servers\ninstalled without\nsecurity review"]
+            T4["🚪 UNAUTHED TOOL USE - AI calls unauthorized tools"]
+            T5["👻 SHADOW MCP SERVERS - Unvetted servers without review"]
         end
     end
 
-    style T1 fill:#f8d7da,stroke:#dc3545,color:#000
-    style T2 fill:#f8d7da,stroke:#dc3545,color:#000
-    style T3 fill:#f8d7da,stroke:#dc3545,color:#000
-    style T4 fill:#f8d7da,stroke:#dc3545,color:#000
-    style T5 fill:#f8d7da,stroke:#dc3545,color:#000
-    style threats fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#000
+    style T1 fill:#f8d7da,stroke:#dc3545
+    style T2 fill:#f8d7da,stroke:#dc3545
+    style T3 fill:#f8d7da,stroke:#dc3545
+    style T4 fill:#f8d7da,stroke:#dc3545
+    style T5 fill:#f8d7da,stroke:#dc3545
+    style threats fill:#fff3cd,stroke:#ffc107,stroke-width:2px
     style row1 fill:transparent,stroke:none
     style row2 fill:transparent,stroke:none
 ```
@@ -59,16 +59,16 @@ Every MCP request must carry the user's identity and be verified against authori
 
 ```mermaid
 sequenceDiagram
-    participant U as 👤 USER (with identity token)
-    participant C as 🖥️ MCP CLIENT (AI app)
-    participant G as 🔐 AUTH GATEWAY
-    participant S as 🔧 MCP SERVER (tool)
+    participant U as USER
+    participant C as MCP CLIENT
+    participant G as AUTH GATEWAY
+    participant S as MCP SERVER
 
     U->>C: query + JWT token
     C->>G: tool call + user token
-    Note over G: Verify:\n• user identity\n• requested tool\n• data scope\n• time/context
+    Note over G: Verify identity, tool, scope, context
     G->>S: authorized request
-    S->>G: result (user's scope)
+    S->>G: result (user scope)
     G->>C: filtered result
     C->>U: answer
 ```
@@ -111,24 +111,24 @@ Credentials must never be accessible from the AI's context — not in config fil
 
 ```mermaid
 graph TD
-    subgraph cred_flow["🔒 SECURE CREDENTIAL FLOW"]
-        AI["🤖 AI RUNTIME\n\nHas NO direct\naccess to creds"]
-        BROKER["🔑 CREDENTIAL BROKER\n\n• Retrieves creds from OS keychain\n• Injects into MCP request\n• Strips from response"]
-        KEYCHAIN["🗄️ OS KEYCHAIN\n\nmacOS Keychain\nWindows DPAPI\nLinux Secret Service"]
+    subgraph cred_flow["SECURE CREDENTIAL FLOW"]
+        AI["🤖 AI RUNTIME - No direct access to creds"]
+        BROKER["🔑 CREDENTIAL BROKER - Retrieves, injects, strips creds"]
+        KEYCHAIN["🗄️ OS KEYCHAIN - macOS, Windows DPAPI, Linux"]
 
         AI -- "request" --> BROKER
-        BROKER -- "result (clean)" --> AI
+        BROKER -- "result clean" --> AI
         BROKER --> KEYCHAIN
     end
 
     NOTE["The AI never sees credentials. The broker handles auth."]
     cred_flow --> NOTE
 
-    style AI fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style BROKER fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style KEYCHAIN fill:#fff3cd,stroke:#ffc107,color:#000
+    style AI fill:#e2d5f1,stroke:#6f42c1
+    style BROKER fill:#f0f4ff,stroke:#2E86C1
+    style KEYCHAIN fill:#fff3cd,stroke:#ffc107
     style cred_flow fill:#f9f9f9,stroke:#333,stroke-width:2px
-    style NOTE fill:#d4edda,stroke:#28a745,color:#000
+    style NOTE fill:#d4edda,stroke:#28a745
 ```
 
 **Implementation options:**
@@ -213,16 +213,16 @@ A formal vetting pipeline ensures only approved, reviewed MCP servers run in pro
 
 ```mermaid
 graph LR
-    DEV["👨‍💻 DEVELOPER REQUEST\n\nI need a DB MCP"] --> SEC["🔍 SECURITY REVIEW\n\n• Code audit\n• Dependency analysis\n• License check"]
-    SEC --> SCAN["🐳 CONTAINER SCANNING\n\n• Vuln scan\n• SBOM generation\n• Malware check"]
-    SCAN --> BOARD["✅ APPROVAL BOARD\n\n• Security sign-off\n• Compliance sign-off\n• Business sponsor"]
-    BOARD --> REG["📦 REGISTRY (Approved)\n\n• Version-pinned\n• Image digest\n• Network policy"]
+    DEV["👨‍💻 DEV REQUEST - I need a DB MCP"] --> SEC["🔍 SECURITY REVIEW - Code, deps, license"]
+    SEC --> SCAN["🐳 CONTAINER SCAN - Vuln, SBOM, malware"]
+    SCAN --> BOARD["✅ APPROVAL BOARD - Security, compliance, sponsor"]
+    BOARD --> REG["📦 REGISTRY - Version-pinned, signed, policies"]
 
-    style DEV fill:#fff3cd,stroke:#ffc107,color:#000
-    style SEC fill:#f8d7da,stroke:#dc3545,color:#000
-    style SCAN fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style BOARD fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style REG fill:#d4edda,stroke:#28a745,color:#000
+    style DEV fill:#fff3cd,stroke:#ffc107
+    style SEC fill:#f8d7da,stroke:#dc3545
+    style SCAN fill:#f0f4ff,stroke:#2E86C1
+    style BOARD fill:#e2d5f1,stroke:#6f42c1
+    style REG fill:#d4edda,stroke:#28a745
 ```
 
 ### Runtime Enforcement
@@ -246,30 +246,30 @@ Apply Zero Trust principles to every layer of the MCP architecture:
 
 ```mermaid
 graph TD
-    subgraph zt["🛡️ ZERO TRUST MCP ARCHITECTURE"]
+    subgraph zt["ZERO TRUST MCP ARCHITECTURE"]
         subgraph principles[" "]
             direction TB
-            P1["🔒 PRINCIPLE 1: NEVER TRUST, ALWAYS VERIFY\nEvery MCP request is authenticated and authorized,\nregardless of source network."]
-            P2["🔑 PRINCIPLE 2: LEAST PRIVILEGE\nMCP servers get minimum permissions needed.\nRead-only unless write is explicitly needed."]
-            P3["💥 PRINCIPLE 3: ASSUME BREACH\nLog everything. Segment networks.\nLimit blast radius. Rotate credentials."]
+            P1["🔒 NEVER TRUST, ALWAYS VERIFY - Authenticate every request"]
+            P2["🔑 LEAST PRIVILEGE - Minimum permissions needed"]
+            P3["💥 ASSUME BREACH - Log everything, segment networks"]
         end
 
-        USER["👤 USER"] --> IDP["🏢 IDENTITY\nPROVIDER\n(Azure AD)"]
-        IDP --> GW["🔐 AUTH\nGATEWAY"]
-        GW --> MCP["🔧 MCP SERVER\n(isolated)"]
-        GW --> AUDIT["📝 AUDIT LOG\n(immutable)"]
-        MCP --> MON["📊 MONITOR\n(SIEM)"]
+        USER["👤 USER"] --> IDP["🏢 IDENTITY PROVIDER"]
+        IDP --> GW["🔐 AUTH GATEWAY"]
+        GW --> MCP["🔧 MCP SERVER - isolated"]
+        GW --> AUDIT["📝 AUDIT LOG - immutable"]
+        MCP --> MON["📊 MONITOR - SIEM"]
     end
 
-    style P1 fill:#f8d7da,stroke:#dc3545,color:#000
-    style P2 fill:#fff3cd,stroke:#ffc107,color:#000
-    style P3 fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style USER fill:#fff3cd,stroke:#ffc107,color:#000
-    style IDP fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style GW fill:#f8d7da,stroke:#dc3545,color:#000
-    style MCP fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style AUDIT fill:#d4edda,stroke:#28a745,color:#000
-    style MON fill:#d4edda,stroke:#28a745,color:#000
+    style P1 fill:#f8d7da,stroke:#dc3545
+    style P2 fill:#fff3cd,stroke:#ffc107
+    style P3 fill:#f0f4ff,stroke:#2E86C1
+    style USER fill:#fff3cd,stroke:#ffc107
+    style IDP fill:#e2d5f1,stroke:#6f42c1
+    style GW fill:#f8d7da,stroke:#dc3545
+    style MCP fill:#f0f4ff,stroke:#2E86C1
+    style AUDIT fill:#d4edda,stroke:#28a745
+    style MON fill:#d4edda,stroke:#28a745
     style zt fill:#f9f9f9,stroke:#333,stroke-width:2px
     style principles fill:transparent,stroke:none
 ```

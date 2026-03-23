@@ -14,7 +14,7 @@ The Model Context Protocol (MCP) is an open standard for connecting AI models to
 
 ```mermaid
 graph LR
-    subgraph Before ["❌ BEFORE MCP — 9 custom integrations"]
+    subgraph Before ["BEFORE MCP - 9 custom integrations"]
         A1["🤖 AI Tool A"] -- "custom" --> S1a["System 1"]
         A1 -- "custom" --> S2a["System 2"]
         A1 -- "custom" --> S3a["System 3"]
@@ -26,7 +26,7 @@ graph LR
         C1 -- "custom" --> S3c["System 3"]
     end
 
-    subgraph After ["✅ WITH MCP — 1 standard protocol"]
+    subgraph After ["WITH MCP - 1 standard protocol"]
         A2["🤖 AI Tool A"] --> MCP["🔌 MCP Protocol"]
         B2["🤖 AI Tool B"] --> MCP
         C2["🤖 AI Tool C"] --> MCP
@@ -36,9 +36,9 @@ graph LR
         MCP --> S4["System 4"]
     end
 
-    style MCP fill:#d4edda,stroke:#28a745,color:#000
-    style Before fill:#f8d7da,stroke:#dc3545,color:#000
-    style After fill:#d4edda,stroke:#28a745,color:#000
+    style MCP fill:#d4edda,stroke:#28a745
+    style Before fill:#f8d7da,stroke:#dc3545
+    style After fill:#d4edda,stroke:#28a745
 ```
 
 ---
@@ -49,18 +49,18 @@ MCP uses a client-server architecture built on JSON-RPC 2.0:
 
 ```mermaid
 graph LR
-    User["👤 USER\nWhat's Q3 revenue?"]
-    Client["🤖 MCP CLIENT\nAI app\nSends query to LLM +\ntools info\nLLM decides which\ntool to call"]
-    Server["🔧 MCP SERVER\ntool/data\nQueries DB\nReturns data"]
+    User["👤 USER - What's Q3 revenue?"]
+    Client["🤖 MCP CLIENT - AI app, sends query, picks tool"]
+    Server["🔧 MCP SERVER - Queries DB, returns data"]
 
     User -- "prompt" --> Client
     Client -- "JSON-RPC" --> Server
     Server -- "result" --> Client
     Client -- "answer: $42M, up 12% YoY" --> User
 
-    style User fill:#fff3cd,stroke:#ffc107,color:#000
-    style Client fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style Server fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style User fill:#fff3cd,stroke:#ffc107
+    style Client fill:#e2d5f1,stroke:#6f42c1
+    style Server fill:#f0f4ff,stroke:#2E86C1
 ```
 
 **Step by step:**

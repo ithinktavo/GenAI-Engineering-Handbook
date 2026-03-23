@@ -62,10 +62,10 @@ Agents can evaluate their own outputs and retry when something fails. If a datab
 
 ```mermaid
 graph TD
-    Goal["🎯 GOAL\nPrepare Q3 deck"]
-    Planner["🧠 PLANNER\nBreak goal into steps"]
-    Executor["🔧 EXECUTOR\nRun current step using tools"]
-    Evaluator["🔍 EVALUATOR\nDid it work? Good enough?"]
+    Goal["🎯 GOAL - Prepare Q3 deck"]
+    Planner["🧠 PLANNER - Break goal into steps"]
+    Executor["🔧 EXECUTOR - Run current step using tools"]
+    Evaluator["🔍 EVALUATOR - Did it work?"]
     Success["✅ Success"]
     Fail["❌ Fail"]
     NextStep["➡️ NEXT STEP"]
@@ -79,13 +79,13 @@ graph TD
     Success --> NextStep
     NextStep -- "until all steps done" --> Planner
 
-    style Goal fill:#fff3cd,stroke:#ffc107,color:#000
-    style Planner fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style Executor fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Evaluator fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Success fill:#d4edda,stroke:#28a745,color:#000
-    style Fail fill:#f8d7da,stroke:#dc3545,color:#000
-    style NextStep fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Goal fill:#fff3cd,stroke:#ffc107
+    style Planner fill:#e2d5f1,stroke:#6f42c1
+    style Executor fill:#f0f4ff,stroke:#2E86C1
+    style Evaluator fill:#f0f4ff,stroke:#2E86C1
+    style Success fill:#d4edda,stroke:#28a745
+    style Fail fill:#f8d7da,stroke:#dc3545
+    style NextStep fill:#f0f4ff,stroke:#2E86C1
 ```
 
 ---
@@ -100,14 +100,14 @@ Agents execute in a fixed, linear order. Each agent's output becomes the next ag
 
 ```mermaid
 graph LR
-    Data["📁 DATA AGENT\nPull raw data\nfrom database"]
-    Analysis["📊 ANALYSIS AGENT\nRun analysis\nand compare to targets"]
-    Chart["📈 CHART AGENT\nGenerate visuals\nfrom data"]
-    Report["📄 REPORT AGENT\nAssemble final\nreport"]
+    Data["📁 DATA AGENT - Pull raw data from database"]
+    Analysis["📊 ANALYSIS AGENT - Run analysis and compare"]
+    Chart["📈 CHART AGENT - Generate visuals from data"]
+    Report["📄 REPORT AGENT - Assemble final report"]
 
     Data --> Analysis --> Chart --> Report
 
-    subgraph State ["📦 State is passed forward through each step"]
+    subgraph State ["State is passed forward through each step"]
         direction LR
         Data
         Analysis
@@ -115,11 +115,11 @@ graph LR
         Report
     end
 
-    style Data fill:#fff3cd,stroke:#ffc107,color:#000
-    style Analysis fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Chart fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Report fill:#d4edda,stroke:#28a745,color:#000
-    style State fill:#f9f9f9,stroke:#ccc,color:#000
+    style Data fill:#fff3cd,stroke:#ffc107
+    style Analysis fill:#f0f4ff,stroke:#2E86C1
+    style Chart fill:#f0f4ff,stroke:#2E86C1
+    style Report fill:#d4edda,stroke:#28a745
+    style State fill:#f9f9f9,stroke:#ccc
 ```
 
 **When to use:** Clear linear dependencies where each step needs the previous step's output. Document processing pipelines, data transformation workflows.
@@ -141,21 +141,21 @@ graph TD
     FinData["Revenue data"]
     HRData["Headcount data"]
     ClientData["Client satisfaction"]
-    Agg["📊 Aggregator\nCombine all results"]
+    Agg["📊 Aggregator - Combine all results"]
 
     Coord --> Fin & HR & Client
     Fin --> FinData --> Agg
     HR --> HRData --> Agg
     Client --> ClientData --> Agg
 
-    style Coord fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style HR fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Client fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style FinData fill:#fff3cd,stroke:#ffc107,color:#000
-    style HRData fill:#fff3cd,stroke:#ffc107,color:#000
-    style ClientData fill:#fff3cd,stroke:#ffc107,color:#000
-    style Agg fill:#d4edda,stroke:#28a745,color:#000
+    style Coord fill:#e2d5f1,stroke:#6f42c1
+    style Fin fill:#f0f4ff,stroke:#2E86C1
+    style HR fill:#f0f4ff,stroke:#2E86C1
+    style Client fill:#f0f4ff,stroke:#2E86C1
+    style FinData fill:#fff3cd,stroke:#ffc107
+    style HRData fill:#fff3cd,stroke:#ffc107
+    style ClientData fill:#fff3cd,stroke:#ffc107
+    style Agg fill:#d4edda,stroke:#28a745
 ```
 
 **When to use:** Independent sub-tasks that don't depend on each other. Data collection from multiple sources, multi-market analysis.
@@ -170,7 +170,7 @@ A central "supervisor" agent delegates tasks to specialized workers based on the
 
 ```mermaid
 graph TD
-    Sup["🤖 SUPERVISOR\nRoutes to right agent"]
+    Sup["🤖 SUPERVISOR - Routes to right agent"]
     Fin["💰 Finance Expert"]
     Tech["💻 Tech Expert"]
     HR["👥 HR Expert"]
@@ -180,10 +180,10 @@ graph TD
     Tech -- "results" --> Sup
     HR -- "results" --> Sup
 
-    style Sup fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Tech fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style HR fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Sup fill:#e2d5f1,stroke:#6f42c1
+    style Fin fill:#f0f4ff,stroke:#2E86C1
+    style Tech fill:#f0f4ff,stroke:#2E86C1
+    style HR fill:#f0f4ff,stroke:#2E86C1
 ```
 
 **When to use:** Diverse query types that require different expertise. A C-suite dashboard where questions could be about finance, HR, clients, or technology — each routed to a specialized agent.
@@ -196,15 +196,15 @@ Agents handle different phases of a workflow, passing context at transition poin
 
 ```mermaid
 graph LR
-    Intake["📥 Intake Agent\nUnderstand the request,\nclassify, gather context"]
-    Research["🔍 Research Agent\nResearch and analyze data,\ngenerate options,\nmake recommendation"]
-    Action["⚡ Action Agent\nExecute the recommended\naction with human approval"]
+    Intake["📥 Intake Agent - Understand, classify, gather context"]
+    Research["🔍 Research Agent - Analyze data, recommend"]
+    Action["⚡ Action Agent - Execute with human approval"]
 
     Intake -- "handoff" --> Research -- "handoff" --> Action
 
-    style Intake fill:#fff3cd,stroke:#ffc107,color:#000
-    style Research fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Action fill:#d4edda,stroke:#28a745,color:#000
+    style Intake fill:#fff3cd,stroke:#ffc107
+    style Research fill:#f0f4ff,stroke:#2E86C1
+    style Action fill:#d4edda,stroke:#28a745
 ```
 
 **When to use:** Workflow phases that require fundamentally different capabilities. Customer service (intake → investigation → resolution), document review (classify → analyze → summarize).
@@ -221,19 +221,19 @@ In enterprise environments — especially in government and financial services �
 
 ```mermaid
 graph TD
-    L4["🚀 Level 4: AUTOMATE\nAgent handles end-to-end for low-risk tasks\nHuman monitors via dashboards"]
-    L3["⚡ Level 3: ACT\nAgent executes routine actions autonomously\nHuman reviews after the fact"]
-    L2["💡 Level 2: RECOMMEND\nAgent analyzes data and recommends action\nHuman approves or rejects"]
-    L1["📋 Level 1: INFORM ← START HERE\nAgent finds data and presents it\nHuman makes all decisions"]
+    L4["🚀 Level 4: AUTOMATE - Agent handles end-to-end"]
+    L3["⚡ Level 3: ACT - Agent executes, human reviews after"]
+    L2["💡 Level 2: RECOMMEND - Agent recommends, human approves"]
+    L1["📋 Level 1: INFORM - Agent presents data, human decides"]
 
     L1 -- "⬆️ More autonomy" --> L2
     L2 -- "⬆️ More autonomy" --> L3
     L3 -- "⬆️ More autonomy" --> L4
 
-    style L4 fill:#d4edda,stroke:#28a745,color:#000
-    style L3 fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style L2 fill:#fff3cd,stroke:#ffc107,color:#000
-    style L1 fill:#f8d7da,stroke:#dc3545,color:#000
+    style L4 fill:#d4edda,stroke:#28a745
+    style L3 fill:#f0f4ff,stroke:#2E86C1
+    style L2 fill:#fff3cd,stroke:#ffc107
+    style L1 fill:#f8d7da,stroke:#dc3545
 ```
 
 **The principle:** Start at Level 1. Earn trust through accuracy and reliability. Gradually move up the ladder. Never skip levels for high-stakes operations.
@@ -262,34 +262,34 @@ For the C-suite dashboard: the GenAI chat interface should be Level 1-2. It info
 
 ```mermaid
 graph TD
-    subgraph App ["🖥️ APPLICATION"]
-        UI["💬 USER INTERFACE\nChat, dashboard, Slack, email"]
-        Runtime["🤖 AGENT RUNTIME\nMicrosoft Agent Framework, LangGraph, n8n, CrewAI"]
+    subgraph App ["APPLICATION"]
+        UI["💬 USER INTERFACE - Chat, dashboard, Slack, email"]
+        Runtime["🤖 AGENT RUNTIME - Agent Framework, LangGraph, CrewAI"]
     end
 
-    subgraph Ops ["⚙️ OPERATIONAL LAYERS"]
-        Tools["🔧 TOOLS & INTEGRATIONS\nMCP servers, APIs, databases, file systems"]
-        Knowledge["📚 KNOWLEDGE LAYER\nRAG pipeline, vector databases, memory"]
-        Models["🧠 MODELS\nGPT-5, Claude, Codex — routed by task type"]
+    subgraph Ops ["OPERATIONAL LAYERS"]
+        Tools["🔧 TOOLS - MCP servers, APIs, databases, file systems"]
+        Knowledge["📚 KNOWLEDGE - RAG pipeline, vector DBs, memory"]
+        Models["🧠 MODELS - GPT-5, Claude, Codex"]
     end
 
-    subgraph Foundation ["🏗️ FOUNDATION LAYERS"]
-        Gov["🛡️ GOVERNANCE\nAccess controls, audit logging,\nguardrails, compliance policies"]
-        Infra["☁️ INFRASTRUCTURE\nAzure AI Foundry, containerized execution,\nvirtual networks, FedRAMP compliance"]
+    subgraph Foundation ["FOUNDATION LAYERS"]
+        Gov["🛡️ GOVERNANCE - Access controls, audit, guardrails"]
+        Infra["☁️ INFRASTRUCTURE - Azure AI Foundry, FedRAMP"]
     end
 
     UI --> Runtime --> Tools --> Knowledge --> Models --> Gov --> Infra
 
-    style UI fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Runtime fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style Tools fill:#fff3cd,stroke:#ffc107,color:#000
-    style Knowledge fill:#fff3cd,stroke:#ffc107,color:#000
-    style Models fill:#e2d5f1,stroke:#6f42c1,color:#000
-    style Gov fill:#f8d7da,stroke:#dc3545,color:#000
-    style Infra fill:#f8d7da,stroke:#dc3545,color:#000
-    style App fill:#f0f4ff,stroke:#2E86C1,color:#000
-    style Ops fill:#fff3cd,stroke:#ffc107,color:#000
-    style Foundation fill:#f8d7da,stroke:#dc3545,color:#000
+    style UI fill:#f0f4ff,stroke:#2E86C1
+    style Runtime fill:#e2d5f1,stroke:#6f42c1
+    style Tools fill:#fff3cd,stroke:#ffc107
+    style Knowledge fill:#fff3cd,stroke:#ffc107
+    style Models fill:#e2d5f1,stroke:#6f42c1
+    style Gov fill:#f8d7da,stroke:#dc3545
+    style Infra fill:#f8d7da,stroke:#dc3545
+    style App fill:#f0f4ff,stroke:#2E86C1
+    style Ops fill:#fff3cd,stroke:#ffc107
+    style Foundation fill:#f8d7da,stroke:#dc3545
 ```
 
 ---
