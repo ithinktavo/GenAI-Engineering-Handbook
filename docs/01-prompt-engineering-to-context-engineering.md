@@ -551,7 +551,7 @@ graph TD
     style OUT fill:#d4edda,stroke:#28a745,color:#333
 ```
 
-### Key Takeaway for the Director Interview
+### Key Takeaway
 
 > "The way I think about building the GenAI layer for the dashboard is context engineering — not just prompt engineering. The system prompt defines the AI's role and constraints. RAG retrieves the specific business data needed to answer each question accurately. Memory management keeps the conversation context without exceeding limits. Tools let the AI query live data sources when needed. And guardrails ensure the AI never hallucinates a number or exposes data someone shouldn't see. Every one of those components has to work together. Prompt engineering is the foundation, but it's one piece of a much larger architecture."
 
