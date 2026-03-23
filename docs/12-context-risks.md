@@ -102,9 +102,9 @@ Stanford's research demonstrated that LLM accuracy follows a U-shaped curve base
 graph LR
     subgraph chart["Accuracy vs Position - Lost in the Middle"]
         direction LR
-        B["✅ BEGINNING - 95-100% accuracy"]
-        M["❌ MIDDLE - 60-65% accuracy, danger zone"]
-        E["✅ END - 95-100% accuracy"]
+        B["BEGINNING - 95-100% accuracy"]
+        M["MIDDLE - 60-65% accuracy, danger zone"]
+        E["END - 95-100% accuracy"]
 
         B -.->|"accuracy drops"| M -.->|"accuracy recovers"| E
     end
@@ -207,17 +207,17 @@ When the total context (system prompt + memory + retrieved data + conversation h
 graph TD
     subgraph budget["CONTEXT WINDOW BUDGET - 128K tokens"]
         direction TB
-        S["🔒 SYSTEM PROMPT - fixed, ~500 tokens"]
-        R["📚 RETRIEVED CONTEXT - variable, ~2K-8K tokens"]
-        H["💬 CONVERSATION HISTORY - growing, ~1K-10K tokens"]
-        Q["❓ USER QUESTION - small, ~50-200 tokens"]
-        RS["✍️ RESPONSE SPACE - reserved, ~500-2K tokens"]
-        B["🛡️ BUFFER - safety margin, ~1K tokens"]
+        S["SYSTEM PROMPT - fixed, ~500 tokens"]
+        R["RETRIEVED CONTEXT - variable, ~2K-8K tokens"]
+        H["CONVERSATION HISTORY - growing, ~1K-10K tokens"]
+        Q["USER QUESTION - small, ~50-200 tokens"]
+        RS["RESPONSE SPACE - reserved, ~500-2K tokens"]
+        B["BUFFER - safety margin, ~1K tokens"]
 
         S --> R --> H --> Q --> RS --> B
     end
 
-    TRIM["⚠️ Trim priority: 1. Never trim system prompt 2. Summarize history 3. Reduce chunks 4. Keep response space"]
+    TRIM["Trim priority: 1. Never trim system prompt 2. Summarize history 3. Reduce chunks 4. Keep response space"]
     budget --> TRIM
 
     style S fill:#f8d7da,stroke:#dc3545

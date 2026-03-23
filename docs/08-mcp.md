@@ -15,21 +15,21 @@ The Model Context Protocol (MCP) is an open standard for connecting AI models to
 ```mermaid
 graph LR
     subgraph Before ["BEFORE MCP - 9 custom integrations"]
-        A1["🤖 AI Tool A"] -- "custom" --> S1a["System 1"]
+        A1["AI Tool A"] -- "custom" --> S1a["System 1"]
         A1 -- "custom" --> S2a["System 2"]
         A1 -- "custom" --> S3a["System 3"]
-        B1["🤖 AI Tool B"] -- "custom" --> S1b["System 1"]
+        B1["AI Tool B"] -- "custom" --> S1b["System 1"]
         B1 -- "custom" --> S2b["System 2"]
         B1 -- "custom" --> S3b["System 3"]
-        C1["🤖 AI Tool C"] -- "custom" --> S1c["System 1"]
+        C1["AI Tool C"] -- "custom" --> S1c["System 1"]
         C1 -- "custom" --> S2c["System 2"]
         C1 -- "custom" --> S3c["System 3"]
     end
 
     subgraph After ["WITH MCP - 1 standard protocol"]
-        A2["🤖 AI Tool A"] --> MCP["🔌 MCP Protocol"]
-        B2["🤖 AI Tool B"] --> MCP
-        C2["🤖 AI Tool C"] --> MCP
+        A2["AI Tool A"] --> MCP["MCP Protocol"]
+        B2["AI Tool B"] --> MCP
+        C2["AI Tool C"] --> MCP
         MCP --> S1["System 1"]
         MCP --> S2["System 2"]
         MCP --> S3["System 3"]
@@ -49,9 +49,9 @@ MCP uses a client-server architecture built on JSON-RPC 2.0:
 
 ```mermaid
 graph LR
-    User["👤 USER - What's Q3 revenue?"]
-    Client["🤖 MCP CLIENT - AI app, sends query, picks tool"]
-    Server["🔧 MCP SERVER - Queries DB, returns data"]
+    User["USER - What's Q3 revenue?"]
+    Client["MCP CLIENT - AI app, sends query, picks tool"]
+    Server["MCP SERVER - Queries DB, returns data"]
 
     User -- "prompt" --> Client
     Client -- "JSON-RPC" --> Server

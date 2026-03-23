@@ -19,20 +19,20 @@ There are two paths in every RAG system — the **indexing path** (one-time, whe
 ```mermaid
 graph TD
     subgraph INDEX["INDEXING PATH - offline"]
-        D1["📁 DOCUMENTS - PDFs, DBs, APIs, wikis"]
-        D2["✂️ CHUNKING - Split into small pieces"]
-        D3["🔢 EMBEDDING - Convert to vectors"]
-        D4["🗄️ VECTOR DB - Store and index"]
+        D1["DOCUMENTS - PDFs, DBs, APIs, wikis"]
+        D2["CHUNKING - Split into small pieces"]
+        D3["EMBEDDING - Convert to vectors"]
+        D4["VECTOR DB - Store and index"]
         D1 --> D2 --> D3 --> D4
     end
 
     subgraph QUERY["QUERY PATH - every question"]
-        Q1["❓ USER QUESTION - What was Q3 revenue?"]
-        Q2["🔢 EMBEDDING - Convert query to vector"]
-        Q3["🔍 RETRIEVAL - Find nearest vectors in DB"]
-        Q4["🎯 RERANKING - Score and reorder"]
-        Q5["📋 PROMPT ASSEMBLY - System prompt + context + query"]
-        Q6["🤖 LLM - Generate answer grounded in data"]
+        Q1["USER QUESTION - What was Q3 revenue?"]
+        Q2["EMBEDDING - Convert query to vector"]
+        Q3["RETRIEVAL - Find nearest vectors in DB"]
+        Q4["RERANKING - Score and reorder"]
+        Q5["PROMPT ASSEMBLY - System prompt + context + query"]
+        Q6["LLM - Generate answer grounded in data"]
         Q1 --> Q2 --> Q3 --> Q4 --> Q5 --> Q6
     end
 
@@ -94,16 +94,16 @@ Split text into chunks of N tokens with optional overlap.
 
 ```mermaid
 graph TD
-    DOC["📄 Document: Revenue reached $42M in Q3..."]
+    DOC["Document: Revenue reached $42M in Q3..."]
 
     subgraph NO_OL["Fixed-size - 50 tokens, no overlap"]
-        A1["✂️ Chunk 1: Revenue reached $42M...defense grew 18%"]
-        A2["✂️ Chunk 2: Financial services slowed 5%...health +15%"]
+        A1["Chunk 1: Revenue reached $42M...defense grew 18%"]
+        A2["Chunk 2: Financial services slowed 5%...health +15%"]
     end
 
     subgraph OL["Fixed-size - 50 tokens, 20% overlap"]
-        B1["✂️ Chunk 1: Revenue reached $42M...defense grew 18%"]
-        B2["🔄 Chunk 2: Defense grew 18%...services slowed 5%"]
+        B1["Chunk 1: Revenue reached $42M...defense grew 18%"]
+        B2["Chunk 2 overlap: Defense grew 18%...services slowed 5%"]
     end
 
     DOC --> NO_OL
@@ -141,16 +141,16 @@ Two levels: parent chunks (full sections) and child chunks (paragraphs within se
 
 ```mermaid
 graph TD
-    P["📁 Parent chunk: Q3 2025 Financial Performance Summary"]
-    C1["📄 Child 1: 'Total revenue for Q3 reached $42.3M...'"]
-    C2["🎯 Child 2: 'Revenue by practice area: Defense...'"]
-    C3["📄 Child 3: 'Gross margin improved to 38.5%...'"]
-    R["✅ Return Child 2 + Parent for full context"]
+    P["Parent chunk: Q3 2025 Financial Performance Summary"]
+    C1["Child 1: Total revenue for Q3 reached $42.3M..."]
+    C2["Child 2: Revenue by practice area: Defense..."]
+    C3["Child 3: Gross margin improved to 38.5%..."]
+    R["Return Child 2 + Parent for full context"]
 
     P --> C1
     P --> C2
     P --> C3
-    C2 -->|"🔍 Search matches"| R
+    C2 -->|"Search matches"| R
 
     style P fill:#fff3cd,stroke:#ffc107,stroke-width:2px
     style C1 fill:#f0f4ff,stroke:#2E86C1
@@ -193,10 +193,10 @@ The embedding model determines how well your system understands meaning. It conv
 
 ```mermaid
 graph LR
-    T1["📝 'Q3 revenue was $42 million'"] -->|Embed| V1["🔢 [0.023, -0.156, 0.891, ...] - 384-3072 dims"]
-    T2["📝 'Third quarter sales figures'"] -->|Embed| V2["🔢 [0.019, -0.148, 0.887, ...] - Similar meaning"]
+    T1["Q3 revenue was $42 million"] -->|Embed| V1["Vector: 0.023, -0.156, 0.891, ... - 384-3072 dims"]
+    T2["Third quarter sales figures"] -->|Embed| V2["Vector: 0.019, -0.148, 0.887, ... - Similar meaning"]
 
-    V1 <-.->|"✅ High similarity"| V2
+    V1 <-.->|"High similarity"| V2
 
     style T1 fill:#fff3cd,stroke:#ffc107
     style T2 fill:#fff3cd,stroke:#ffc107
@@ -233,17 +233,17 @@ Vector databases are purpose-built for storing embeddings and running similarity
 
 ```mermaid
 graph TD
-    Q["🔍 Query vector: [0.023, -0.156, 0.891, ...]"]
+    Q["Query vector: 0.023, -0.156, 0.891, ..."]
 
     subgraph VDB["VECTOR DATABASE"]
-        C1["📄 Chunk 1: [0.019, ...] dist: 0.04 ✅"]
-        C2["📄 Chunk 2: [0.812, ...] dist: 0.73 ❌"]
-        C3["📄 Chunk 3: [0.025, ...] dist: 0.03 ✅"]
-        C4["📄 Chunk 4: [0.567, ...] dist: 0.51 ❌"]
-        C5["📄 Chunk 5: [0.021, ...] dist: 0.05 ✅"]
+        C1["Chunk 1: 0.019, ... dist: 0.04 - match"]
+        C2["Chunk 2: 0.812, ... dist: 0.73 - skip"]
+        C3["Chunk 3: 0.025, ... dist: 0.03 - match"]
+        C4["Chunk 4: 0.567, ... dist: 0.51 - skip"]
+        C5["Chunk 5: 0.021, ... dist: 0.05 - match"]
     end
 
-    R["🎯 Top 3 results: Chunk 3, Chunk 1, Chunk 5"]
+    R["Top 3 results: Chunk 3, Chunk 1, Chunk 5"]
 
     Q --> VDB
     C3 --> R
@@ -292,23 +292,23 @@ Run both searches, combine results. This is the production standard — it catch
 
 ```mermaid
 graph TD
-    Q["❓ User query: 'Q3 book-to-bill ratio'"]
+    Q["User query: Q3 book-to-bill ratio"]
 
     Q --> VS
     Q --> KS
 
     subgraph VS["Vector Search"]
-        V1["✅ 'New bookings in Q3 totaled $38M'"]
-        V2["✅ 'Revenue reached $42.3 million'"]
-        V3["✅ 'Backlog stands at $127M'"]
+        V1["New bookings in Q3 totaled $38M"]
+        V2["Revenue reached $42.3 million"]
+        V3["Backlog stands at $127M"]
     end
 
     subgraph KS["Keyword Search"]
-        K1["✅ 'book-to-bill ratio of 0.90'"]
-        K2["❌ only exact keyword matches"]
+        K1["book-to-bill ratio of 0.90"]
+        K2["only exact keyword matches"]
     end
 
-    VS --> H["🎯 Hybrid: combines both - Best results"]
+    VS --> H["Hybrid: combines both - Best results"]
     KS --> H
 
     style Q fill:#fff3cd,stroke:#ffc107,stroke-width:2px
@@ -329,21 +329,21 @@ Initial retrieval casts a wide net — top 10-20 results. A **reranker** then sc
 ```mermaid
 graph LR
     subgraph BEFORE["Initial Retrieval - top 5"]
-        B1["1. Revenue data — 0.82"]
-        B2["2. Headcount data — 0.78"]
-        B3["3. Book-to-bill ratio — 0.75"]
-        B4["4. Client satisfaction — 0.73"]
-        B5["5. Backlog data — 0.71"]
+        B1["1. Revenue data - 0.82"]
+        B2["2. Headcount data - 0.78"]
+        B3["3. Book-to-bill ratio - 0.75"]
+        B4["4. Client satisfaction - 0.73"]
+        B5["5. Backlog data - 0.71"]
     end
 
     BEFORE -->|"Rerank"| AFTER
 
     subgraph AFTER["After Reranking"]
-        A1["1. Book-to-bill ratio — 0.95 ⬆️"]
-        A2["2. Revenue data — 0.88"]
-        A3["3. Backlog data — 0.82 ⬆️"]
-        A4["4. Headcount data — 0.45 ⬇️"]
-        A5["5. Client satisfaction — 0.31 ⬇️"]
+        A1["1. Book-to-bill ratio - 0.95 UP"]
+        A2["2. Revenue data - 0.88"]
+        A3["3. Backlog data - 0.82 UP"]
+        A4["4. Headcount data - 0.45 DOWN"]
+        A5["5. Client satisfaction - 0.31 DOWN"]
     end
 
     style BEFORE fill:#fff3cd,stroke:#ffc107,stroke-width:2px
@@ -370,9 +370,9 @@ The final step before the LLM: assembling all retrieved context into a well-stru
 ```mermaid
 graph TD
     subgraph PROMPT["RAG Prompt Assembly"]
-        S["🛡️ SYSTEM PROMPT - Answer based ONLY on provided context"]
-        C["📁 RETRIEVED CONTEXT - Q3 Financial Summary + Q3 Client Report"]
-        U["❓ USER QUESTION - How did performance relate to client acquisition?"]
+        S["SYSTEM PROMPT - Answer based ONLY on provided context"]
+        C["RETRIEVED CONTEXT - Q3 Financial Summary + Q3 Client Report"]
+        U["USER QUESTION - How did performance relate to client acquisition?"]
 
         S --> C --> U
     end
@@ -390,11 +390,11 @@ The context window has a fixed size. You need to allocate it wisely:
 ```mermaid
 graph TD
     subgraph BUDGET["Context Window Budget - 128K tokens"]
-        A["📋 System prompt - ~500 tokens, fixed"]
-        B["📁 Retrieved context - ~2,000 tokens, variable"]
-        C["❓ User question - ~100 tokens"]
-        D["🤖 Response space - ~1,000 tokens, reserved"]
-        E["✅ Available - ~124,400 tokens, plenty of room"]
+        A["System prompt - ~500 tokens, fixed"]
+        B["Retrieved context - ~2,000 tokens, variable"]
+        C["User question - ~100 tokens"]
+        D["Response space - ~1,000 tokens, reserved"]
+        E["Available - ~124,400 tokens, plenty of room"]
 
         A --> B --> C --> D --> E
     end
@@ -436,21 +436,21 @@ Building the pipeline is half the work. Measuring whether it actually works well
 
 ```mermaid
 graph TD
-    Q1{"🤔 Need AI to answer questions about private/current data?"}
-    Q1 -->|No| A1["✅ Standard LLM with good prompting is sufficient"]
-    Q1 -->|Yes| Q2{"📏 Data under 100 docs and 100K tokens?"}
+    Q1{"Need AI to answer questions about private/current data?"}
+    Q1 -->|No| A1["Standard LLM with good prompting is sufficient"]
+    Q1 -->|Yes| Q2{"Data under 100 docs and 100K tokens?"}
 
-    Q2 -->|Yes| A2["✅ Consider long context first - simpler"]
-    Q2 -->|No| A3["🎯 RAG is the right choice"]
+    Q2 -->|Yes| A2["Consider long context first - simpler"]
+    Q2 -->|No| Q3{"Data changes frequently?"}
 
-    Q1 -->|Yes| Q3{"🔄 Data changes frequently?"}
-    Q3 -->|Yes| A4["🎯 RAG - update index incrementally"]
+    Q3 -->|Yes| A4["RAG - update index incrementally"]
+    Q3 -->|No| Q4{"Need sub-second response times?"}
 
-    Q1 -->|Yes| Q4{"⚡ Need sub-second response times?"}
-    Q4 -->|Yes| A5["🎯 RAG - long context = 30-60s at 1M tokens"]
+    Q4 -->|Yes| A5["RAG - long context = 30-60s at 1M tokens"]
+    Q4 -->|No| Q5{"Data measured in terabytes?"}
 
-    Q1 -->|Yes| Q5{"💾 Data measured in terabytes?"}
-    Q5 -->|Yes| A6["🎯 RAG is the only viable option"]
+    Q5 -->|Yes| A6["RAG is the only viable option"]
+    Q5 -->|No| A3["RAG is the right choice for most enterprise use cases"]
 
     style Q1 fill:#fff3cd,stroke:#ffc107,stroke-width:2px
     style Q2 fill:#fff3cd,stroke:#ffc107

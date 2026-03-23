@@ -148,11 +148,12 @@ This is where prompt engineering alone breaks down — and why Context Engineeri
 Every LLM has a **knowledge cutoff date** — the point at which its training data ends. After that date, the model knows nothing. It doesn't know today's stock price, last quarter's revenue, your company's policies, or the email your CEO sent this morning.
 
 ```mermaid
-block-beta
-    columns 3
-    A["🟢 TRAINING DATA - Books, internet, code, research"]:1
-    B["🔴 KNOWLEDGE CUTOFF - Model knows nothing after this"]:1
-    C["🟡 TODAY - Your questions need context injection"]:1
+graph LR
+    A["TRAINING DATA - Books, internet, code, research"]
+    B["KNOWLEDGE CUTOFF - Model knows nothing after this"]
+    C["TODAY - Your questions need context injection"]
+
+    A --> B --> C
 
     style A fill:#d4edda,stroke:#28a745
     style B fill:#f8d7da,stroke:#dc3545
@@ -210,16 +211,16 @@ graph TB
     subgraph CE["CONTEXT ENGINEERING"]
         direction TB
         subgraph row1[" "]
-            SP["🎯 SYSTEM PROMPT - Role, rules, constraints"]
-            MM["🧠 MEMORY - Short-term, Long-term, Working"]
+            SP["SYSTEM PROMPT - Role, rules, constraints"]
+            MM["MEMORY - Short-term, Long-term, Working"]
         end
         subgraph row2[" "]
-            RAG["📄 RAG - Retrieved documents and data chunks"]
-            SM["📊 STATE MGMT - Workflow tracking"]
+            RAG["RAG - Retrieved documents and data chunks"]
+            SM["STATE MGMT - Workflow tracking"]
         end
         subgraph row3[" "]
-            TOOLS["🔧 TOOLS - APIs, DBs, functions via MCP"]
-            GUARD["🛡️ GUARDRAILS - Access controls, safety"]
+            TOOLS["TOOLS - APIs, DBs, functions via MCP"]
+            GUARD["GUARDRAILS - Access controls, safety"]
         end
     end
 
@@ -354,23 +355,24 @@ The context window isn't infinite. Even at 1M tokens, you have to be strategic a
 
 ```mermaid
 graph TD
+    VDB[("VECTOR DATABASE - Store and search by meaning")]
+
     subgraph indexing["INDEXING PATH - one-time"]
-        D["📁 Document Store - PDFs, DBs, APIs"] --> CH["✂️ Chunking - Split docs into pieces"]
-        CH --> EMB1["🔢 Embedding - Convert chunks to vectors"]
-        EMB1 --> VDB
+        D["Document Store - PDFs, DBs, APIs"] --> CH["Chunking - Split docs into pieces"]
+        CH --> EMB1["Embedding - Convert chunks to vectors"]
     end
 
     subgraph query["QUERY PATH - every question"]
-        Q["❓ User Question - What was Q3 revenue?"] --> EMB2["🔢 Embedding - Convert question to vector"]
-        EMB2 --> VDB
+        Q["User Question - What was Q3 revenue?"] --> EMB2["Embedding - Convert question to vector"]
     end
 
-    VDB[("🗄️ VECTOR DATABASE - Store and search by meaning")]
+    EMB1 --> VDB
+    EMB2 --> VDB
 
-    VDB --> TOP["🎯 Top Results - 3-10 most relevant chunks"]
-    TOP --> AUG["📋 Augmented Prompt - System prompt + chunks + question"]
-    AUG --> LLM["🤖 LLM - Generates answer grounded in data"]
-    LLM --> RESP["💬 Response - Q3 revenue by practice area was..."]
+    VDB --> TOP["Top Results - 3-10 most relevant chunks"]
+    TOP --> AUG["Augmented Prompt - System prompt + chunks + question"]
+    AUG --> LLM["LLM - Generates answer grounded in data"]
+    LLM --> RESP["Response - Q3 revenue by practice area was..."]
 
     style indexing fill:#f0f4ff,stroke:#2E86C1
     style query fill:#fff8e1,stroke:#ffc107
@@ -518,28 +520,28 @@ For the C-suite dashboard?
 
 ```mermaid
 graph TD
-    UI["🖥️ USER INTERFACE - C-Suite Dashboard"]
+    UI["USER INTERFACE - C-Suite Dashboard"]
 
     UI --> CEL
 
     subgraph CEL["CONTEXT ENGINEERING LAYER"]
         direction TB
-        SP["🎯 System Prompt - Role, rules"]
-        MEM["🧠 Memory - History, prefs"]
-        RAGP["📄 RAG Pipeline - Retrieve relevant data"]
-        MCP["🔧 Tools / MCP - Query DBs, run calcs"]
+        SP["System Prompt - Role, rules"]
+        MEM["Memory - History, prefs"]
+        RAGP["RAG Pipeline - Retrieve relevant data"]
+        MCP["Tools / MCP - Query DBs, run calcs"]
 
         SP --> ASM
         MEM --> ASM
         RAGP --> ASM
         MCP --> ASM
 
-        ASM["📋 ASSEMBLED CONTEXT - Prompt + Memory + Data + Tools + Question"]
-        ASM --> GR["🛡️ GUARDRAILS - Input sanitization, access controls"]
+        ASM["ASSEMBLED CONTEXT - Prompt + Memory + Data + Tools + Question"]
+        ASM --> GR["GUARDRAILS - Input sanitization, access controls"]
     end
 
-    GR --> LLM["🤖 LLM via Azure OpenAI - Response grounded in context"]
-    LLM --> OUT["✅ OUTPUT VALIDATION - Hallucination check, data accuracy"]
+    GR --> LLM["LLM via Azure OpenAI - Response grounded in context"]
+    LLM --> OUT["OUTPUT VALIDATION - Hallucination check, data accuracy"]
 
     style UI fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
     style CEL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px

@@ -48,11 +48,11 @@ The context window is the model's "working memory" — everything it can see at 
 ```mermaid
 graph TD
     subgraph CW["CONTEXT WINDOW"]
-        A["📋 System Prompt - ~200 tokens"]
-        B["💬 Conversation History - ~500-2,000 tokens"]
-        C["📁 Retrieved Context via RAG - ~1,000-5,000 tokens"]
-        D["❓ User's Current Question - ~20-100 tokens"]
-        E["🤖 Model's Response - ~100-2,000 tokens"]
+        A["System Prompt - ~200 tokens"]
+        B["Conversation History - ~500-2,000 tokens"]
+        C["Retrieved Context via RAG - ~1,000-5,000 tokens"]
+        D["User's Current Question - ~20-100 tokens"]
+        E["Model's Response - ~100-2,000 tokens"]
 
         A --> B --> C --> D --> E
     end

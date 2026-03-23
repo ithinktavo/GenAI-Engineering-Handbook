@@ -23,18 +23,18 @@ Load all your data directly into the prompt. The model reads everything and answ
 ```mermaid
 graph TD
     subgraph LC["LONG CONTEXT WINDOW"]
-        S["📋 System prompt ~500 tk"]
-        D1["📄 Document 1 - full text - 5,000 tk"]
-        D2["📄 Document 2 - full text - 8,000 tk"]
-        D3["📄 Document 3 - full text - 3,000 tk"]
-        D4["📄 Document 4 - full text - 6,000 tk"]
-        DN["📄 ... Document N - full text - 12,000 tk"]
-        UQ["❓ User question ~100 tk"]
+        S["System prompt ~500 tk"]
+        D1["Document 1 - full text - 5,000 tk"]
+        D2["Document 2 - full text - 8,000 tk"]
+        D3["Document 3 - full text - 3,000 tk"]
+        D4["Document 4 - full text - 6,000 tk"]
+        DN["... Document N - full text - 12,000 tk"]
+        UQ["User question ~100 tk"]
 
         S --> D1 --> D2 --> D3 --> D4 --> DN --> UQ
     end
 
-    T["📊 Total: 100K-2M tokens. Model reads ALL of it every query."]
+    T["Total: 100K-2M tokens. Model reads ALL of it every query."]
     UQ --> T
 
     style LC fill:#fff3cd,stroke:#ffc107,stroke-width:2px
@@ -57,16 +57,16 @@ Retrieve only the specific pieces relevant to each question. The model reads a f
 ```mermaid
 graph TD
     subgraph RAG["RAG CONTEXT WINDOW"]
-        S["📋 System prompt ~500 tk"]
-        C7["✅ Retrieved Chunk 7: Revenue by practice..."]
-        C12["✅ Retrieved Chunk 12: Q3 vs Q2 comparison..."]
-        C3["✅ Retrieved Chunk 3: Financial summary..."]
-        UQ["❓ User question ~100 tk"]
+        S["System prompt ~500 tk"]
+        C7["Retrieved Chunk 7: Revenue by practice..."]
+        C12["Retrieved Chunk 12: Q3 vs Q2 comparison..."]
+        C3["Retrieved Chunk 3: Financial summary..."]
+        UQ["User question ~100 tk"]
 
         S --> C7 --> C12 --> C3 --> UQ
     end
 
-    T["📊 Total: ~3,000-5,000 tokens. Model reads ONLY what's relevant."]
+    T["Total: ~3,000-5,000 tokens. Model reads ONLY what's relevant."]
     UQ --> T
 
     style RAG fill:#d4edda,stroke:#28a745,stroke-width:2px
@@ -125,11 +125,20 @@ At scale, RAG is roughly **1,250x cheaper per query**. For the consulting firm's
 As context grows, LLM accuracy degrades — especially for information buried in the middle of the context. Stanford's "Lost in the Middle" research found a **U-shaped accuracy curve**: models perform well with information at the beginning or end, but accuracy drops 30%+ for information in the middle.
 
 ```mermaid
-xychart-beta
-    title "Accuracy vs. Position in Context (Lost in the Middle)"
-    x-axis ["Start", "", "", "", "Middle", "", "", "", "End"]
-    y-axis "Accuracy %" 50 --> 100
-    line [97, 93, 88, 78, 62, 65, 78, 90, 97]
+graph LR
+    subgraph chart["Accuracy vs Position in Context — Lost in the Middle"]
+        direction LR
+        S["START - ~97% accuracy"]
+        M["MIDDLE - ~62% accuracy"]
+        E["END - ~97% accuracy"]
+
+        S -.->|"accuracy drops ~30%+"| M -.->|"accuracy recovers"| E
+    end
+
+    style S fill:#d4edda,stroke:#28a745
+    style M fill:#f8d7da,stroke:#dc3545
+    style E fill:#d4edda,stroke:#28a745
+    style chart fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
 > The U-shaped curve shows ~30%+ accuracy drop for information in the middle of context. Beginning and end positions maintain high accuracy, while the middle is a danger zone.
@@ -161,14 +170,14 @@ The 2026 consensus among production teams: **use RAG for retrieval, long context
 ```mermaid
 graph TD
     subgraph HYBRID["HYBRID ARCHITECTURE"]
-        DC["💾 FULL DATA CORPUS - Terabytes of enterprise data"]
-        RL["🔍 RAG LAYER - Find 10-20 most relevant chunks"]
+        DC["FULL DATA CORPUS - Terabytes of enterprise data"]
+        RL["RAG LAYER - Find 10-20 most relevant chunks"]
 
         subgraph CTX["GENEROUS CONTEXT WINDOW"]
-            S["🛡️ System prompt + guardrails"]
-            CH["📁 Retrieved chunks - full sections, not fragments"]
-            HI["💬 Conversation history"]
-            UQ["❓ User question"]
+            S["System prompt + guardrails"]
+            CH["Retrieved chunks - full sections, not fragments"]
+            HI["Conversation history"]
+            UQ["User question"]
         end
 
         DC --> RL --> CTX
@@ -203,21 +212,21 @@ This combination outperforms either approach alone. RAG provides precision (find
 graph TD
     Q1{"How large is your dataset?"}
 
-    Q1 -->|"Under 100K tokens"| A1["✅ Start with long context - simpler, sufficient"]
+    Q1 -->|"Under 100K tokens"| A1["Start with long context - simpler, sufficient"]
 
     Q1 -->|"100K to 2M tokens"| Q2{"Query type?"}
-    Q2 -->|"Cross-document reasoning"| A2["🔀 Hybrid - RAG retrieval + long context reasoning"]
-    Q2 -->|"Factual lookups"| A3["🎯 RAG - Faster, cheaper, more accurate"]
+    Q2 -->|"Cross-document reasoning"| A2["Hybrid - RAG retrieval + long context reasoning"]
+    Q2 -->|"Factual lookups"| A3["RAG - Faster, cheaper, more accurate"]
 
-    Q1 -->|"Over 2M tokens"| A4["🎯 RAG is the only option"]
+    Q1 -->|"Over 2M tokens"| A4["RAG is the only option"]
 
     subgraph FACTORS["Additional Factors"]
-        F1["🔄 Data changes daily? Use RAG"]
-        F2["⚡ Sub-second responses? Use RAG"]
-        F3["💰 Cost-sensitive at scale? Use RAG"]
-        F4["📖 Need whole-doc reasoning? Long context or hybrid"]
-        F5["🚀 Building first prototype? Long context"]
-        F6["🛡️ Regulated environment? Hybrid with audit trail"]
+        F1["Data changes daily? Use RAG"]
+        F2["Sub-second responses? Use RAG"]
+        F3["Cost-sensitive at scale? Use RAG"]
+        F4["Need whole-doc reasoning? Long context or hybrid"]
+        F5["Building first prototype? Long context"]
+        F6["Regulated environment? Hybrid with audit trail"]
     end
 
     style Q1 fill:#fff3cd,stroke:#ffc107,stroke-width:2px

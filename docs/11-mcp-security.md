@@ -24,14 +24,14 @@ graph TD
         direction LR
         subgraph row1[" "]
             direction LR
-            T1["💉 PROMPT INJECTION - Attacker plants instructions in docs"]
-            T2["🔑 CREDENTIAL THEFT - Attacker extracts API keys via prompt"]
-            T3["📤 DATA EXFILTRATION - Tool calls send data externally"]
+            T1["PROMPT INJECTION - Attacker plants instructions in docs"]
+            T2["CREDENTIAL THEFT - Attacker extracts API keys via prompt"]
+            T3["DATA EXFILTRATION - Tool calls send data externally"]
         end
         subgraph row2[" "]
             direction LR
-            T4["🚪 UNAUTHED TOOL USE - AI calls unauthorized tools"]
-            T5["👻 SHADOW MCP SERVERS - Unvetted servers without review"]
+            T4["UNAUTHED TOOL USE - AI calls unauthorized tools"]
+            T5["SHADOW MCP SERVERS - Unvetted servers without review"]
         end
     end
 
@@ -112,9 +112,9 @@ Credentials must never be accessible from the AI's context — not in config fil
 ```mermaid
 graph TD
     subgraph cred_flow["SECURE CREDENTIAL FLOW"]
-        AI["🤖 AI RUNTIME - No direct access to creds"]
-        BROKER["🔑 CREDENTIAL BROKER - Retrieves, injects, strips creds"]
-        KEYCHAIN["🗄️ OS KEYCHAIN - macOS, Windows DPAPI, Linux"]
+        AI["AI RUNTIME - No direct access to creds"]
+        BROKER["CREDENTIAL BROKER - Retrieves, injects, strips creds"]
+        KEYCHAIN["OS KEYCHAIN - macOS, Windows DPAPI, Linux"]
 
         AI -- "request" --> BROKER
         BROKER -- "result clean" --> AI
@@ -213,10 +213,10 @@ A formal vetting pipeline ensures only approved, reviewed MCP servers run in pro
 
 ```mermaid
 graph LR
-    DEV["👨‍💻 DEV REQUEST - I need a DB MCP"] --> SEC["🔍 SECURITY REVIEW - Code, deps, license"]
-    SEC --> SCAN["🐳 CONTAINER SCAN - Vuln, SBOM, malware"]
-    SCAN --> BOARD["✅ APPROVAL BOARD - Security, compliance, sponsor"]
-    BOARD --> REG["📦 REGISTRY - Version-pinned, signed, policies"]
+    DEV["DEV REQUEST - I need a DB MCP"] --> SEC["SECURITY REVIEW - Code, deps, license"]
+    SEC --> SCAN["CONTAINER SCAN - Vuln, SBOM, malware"]
+    SCAN --> BOARD["APPROVAL BOARD - Security, compliance, sponsor"]
+    BOARD --> REG["REGISTRY - Version-pinned, signed, policies"]
 
     style DEV fill:#fff3cd,stroke:#ffc107
     style SEC fill:#f8d7da,stroke:#dc3545
@@ -249,16 +249,16 @@ graph TD
     subgraph zt["ZERO TRUST MCP ARCHITECTURE"]
         subgraph principles[" "]
             direction TB
-            P1["🔒 NEVER TRUST, ALWAYS VERIFY - Authenticate every request"]
-            P2["🔑 LEAST PRIVILEGE - Minimum permissions needed"]
-            P3["💥 ASSUME BREACH - Log everything, segment networks"]
+            P1["NEVER TRUST, ALWAYS VERIFY - Authenticate every request"]
+            P2["LEAST PRIVILEGE - Minimum permissions needed"]
+            P3["ASSUME BREACH - Log everything, segment networks"]
         end
 
-        USER["👤 USER"] --> IDP["🏢 IDENTITY PROVIDER"]
-        IDP --> GW["🔐 AUTH GATEWAY"]
-        GW --> MCP["🔧 MCP SERVER - isolated"]
-        GW --> AUDIT["📝 AUDIT LOG - immutable"]
-        MCP --> MON["📊 MONITOR - SIEM"]
+        USER["USER"] --> IDP["IDENTITY PROVIDER"]
+        IDP --> GW["AUTH GATEWAY"]
+        GW --> MCP["MCP SERVER - isolated"]
+        GW --> AUDIT["AUDIT LOG - immutable"]
+        MCP --> MON["MONITOR - SIEM"]
     end
 
     style P1 fill:#f8d7da,stroke:#dc3545

@@ -36,11 +36,11 @@ Different frameworks care about different things. Here's what each requires when
 graph TD
     subgraph framework["AI GOVERNANCE FRAMEWORK"]
         direction LR
-        P1["📊 DATA GOVERNANCE - Classify, Protect, Retain"]
-        P2["🤖 MODEL GOVERNANCE - Approve, Version, Test"]
-        P3["🔐 ACCESS GOVERNANCE - Who sees what when"]
-        P4["📋 AUDIT & COMPLIANCE - Log, Prove, Report"]
-        P5["⚠️ RISK MANAGEMENT - What could fail"]
+        P1["DATA GOVERNANCE - Classify, Protect, Retain"]
+        P2["MODEL GOVERNANCE - Approve, Version, Test"]
+        P3["ACCESS GOVERNANCE - Who sees what when"]
+        P4["AUDIT & COMPLIANCE - Log, Prove, Report"]
+        P5["RISK MANAGEMENT - What could fail"]
     end
 
     note["Each pillar addresses a different dimension of AI risk. All five must work together for compliance."]
@@ -113,15 +113,15 @@ In a traditional application, access controls are straightforward — users have
 
 ```mermaid
 graph TD
-    Q["🔍 Query: Show me all practice area revenue"]
+    Q["Query: Show me all practice area revenue"]
 
-    Q --> P["🟢 PARTNER - Full Access"]
-    Q --> D["🟡 DIRECTOR - Filtered Access"]
-    Q --> A["🔴 JUNIOR ANALYST - Access Denied"]
+    Q --> P["PARTNER - Full Access"]
+    Q --> D["DIRECTOR - Filtered Access"]
+    Q --> A["JUNIOR ANALYST - Access Denied"]
 
-    P --> PR["✅ Revenue for ALL practice areas"]
-    D --> DR["⚠️ Revenue for THEIR practice area only"]
-    A --> AR["🚫 Requires Director-level access"]
+    P --> PR["Revenue for ALL practice areas"]
+    D --> DR["Revenue for THEIR practice area only"]
+    A --> AR["Requires Director-level access"]
 
     style Q fill:#f0f4ff,stroke:#2E86C1
     style P fill:#d4edda,stroke:#28a745
@@ -158,10 +158,10 @@ graph TD
 
 ```mermaid
 graph LR
-    U["👤 USER ACTION - Query, Tool call"] --> AI["🤖 AI SYSTEM - Retrieval, Generation"]
-    AI --> LOG["📝 AUDIT LOG - Immutable, Write-once"]
-    LOG --> SIEM["🔔 SIEM - Alerts, Reports"]
-    LOG --> DASH["📊 COMPLIANCE DASHBOARD - Auditor access, GRC reporting"]
+    U["USER ACTION - Query, Tool call"] --> AI["AI SYSTEM - Retrieval, Generation"]
+    AI --> LOG["AUDIT LOG - Immutable, Write-once"]
+    LOG --> SIEM["SIEM - Alerts, Reports"]
+    LOG --> DASH["COMPLIANCE DASHBOARD - Auditor access, GRC reporting"]
 
     style U fill:#fff3cd,stroke:#ffc107
     style AI fill:#e2d5f1,stroke:#6f42c1

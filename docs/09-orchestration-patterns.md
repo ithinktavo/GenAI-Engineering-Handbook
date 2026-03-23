@@ -21,10 +21,10 @@ Agents execute in a fixed, linear order. Each agent's output becomes the next ag
 ```mermaid
 graph LR
     subgraph Pipeline ["STATE passed forward through each step"]
-        Data["📁 DATA AGENT - Pull Q3 data from warehouse"]
-        Analysis["📊 ANALYSIS AGENT - Compare to Q2 and YoY"]
-        Chart["📈 CHART AGENT - Generate visualizations"]
-        Report["📄 REPORT AGENT - Assemble final deck"]
+        Data["DATA AGENT - Pull Q3 data from warehouse"]
+        Analysis["ANALYSIS AGENT - Compare to Q2 and YoY"]
+        Chart["CHART AGENT - Generate visualizations"]
+        Report["REPORT AGENT - Assemble final deck"]
     end
 
     Data --> Analysis --> Chart --> Report
@@ -48,9 +48,9 @@ What happens when Step 3 fails? Three strategies:
 
 ```mermaid
 graph TD
-    S1["Step 1"] --> S2["Step 2"] --> S3["❌ Step 3 FAILS"]
-    S3 --> Retry["🔄 Retry? Retry 1x then fallback"]
-    S3 --> Fallback["🔀 Fallback? Use simpler chart type"]
+    S1["Step 1"] --> S2["Step 2"] --> S3["Step 3 FAILS"]
+    S3 --> Retry["Retry? Retry 1x then fallback"]
+    S3 --> Fallback["Fallback? Use simpler chart type"]
 
     style S1 fill:#d4edda,stroke:#28a745
     style S2 fill:#d4edda,stroke:#28a745
@@ -76,11 +76,11 @@ Multiple agents work independently on different sub-tasks. Results are aggregate
 
 ```mermaid
 graph TD
-    Coord["🎯 COORDINATOR - Split task into parts"]
-    Fin["💰 FINANCIAL AGENT - Revenue, margin, backlog"]
-    HR["👥 HR AGENT - Headcount, attrition, hiring"]
-    Client["🤝 CLIENT AGENT - Pipeline, NPS, retention"]
-    Agg["📊 AGGREGATOR - Combine all results"]
+    Coord["COORDINATOR - Split task into parts"]
+    Fin["FINANCIAL AGENT - Revenue, margin, backlog"]
+    HR["HR AGENT - Headcount, attrition, hiring"]
+    Client["CLIENT AGENT - Pipeline, NPS, retention"]
+    Agg["AGGREGATOR - Combine all results"]
 
     Coord --> Fin & HR & Client
     Fin -- "2.1s" --> Agg
@@ -122,12 +122,12 @@ A central "supervisor" agent receives every request, analyzes it, and delegates 
 
 ```mermaid
 graph TD
-    User["👤 User query"] --> Sup1
-    Sup1["🤖 SUPERVISOR - Analyzes intent, routes to specialist"]
-    Fin["💰 FINANCE EXPERT - Revenue, Margin, Backlog"]
-    HR["👥 HR EXPERT - Headcount, Attrition, Hiring"]
-    Client["🤝 CLIENT EXPERT - Pipeline, NPS, Retention"]
-    Sup2["🤖 SUPERVISOR - Receives result, formats for user"]
+    User["User query"] --> Sup1
+    Sup1["SUPERVISOR - Analyzes intent, routes to specialist"]
+    Fin["FINANCE EXPERT - Revenue, Margin, Backlog"]
+    HR["HR EXPERT - Headcount, Attrition, Hiring"]
+    Client["CLIENT EXPERT - Pipeline, NPS, Retention"]
+    Sup2["SUPERVISOR - Receives result, formats for user"]
 
     Sup1 --> Fin & HR & Client
     Fin --> Sup2
@@ -190,15 +190,15 @@ Agents handle different **phases** of a workflow, explicitly passing context at 
 ```mermaid
 graph LR
     subgraph P1 ["PHASE 1"]
-        Intake["📥 INTAKE AGENT - Understand, classify, gather"]
+        Intake["INTAKE AGENT - Understand, classify, gather"]
     end
 
     subgraph P2 ["PHASE 2"]
-        Research["🔍 RESEARCH AGENT - Analyze, recommend"]
+        Research["RESEARCH AGENT - Analyze, recommend"]
     end
 
     subgraph P3 ["PHASE 3"]
-        Action["⚡ ACTION AGENT - Draft, format, get approval"]
+        Action["ACTION AGENT - Draft, format, get approval"]
     end
 
     Intake -- "context: parsed intent + data needs" --> Research
@@ -257,13 +257,13 @@ A lead agent delegates to department-level supervisors, who each manage their ow
 ```mermaid
 graph TD
     subgraph T1 ["TIER 1: EXECUTIVE"]
-        Lead["🎯 LEAD AGENT - Delegates to department heads"]
+        Lead["LEAD AGENT - Delegates to department heads"]
     end
 
     subgraph T2 ["TIER 2: SUPERVISORS"]
-        FinSup["💰 FINANCE SUPERVISOR"]
-        HRSup["👥 HR SUPERVISOR"]
-        CliSup["🤝 CLIENT SUPERVISOR"]
+        FinSup["FINANCE SUPERVISOR"]
+        HRSup["HR SUPERVISOR"]
+        CliSup["CLIENT SUPERVISOR"]
     end
 
     subgraph T3 ["TIER 3: WORKERS"]
@@ -314,16 +314,16 @@ Agents need to track where they are, what's been done, and what's next. Without 
 ```mermaid
 graph TD
     subgraph State ["WORKFLOW STATE - q3-report-2025 - in_progress - step 3/5"]
-        S1["✅ 1. pull_financial_data - completed (2.1s)"]
-        S2["✅ 2. pull_hr_data - completed (1.8s)"]
-        S3["🔄 3. generate_analysis - in_progress"]
-        S4["⏳ 4. create_charts - pending"]
-        S5["⏳ 5. assemble_report - pending"]
+        S1["1. pull_financial_data - completed, 2.1s"]
+        S2["2. pull_hr_data - completed, 1.8s"]
+        S3["3. generate_analysis - in_progress"]
+        S4["4. create_charts - pending"]
+        S5["5. assemble_report - pending"]
     end
 
     S1 --> S2 --> S3 --> S4 --> S5
 
-    Checkpoint["💾 checkpoint: 2025-10-14T14:23:00Z - resume from step_3"]
+    Checkpoint["checkpoint: 2025-10-14T14:23:00Z - resume from step_3"]
     S3 -.- Checkpoint
 
     style S1 fill:#d4edda,stroke:#28a745
@@ -374,18 +374,18 @@ Every agent workflow will encounter failures. The question is how you handle the
 
 ```mermaid
 graph TD
-    Call["🔧 Agent calls external API"]
-    Ok1["✅ Success - continue"]
-    F1["❌ Failure (attempt 1)"]
-    R1["🔄 Retry (1s backoff)"]
-    Ok2["✅ Success - continue"]
-    F2["❌ Failure (attempt 2)"]
-    R2["🔄 Retry (2s backoff)"]
-    Ok3["✅ Success - continue"]
-    F3["❌ Failure (attempt 3)"]
-    CB["🚫 Circuit breaker opens"]
-    Fallback["🔀 Fallback agent available? Use fallback"]
-    Human["👤 Human escalation - Step 3 failed, proceed?"]
+    Call["Agent calls external API"]
+    Ok1["Success - continue"]
+    F1["Failure attempt 1"]
+    R1["Retry 1s backoff"]
+    Ok2["Success - continue"]
+    F2["Failure attempt 2"]
+    R2["Retry 2s backoff"]
+    Ok3["Success - continue"]
+    F3["Failure attempt 3"]
+    CB["Circuit breaker opens"]
+    Fallback["Fallback agent available? Use fallback"]
+    Human["Human escalation - Step 3 failed, proceed?"]
 
     Call --> Ok1
     Call --> F1 --> R1
