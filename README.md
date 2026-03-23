@@ -194,7 +194,7 @@ Please keep the professional/educational tone consistent with existing content.
 
 ## About
 
-Created by [Gustavo Marrero](https://linkedin.com/in/gustavoamr) — a software engineering lead with 7+ years in cloud engineering, DevOps, and GenAI adoption. This handbook was born from real-world experience building AI systems in regulated enterprise environments and a belief that the best way to learn is to teach.
+Created by [Gustavo Marrero](https://linkedin.com/in/gustavoamr) — a software engineering lead with 7+ years in cloud engineering, DevOps, and regulated enterprise environments. Currently leading a team of AI Coaches driving GenAI adoption. This handbook was born from that intersection of hands-on engineering in regulated industries and a passion for making AI accessible — because the best way to learn is to teach.
 
 ---
 
