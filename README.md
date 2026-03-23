@@ -194,10 +194,22 @@ Please keep the professional/educational tone consistent with existing content.
 
 ## About
 
-Created by [Gustavo Marrero](https://linkedin.com/in/gustavoamr) — a software engineering lead with 8+ years in cloud engineering, DevOps, and regulated enterprise environments. Currently leading a team of AI Coaches driving GenAI adoption. This handbook was born from that intersection of hands-on engineering in regulated industries and a passion for making AI accessible — because the best way to learn is to teach.
+Created by [Gustavo Marrero](https://linkedin.com/in/gustavoamr) — a software engineering lead with 8+ years in software development, cloud engineering, DevOps, and regulated enterprise environments. Currently leading a team of AI Coaches driving GenAI adoption. This handbook was born from that intersection of hands-on engineering in regulated industries and a passion for making AI accessible — because the best way to learn is to teach.
+
+This project was built with the help of AI tools — including for drafting, editing, and code generation. While I review and curate the content, not every detail has been independently validated. It felt right to be transparent about that, especially in a handbook about AI engineering.
+
+---
+
+## Disclaimer
+
+This handbook is an educational resource based on my experience and research as of 2026. AI moves fast — tools, best practices, and pricing can change between the time I write something and the time you read it. While I do my best to keep things accurate, I can't guarantee that every detail is current or error-free.
+
+Use this material at your own discretion. Nothing here constitutes professional, legal, or security advice. If you're building production systems — especially in regulated environments — always validate against your organization's policies and consult the relevant experts.
+
+If you spot something outdated or incorrect, [open an issue](https://github.com/ithinktavo/genai-engineering-handbook/issues) — I genuinely appreciate it.
 
 ---
 
 ## License
 
-MIT License — use it, share it, build on it.
+This project is licensed under the [MIT License](LICENSE) — use it, share it, build on it.
