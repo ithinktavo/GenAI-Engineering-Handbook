@@ -18,22 +18,22 @@ If you've read [Agentic AI Fundamentals](07-agentic-ai.md), you've seen the four
 
 Agents execute in a fixed, linear order. Each agent's output becomes the next agent's input.
 
-```
-┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
-│  DATA    │────►│ ANALYSIS │────►│  CHART   │────►│  REPORT  │
-│  AGENT   │     │  AGENT   │     │  AGENT   │     │  AGENT   │
-└──────────┘     └──────────┘     └──────────┘     └──────────┘
-     │                │                │                │
-     ▼                ▼                ▼                ▼
-  Pull Q3          Compare to       Generate         Assemble
-  data from        Q2 and YoY       visualizations   final deck
-  data warehouse   benchmarks       from analysis    with narrative
-     │                │                │                │
-     ▼                ▼                ▼                ▼
-┌──────────────────────────────────────────────────────────────┐
-│                     STATE (passed forward)                    │
-│  Step 1 result → Step 2 input → Step 3 input → Step 4 input │
-└──────────────────────────────────────────────────────────────┘
+```mermaid
+graph LR
+    subgraph Pipeline ["📦 STATE passed forward through each step"]
+        Data["📁 DATA AGENT<br/>Pull Q3 data from<br/>data warehouse"]
+        Analysis["📊 ANALYSIS AGENT<br/>Compare to Q2<br/>and YoY benchmarks"]
+        Chart["📈 CHART AGENT<br/>Generate visualizations<br/>from analysis"]
+        Report["📄 REPORT AGENT<br/>Assemble final<br/>deck with narrative"]
+    end
+
+    Data --> Analysis --> Chart --> Report
+
+    style Data fill:#fff3cd,stroke:#ffc107,color:#000
+    style Analysis fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Chart fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Report fill:#d4edda,stroke:#28a745,color:#000
+    style Pipeline fill:#f9f9f9,stroke:#ccc,color:#000
 ```
 
 ### Error Handling in Sequential Pipelines
@@ -46,17 +46,17 @@ What happens when Step 3 fails? Three strategies:
 | **Fallback** | Switch to an alternative approach (e.g., simpler chart type) | When a degraded result is acceptable |
 | **Replan** | Go back to an earlier step and try a different path | When the failure reveals a data issue |
 
-```
-Step 1 → Step 2 → Step 3 ✗ FAILS
-                     │
-                ┌────┴────┐
-                ▼         ▼
-           [Retry?]   [Fallback?]
-              │           │
-              ▼           ▼
-          Retry 1x    Use simpler
-          then        chart type
-          fallback    and continue
+```mermaid
+graph TD
+    S1["Step 1"] --> S2["Step 2"] --> S3["❌ Step 3 FAILS"]
+    S3 --> Retry["🔄 Retry?<br/>Retry 1x then fallback"]
+    S3 --> Fallback["🔀 Fallback?<br/>Use simpler chart type<br/>and continue"]
+
+    style S1 fill:#d4edda,stroke:#28a745,color:#000
+    style S2 fill:#d4edda,stroke:#28a745,color:#000
+    style S3 fill:#f8d7da,stroke:#dc3545,color:#000
+    style Retry fill:#fff3cd,stroke:#ffc107,color:#000
+    style Fallback fill:#fff3cd,stroke:#ffc107,color:#000
 ```
 
 **Enterprise principle:** Never silently swallow errors. Every failure must be logged, and the final output must indicate if any step used a fallback. An executive reading a report with degraded charts needs to know.
@@ -74,34 +74,24 @@ Step 1 → Step 2 → Step 3 ✗ FAILS
 
 Multiple agents work independently on different sub-tasks. Results are aggregated when all (or enough) complete.
 
-```
-                    ┌──────────────┐
-                    │  COORDINATOR │
-                    │  Split task  │
-                    │  into parts  │
-                    └──────┬───────┘
-               ┌──────────┼──────────┐
-               ▼          ▼          ▼
-        ┌──────────┐ ┌──────────┐ ┌──────────┐
-        │ FINANCIAL│ │    HR    │ │  CLIENT  │
-        │  AGENT   │ │  AGENT   │ │  AGENT   │
-        │          │ │          │ │          │
-        │ Pull Q3  │ │ Pull Q3  │ │ Pull Q3  │
-        │ revenue, │ │ headcount│ │ pipeline,│
-        │ margin,  │ │ attrition│ │ NPS,     │
-        │ backlog  │ │ hiring   │ │ retention│
-        └────┬─────┘ └────┬─────┘ └────┬─────┘
-             │  2.1s       │  1.8s      │  3.2s
-             │             │            │
-             └─────────────┼────────────┘
-                           ▼
-                    ┌──────────────┐
-                    │  AGGREGATOR  │
-                    │  Combine all │
-                    │  results     │
-                    │  Wait: 3.2s  │
-                    │  (slowest)   │
-                    └──────────────┘
+```mermaid
+graph TD
+    Coord["🎯 COORDINATOR<br/>Split task into parts"]
+    Fin["💰 FINANCIAL AGENT<br/>Pull Q3 revenue,<br/>margin, backlog"]
+    HR["👥 HR AGENT<br/>Pull Q3 headcount,<br/>attrition, hiring"]
+    Client["🤝 CLIENT AGENT<br/>Pull Q3 pipeline,<br/>NPS, retention"]
+    Agg["📊 AGGREGATOR<br/>Combine all results<br/>Wait: 3.2s (slowest)"]
+
+    Coord --> Fin & HR & Client
+    Fin -- "2.1s" --> Agg
+    HR -- "1.8s" --> Agg
+    Client -- "3.2s" --> Agg
+
+    style Coord fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style HR fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Client fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Agg fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 ### Handling Partial Failures
@@ -130,33 +120,26 @@ In production, some agents will fail while others succeed. The key decision: **d
 
 A central "supervisor" agent receives every request, analyzes it, and delegates to the right specialized agent.
 
-```
-                    ╔═══════════════════════╗
-        User ──────►║     SUPERVISOR        ║
-        query       ║                       ║
-                    ║  • Analyzes intent    ║
-                    ║  • Routes to the      ║
-                    ║    right specialist   ║
-                    ╚═══════════╤═══════════╝
-                    ┌───────────┼───────────────────┐
-                    ▼           ▼                   ▼
-             ┌──────────┐ ┌──────────┐ ┌──────────────┐
-             │ FINANCE  │ │    HR    │ │    CLIENT    │
-             │ EXPERT   │ │  EXPERT  │ │    EXPERT    │
-             │          │ │          │ │              │
-             │ Revenue  │ │ Headcount│ │ Pipeline     │
-             │ Margin   │ │ Attrition│ │ NPS          │
-             │ Backlog  │ │ Hiring   │ │ Retention    │
-             └────┬─────┘ └────┬─────┘ └──────┬───────┘
-                  │            │               │
-                  └────────────┼───────────────┘
-                               ▼
-                    ╔═══════════════════════╗
-                    ║     SUPERVISOR        ║
-                    ║  • Receives result    ║
-                    ║  • Formats for user   ║
-                    ║  • May route again    ║
-                    ╚═══════════════════════╝
+```mermaid
+graph TD
+    User["👤 User query"] --> Sup1
+    Sup1["🤖 SUPERVISOR<br/>Analyzes intent<br/>Routes to right specialist"]
+    Fin["💰 FINANCE EXPERT<br/>Revenue, Margin, Backlog"]
+    HR["👥 HR EXPERT<br/>Headcount, Attrition, Hiring"]
+    Client["🤝 CLIENT EXPERT<br/>Pipeline, NPS, Retention"]
+    Sup2["🤖 SUPERVISOR<br/>Receives result<br/>Formats for user<br/>May route again"]
+
+    Sup1 --> Fin & HR & Client
+    Fin --> Sup2
+    HR --> Sup2
+    Client --> Sup2
+
+    style User fill:#fff3cd,stroke:#ffc107,color:#000
+    style Sup1 fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Sup2 fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style HR fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Client fill:#f0f4ff,stroke:#2E86C1,color:#000
 ```
 
 ### The Routing Decision
@@ -204,19 +187,29 @@ Supervisor detects: needs both HR data (utilization) and Finance data (revenue)
 
 Agents handle different **phases** of a workflow, explicitly passing context at transition points.
 
-```
-┌──────────────────┐          ┌──────────────────┐          ┌──────────────────┐
-│  ░░░ PHASE 1 ░░░ │          │  ░░░ PHASE 2 ░░░ │          │  ░░░ PHASE 3 ░░░ │
-│                  │          │                  │          │                  │
-│   INTAKE AGENT   │  context │  RESEARCH AGENT  │  context │   ACTION AGENT   │
-│                  ├─────────►│                  ├─────────►│                  │
-│  • Understand    │  ┌─────┐ │  • Analyze data  │  ┌─────┐ │  • Draft output  │
-│    the request   │  │parsed│ │  • Generate      │  │find-│ │  • Format for    │
-│  • Classify type │  │intent│ │    options       │  │ings │ │    audience      │
-│  • Gather data   │  │+data │ │  • Make          │  │+rec.│ │  • Get human     │
-│    requirements  │  │needs │ │    recommendation│  │     │ │    approval ⏸️   │
-│                  │  └─────┘ │                  │  └─────┘ │                  │
-└──────────────────┘          └──────────────────┘          └──────────────────┘
+```mermaid
+graph LR
+    subgraph P1 ["🔷 PHASE 1"]
+        Intake["📥 INTAKE AGENT<br/>Understand the request<br/>Classify type<br/>Gather data requirements"]
+    end
+
+    subgraph P2 ["🔷 PHASE 2"]
+        Research["🔍 RESEARCH AGENT<br/>Analyze data<br/>Generate options<br/>Make recommendation"]
+    end
+
+    subgraph P3 ["🔷 PHASE 3"]
+        Action["⚡ ACTION AGENT<br/>Draft output<br/>Format for audience<br/>Get human approval ⏸️"]
+    end
+
+    Intake -- "context:<br/>parsed intent<br/>+ data needs" --> Research
+    Research -- "context:<br/>findings<br/>+ recommendation" --> Action
+
+    style Intake fill:#fff3cd,stroke:#ffc107,color:#000
+    style Research fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Action fill:#d4edda,stroke:#28a745,color:#000
+    style P1 fill:#f9f9f9,stroke:#2E86C1,color:#000
+    style P2 fill:#f9f9f9,stroke:#2E86C1,color:#000
+    style P3 fill:#f9f9f9,stroke:#2E86C1,color:#000
 ```
 
 ### The Handoff Protocol
@@ -261,27 +254,51 @@ What gets passed between agents matters enormously. Too little context and the n
 
 A lead agent delegates to department-level supervisors, who each manage their own team of workers. This scales to complex organizations.
 
-```
-                         TIER 1: EXECUTIVE
-                    ╔══════════════════════╗
-                    ║     LEAD AGENT       ║
-                    ║   Delegates to       ║
-                    ║   department heads   ║
-                    ╚══════════╤═══════════╝
-               ┌───────────────┼───────────────┐
-               ▼               ▼               ▼
-                         TIER 2: SUPERVISORS
-        ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-        │   FINANCE    │ │      HR      │ │    CLIENT    │
-        │  SUPERVISOR  │ │  SUPERVISOR  │ │  SUPERVISOR  │
-        └───────┬──────┘ └───────┬──────┘ └───────┬──────┘
-          ┌─────┼─────┐    ┌─────┼─────┐    ┌─────┼─────┐
-          ▼     ▼     ▼    ▼     ▼     ▼    ▼     ▼     ▼
-                         TIER 3: WORKERS
-        ┌─────┐┌────┐┌────┐┌───┐┌────┐┌───┐┌────┐┌───┐┌────┐
-        │ Rev ││Mrgn││Bklg││ HC││Attr││Utl││NPS ││Pip││Retn│
-        │Agent││Agt ││Agt ││Agt││Agt ││Agt││Agt ││Agt││Agt │
-        └─────┘└────┘└────┘└───┘└────┘└───┘└────┘└───┘└────┘
+```mermaid
+graph TD
+    subgraph T1 ["👑 TIER 1: EXECUTIVE"]
+        Lead["🎯 LEAD AGENT<br/>Delegates to department heads"]
+    end
+
+    subgraph T2 ["📋 TIER 2: SUPERVISORS"]
+        FinSup["💰 FINANCE<br/>SUPERVISOR"]
+        HRSup["👥 HR<br/>SUPERVISOR"]
+        CliSup["🤝 CLIENT<br/>SUPERVISOR"]
+    end
+
+    subgraph T3 ["⚙️ TIER 3: WORKERS"]
+        Rev["Rev Agent"]
+        Mrgn["Margin Agent"]
+        Bklg["Backlog Agent"]
+        HC["HC Agent"]
+        Attr["Attrition Agent"]
+        Utl["Utilization Agent"]
+        NPS["NPS Agent"]
+        Pip["Pipeline Agent"]
+        Retn["Retention Agent"]
+    end
+
+    Lead --> FinSup & HRSup & CliSup
+    FinSup --> Rev & Mrgn & Bklg
+    HRSup --> HC & Attr & Utl
+    CliSup --> NPS & Pip & Retn
+
+    style Lead fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style FinSup fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style HRSup fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style CliSup fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Rev fill:#fff3cd,stroke:#ffc107,color:#000
+    style Mrgn fill:#fff3cd,stroke:#ffc107,color:#000
+    style Bklg fill:#fff3cd,stroke:#ffc107,color:#000
+    style HC fill:#fff3cd,stroke:#ffc107,color:#000
+    style Attr fill:#fff3cd,stroke:#ffc107,color:#000
+    style Utl fill:#fff3cd,stroke:#ffc107,color:#000
+    style NPS fill:#fff3cd,stroke:#ffc107,color:#000
+    style Pip fill:#fff3cd,stroke:#ffc107,color:#000
+    style Retn fill:#fff3cd,stroke:#ffc107,color:#000
+    style T1 fill:#f3e8ff,stroke:#6f42c1,color:#000
+    style T2 fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style T3 fill:#fff3cd,stroke:#ffc107,color:#000
 ```
 
 **When to use:** Enterprise-scale workflows where the complexity exceeds what a single supervisor can manage. The lead agent never interacts with individual workers — it works through department-level supervisors who each manage their domain.
@@ -294,28 +311,28 @@ Agents need to track where they are, what's been done, and what's next. Without 
 
 ### What State Looks Like
 
-```
-┌───────────────────────────────────────────────────┐
-│                  WORKFLOW STATE                     │
-│                                                    │
-│  workflow_id: "q3-report-2025"                     │
-│  status: "in_progress"                             │
-│  current_step: 3 of 5                             │
-│                                                    │
-│  steps:                                            │
-│    [1] pull_financial_data    ✅ completed (2.1s)  │
-│    [2] pull_hr_data           ✅ completed (1.8s)  │
-│    [3] generate_analysis      🔄 in_progress       │
-│    [4] create_charts          ⏳ pending            │
-│    [5] assemble_report        ⏳ pending            │
-│                                                    │
-│  intermediate_results:                             │
-│    step_1: { revenue: 42.3M, margin: 38.5%, ... } │
-│    step_2: { headcount: 852, attrition: 8%, ... }  │
-│                                                    │
-│  checkpoint: "2025-10-14T14:23:00Z"               │
-│  can_resume_from: step_3                          │
-└───────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph State ["📋 WORKFLOW STATE — q3-report-2025 — in_progress — step 3 of 5"]
+        S1["✅ 1. pull_financial_data<br/>completed (2.1s)"]
+        S2["✅ 2. pull_hr_data<br/>completed (1.8s)"]
+        S3["🔄 3. generate_analysis<br/>in_progress"]
+        S4["⏳ 4. create_charts<br/>pending"]
+        S5["⏳ 5. assemble_report<br/>pending"]
+    end
+
+    S1 --> S2 --> S3 --> S4 --> S5
+
+    Checkpoint["💾 checkpoint: 2025-10-14T14:23:00Z<br/>can_resume_from: step_3"]
+    S3 -.- Checkpoint
+
+    style S1 fill:#d4edda,stroke:#28a745,color:#000
+    style S2 fill:#d4edda,stroke:#28a745,color:#000
+    style S3 fill:#fff3cd,stroke:#ffc107,color:#000
+    style S4 fill:#f9f9f9,stroke:#ccc,color:#000
+    style S5 fill:#f9f9f9,stroke:#ccc,color:#000
+    style Checkpoint fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style State fill:#f9f9f9,stroke:#333,color:#000
 ```
 
 ### Checkpointing
@@ -355,25 +372,42 @@ Every agent workflow will encounter failures. The question is how you handle the
 | **Human escalation** | Pause workflow and notify a human | When automated recovery isn't safe |
 | **Graceful degradation** | Return partial results with a warning | When some data is better than no data |
 
-```
-Agent calls external API
-│
-├── Success → continue
-│
-├── Failure (attempt 1) → retry (1s backoff)
-│   ├── Success → continue
-│   │
-│   ├── Failure (attempt 2) → retry (2s backoff)
-│   │   ├── Success → continue
-│   │   │
-│   │   └── Failure (attempt 3) → circuit breaker opens
-│   │       │
-│   │       ├── Fallback agent available? → use fallback
-│   │       │
-│   │       └── No fallback → human escalation
-│   │           "Step 3 failed after 3 retries.
-│   │            Do you want to proceed without
-│   │            chart generation?"
+```mermaid
+graph TD
+    Call["🔧 Agent calls external API"]
+    Ok1["✅ Success — continue"]
+    F1["❌ Failure (attempt 1)"]
+    R1["🔄 Retry (1s backoff)"]
+    Ok2["✅ Success — continue"]
+    F2["❌ Failure (attempt 2)"]
+    R2["🔄 Retry (2s backoff)"]
+    Ok3["✅ Success — continue"]
+    F3["❌ Failure (attempt 3)"]
+    CB["🚫 Circuit breaker opens"]
+    Fallback["🔀 Fallback agent available?<br/>Use fallback"]
+    Human["👤 Human escalation<br/>Step 3 failed after 3 retries.<br/>Proceed without chart generation?"]
+
+    Call --> Ok1
+    Call --> F1 --> R1
+    R1 --> Ok2
+    R1 --> F2 --> R2
+    R2 --> Ok3
+    R2 --> F3 --> CB
+    CB --> Fallback
+    CB --> Human
+
+    style Call fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Ok1 fill:#d4edda,stroke:#28a745,color:#000
+    style Ok2 fill:#d4edda,stroke:#28a745,color:#000
+    style Ok3 fill:#d4edda,stroke:#28a745,color:#000
+    style F1 fill:#f8d7da,stroke:#dc3545,color:#000
+    style F2 fill:#f8d7da,stroke:#dc3545,color:#000
+    style F3 fill:#f8d7da,stroke:#dc3545,color:#000
+    style R1 fill:#fff3cd,stroke:#ffc107,color:#000
+    style R2 fill:#fff3cd,stroke:#ffc107,color:#000
+    style CB fill:#f8d7da,stroke:#dc3545,color:#000
+    style Fallback fill:#fff3cd,stroke:#ffc107,color:#000
+    style Human fill:#e2d5f1,stroke:#6f42c1,color:#000
 ```
 
 ---

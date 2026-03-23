@@ -45,34 +45,24 @@ LLMs don't process words — they process **tokens**. A token is a fragment of t
 
 The context window is the model's "working memory" — everything it can see at once. It includes:
 
-```
-┌──────────────────────────────────────────┐
-│           CONTEXT WINDOW                 │
-│                                          │
-│  ┌────────────────────────────────────┐  │
-│  │ System Prompt                      │  │
-│  │ "You are a financial analyst..."   │  │
-│  │ (~200 tokens)                      │  │
-│  ├────────────────────────────────────┤  │
-│  │ Conversation History               │  │
-│  │ Previous messages in this chat     │  │
-│  │ (~500-2,000 tokens)                │  │
-│  ├────────────────────────────────────┤  │
-│  │ Retrieved Context (RAG)            │  │
-│  │ Documents pulled from vector DB    │  │
-│  │ (~1,000-5,000 tokens)              │  │
-│  ├────────────────────────────────────┤  │
-│  │ User's Current Question            │  │
-│  │ "What was Q3 revenue?"             │  │
-│  │ (~20-100 tokens)                   │  │
-│  ├────────────────────────────────────┤  │
-│  │ Model's Response                   │  │
-│  │ (generated, also uses window)      │  │
-│  │ (~100-2,000 tokens)                │  │
-│  └────────────────────────────────────┘  │
-│                                          │
-│  Total must fit within model's limit     │
-└──────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph CW["🧠 CONTEXT WINDOW"]
+        A["📋 System Prompt\n'You are a financial analyst...'\n~200 tokens"]
+        B["💬 Conversation History\nPrevious messages in this chat\n~500–2,000 tokens"]
+        C["📁 Retrieved Context — RAG\nDocuments pulled from vector DB\n~1,000–5,000 tokens"]
+        D["❓ User's Current Question\n'What was Q3 revenue?'\n~20–100 tokens"]
+        E["🤖 Model's Response\nGenerated, also uses window\n~100–2,000 tokens"]
+
+        A --> B --> C --> D --> E
+    end
+
+    style CW fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style A fill:#fff3cd,stroke:#ffc107,stroke-width:1px
+    style B fill:#fff3cd,stroke:#ffc107,stroke-width:1px
+    style C fill:#e2d5f1,stroke:#6f42c1,stroke-width:1px
+    style D fill:#fff3cd,stroke:#ffc107,stroke-width:1px
+    style E fill:#d4edda,stroke:#28a745,stroke-width:1px
 ```
 
 **Context window sizes (2026):**

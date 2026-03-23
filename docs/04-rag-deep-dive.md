@@ -16,51 +16,40 @@ This is the engineering deep dive into Retrieval-Augmented Generation. If you've
 
 There are two paths in every RAG system — the **indexing path** (one-time, when data changes) and the **query path** (every time a user asks a question):
 
-```
-INDEXING PATH (offline)                QUERY PATH (every question)
-═══════════════════════                ════════════════════════════
+```mermaid
+graph TD
+    subgraph INDEX["📥 INDEXING PATH — offline"]
+        D1["📁 DOCUMENTS\nPDFs, DBs, APIs, wikis"]
+        D2["✂️ CHUNKING\nSplit into small pieces"]
+        D3["🔢 EMBEDDING\nConvert to vectors"]
+        D4["🗄️ VECTOR DB\nStore and index"]
+        D1 --> D2 --> D3 --> D4
+    end
 
-┌─────────────┐                       ┌─────────────────┐
-│  DOCUMENTS  │                       │  USER QUESTION  │
-│  PDFs, DBs, │                       │  "What was Q3   │
-│  APIs, wikis│                       │   revenue?"     │
-└──────┬──────┘                       └────────┬────────┘
-       │                                       │
-       ▼                                       ▼
-┌─────────────┐                       ┌─────────────────┐
-│  CHUNKING   │                       │   EMBEDDING     │
-│  Split into │                       │   Convert query │
-│  small      │                       │   to vector     │
-│  pieces     │                       └────────┬────────┘
-└──────┬──────┘                                │
-       │                                       │
-       ▼                                       ▼
-┌─────────────┐                       ┌─────────────────┐
-│  EMBEDDING  │                       │   RETRIEVAL     │
-│  Convert to │                       │   Find nearest  │
-│  vectors    │                       │   vectors in DB │
-└──────┬──────┘                       └────────┬────────┘
-       │                                       │
-       ▼                                       ▼
-┌─────────────┐                       ┌─────────────────┐
-│  VECTOR DB  │◄──────────────────────│   RERANKING     │
-│  Store and  │   similarity search   │   Score and     │
-│  index      │                       │   reorder       │
-└─────────────┘                       └────────┬────────┘
-                                               │
-                                               ▼
-                                      ┌─────────────────┐
-                                      │ PROMPT ASSEMBLY  │
-                                      │ System prompt +  │
-                                      │ context + query  │
-                                      └────────┬────────┘
-                                               │
-                                               ▼
-                                      ┌─────────────────┐
-                                      │      LLM        │
-                                      │ Generate answer  │
-                                      │ grounded in data │
-                                      └─────────────────┘
+    subgraph QUERY["🔍 QUERY PATH — every question"]
+        Q1["❓ USER QUESTION\n'What was Q3 revenue?'"]
+        Q2["🔢 EMBEDDING\nConvert query to vector"]
+        Q3["🔍 RETRIEVAL\nFind nearest vectors in DB"]
+        Q4["🎯 RERANKING\nScore and reorder"]
+        Q5["📋 PROMPT ASSEMBLY\nSystem prompt + context + query"]
+        Q6["🤖 LLM\nGenerate answer grounded in data"]
+        Q1 --> Q2 --> Q3 --> Q4 --> Q5 --> Q6
+    end
+
+    D4 -.->|similarity search| Q3
+
+    style INDEX fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style QUERY fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style D1 fill:#fff3cd,stroke:#ffc107
+    style D2 fill:#f0f4ff,stroke:#2E86C1
+    style D3 fill:#f0f4ff,stroke:#2E86C1
+    style D4 fill:#e2d5f1,stroke:#6f42c1
+    style Q1 fill:#fff3cd,stroke:#ffc107
+    style Q2 fill:#f0f4ff,stroke:#2E86C1
+    style Q3 fill:#f0f4ff,stroke:#2E86C1
+    style Q4 fill:#f0f4ff,stroke:#2E86C1
+    style Q5 fill:#f0f4ff,stroke:#2E86C1
+    style Q6 fill:#d4edda,stroke:#28a745
 ```
 
 The indexing path runs when your data changes (daily, weekly, or on-demand). The query path runs in real-time for every user question. The key insight: **most of the engineering complexity is in the indexing path.** Get that right, and queries are fast and accurate.
@@ -103,30 +92,30 @@ Chunking is where most RAG pipelines succeed or fail. The goal: create pieces sm
 
 Split text into chunks of N tokens with optional overlap.
 
-```
-Document: "Revenue reached $42M in Q3. The defense practice
-           grew 18%. Financial services slowed 5%. Health
-           showed strong recovery at 15% growth."
+```mermaid
+graph TD
+    DOC["📄 Document: 'Revenue reached $42M in Q3. The defense practice\ngrew 18%. Financial services slowed 5%. Health\nshowed strong recovery at 15% growth.'"]
 
-Fixed-size (50 tokens, no overlap):
-┌──────────────────────────────────────┐
-│ Chunk 1: "Revenue reached $42M in    │
-│ Q3. The defense practice grew 18%."  │
-├──────────────────────────────────────┤
-│ Chunk 2: "Financial services slowed  │
-│ 5%. Health showed strong recovery    │
-│ at 15% growth."                      │
-└──────────────────────────────────────┘
+    subgraph NO_OL["Fixed-size — 50 tokens, no overlap"]
+        A1["✂️ Chunk 1: 'Revenue reached $42M in\nQ3. The defense practice grew 18%.'"]
+        A2["✂️ Chunk 2: 'Financial services slowed\n5%. Health showed strong recovery\nat 15% growth.'"]
+    end
 
-Fixed-size (50 tokens, 20% overlap):
-┌──────────────────────────────────────┐
-│ Chunk 1: "Revenue reached $42M in    │
-│ Q3. The defense practice grew 18%."  │
-├──────────────────────────────────────┤
-│ Chunk 2: "The defense practice grew  │  ← overlap
-│ 18%. Financial services slowed 5%.   │
-│ Health showed strong recovery..."    │
-└──────────────────────────────────────┘
+    subgraph OL["Fixed-size — 50 tokens, 20% overlap"]
+        B1["✂️ Chunk 1: 'Revenue reached $42M in\nQ3. The defense practice grew 18%.'"]
+        B2["🔄 Chunk 2: 'The defense practice grew\n18%. Financial services slowed 5%.\nHealth showed strong recovery...'"]
+    end
+
+    DOC --> NO_OL
+    DOC --> OL
+
+    style DOC fill:#fff3cd,stroke:#ffc107
+    style NO_OL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style OL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style A1 fill:#f0f4ff,stroke:#2E86C1
+    style A2 fill:#f0f4ff,stroke:#2E86C1
+    style B1 fill:#f0f4ff,stroke:#2E86C1
+    style B2 fill:#e2d5f1,stroke:#6f42c1
 ```
 
 **Pros:** Simple, predictable chunk sizes, easy to implement.
@@ -150,15 +139,24 @@ Any strategy combined with overlap at boundaries, so context isn't lost between 
 
 Two levels: parent chunks (full sections) and child chunks (paragraphs within sections). Retrieve the child, include the parent for context.
 
-```
-Parent chunk: "Q3 2025 Financial Performance Summary
-               [entire 3-paragraph section]"
-  │
-  ├── Child chunk 1: "Total revenue for Q3 reached $42.3M..."
-  ├── Child chunk 2: "Revenue by practice area: Defense..."
-  └── Child chunk 3: "Gross margin improved to 38.5%..."
+```mermaid
+graph TD
+    P["📁 Parent chunk: 'Q3 2025 Financial Performance Summary'\nEntire 3-paragraph section"]
+    C1["📄 Child 1: 'Total revenue for Q3 reached $42.3M...'"]
+    C2["🎯 Child 2: 'Revenue by practice area: Defense...'"]
+    C3["📄 Child 3: 'Gross margin improved to 38.5%...'"]
+    R["✅ Return Child 2 + Parent for full context"]
 
-Search matches Child 2 → Return Child 2 + Parent for full context
+    P --> C1
+    P --> C2
+    P --> C3
+    C2 -->|"🔍 Search matches"| R
+
+    style P fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style C1 fill:#f0f4ff,stroke:#2E86C1
+    style C2 fill:#d4edda,stroke:#28a745,stroke-width:2px
+    style C3 fill:#f0f4ff,stroke:#2E86C1
+    style R fill:#d4edda,stroke:#28a745
 ```
 
 **Pros:** Best of both worlds — precise retrieval with broad context.
@@ -193,12 +191,17 @@ The embedding model determines how well your system understands meaning. It conv
 
 ### How Embeddings Work
 
-```
-"Q3 revenue was $42 million"  →  [0.023, -0.156, 0.891, ..., 0.034]
-                                  └──── 384 to 3,072 dimensions ────┘
+```mermaid
+graph LR
+    T1["📝 'Q3 revenue was $42 million'"] -->|Embed| V1["🔢 [0.023, -0.156, 0.891, ..., 0.034]\n384 to 3,072 dimensions"]
+    T2["📝 'Third quarter sales figures'"] -->|Embed| V2["🔢 [0.019, -0.148, 0.887, ..., 0.031]\nSimilar values = similar meaning"]
 
-"Third quarter sales figures"  →  [0.019, -0.148, 0.887, ..., 0.031]
-                                  └──── similar values = similar meaning ──┘
+    V1 <-.->|"✅ High similarity"| V2
+
+    style T1 fill:#fff3cd,stroke:#ffc107
+    style T2 fill:#fff3cd,stroke:#ffc107
+    style V1 fill:#e2d5f1,stroke:#6f42c1
+    style V2 fill:#e2d5f1,stroke:#6f42c1
 ```
 
 ### Model Comparison (2026)
@@ -228,23 +231,33 @@ Vector databases are purpose-built for storing embeddings and running similarity
 
 ### How Similarity Search Works
 
-```
-Query vector:     [0.023, -0.156, 0.891, ...]
-                          │
-                          ▼
-            ┌─────────────────────────┐
-            │     VECTOR DATABASE     │
-            │                         │
-            │  Chunk 1: [0.019, ...]  │ ← distance: 0.04 ✓ close
-            │  Chunk 2: [0.812, ...]  │ ← distance: 0.73 ✗ far
-            │  Chunk 3: [0.025, ...]  │ ← distance: 0.03 ✓ closest
-            │  Chunk 4: [0.567, ...]  │ ← distance: 0.51 ✗ far
-            │  Chunk 5: [0.021, ...]  │ ← distance: 0.05 ✓ close
-            │                         │
-            └─────────────────────────┘
-                          │
-                    Top 3 results:
-                    Chunk 3, Chunk 1, Chunk 5
+```mermaid
+graph TD
+    Q["🔍 Query vector: [0.023, -0.156, 0.891, ...]"]
+
+    subgraph VDB["🗄️ VECTOR DATABASE"]
+        C1["📄 Chunk 1: [0.019, ...]\ndistance: 0.04 ✅ close"]
+        C2["📄 Chunk 2: [0.812, ...]\ndistance: 0.73 ❌ far"]
+        C3["📄 Chunk 3: [0.025, ...]\ndistance: 0.03 ✅ closest"]
+        C4["📄 Chunk 4: [0.567, ...]\ndistance: 0.51 ❌ far"]
+        C5["📄 Chunk 5: [0.021, ...]\ndistance: 0.05 ✅ close"]
+    end
+
+    R["🎯 Top 3 results: Chunk 3, Chunk 1, Chunk 5"]
+
+    Q --> VDB
+    C3 --> R
+    C1 --> R
+    C5 --> R
+
+    style Q fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style VDB fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
+    style C1 fill:#d4edda,stroke:#28a745
+    style C2 fill:#f8d7da,stroke:#dc3545
+    style C3 fill:#d4edda,stroke:#28a745,stroke-width:2px
+    style C4 fill:#f8d7da,stroke:#dc3545
+    style C5 fill:#d4edda,stroke:#28a745
+    style R fill:#d4edda,stroke:#28a745,stroke-width:2px
 ```
 
 ### Database Comparison
@@ -277,28 +290,69 @@ Traditional full-text search. Great for exact terms and technical jargon, but mi
 **3. Hybrid search (vector + keyword):**
 Run both searches, combine results. This is the production standard — it catches both conceptual and exact matches.
 
-```
-User query: "Q3 book-to-bill ratio"
+```mermaid
+graph TD
+    Q["❓ User query: 'Q3 book-to-bill ratio'"]
 
-Vector search finds:                    Keyword search finds:
-  ✓ "New bookings in Q3 totaled $38M"     ✓ "book-to-bill ratio of 0.90"
-  ✓ "Revenue reached $42.3 million"        ✗ (only exact keyword matches)
-  ✓ "Backlog stands at $127M"
+    Q --> VS
+    Q --> KS
 
-Hybrid: combines both → best results
+    subgraph VS["🔢 Vector Search"]
+        V1["✅ 'New bookings in Q3 totaled $38M'"]
+        V2["✅ 'Revenue reached $42.3 million'"]
+        V3["✅ 'Backlog stands at $127M'"]
+    end
+
+    subgraph KS["🔤 Keyword Search"]
+        K1["✅ 'book-to-bill ratio of 0.90'"]
+        K2["❌ only exact keyword matches"]
+    end
+
+    VS --> H["🎯 Hybrid: combines both\nBest results"]
+    KS --> H
+
+    style Q fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style VS fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
+    style KS fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style H fill:#d4edda,stroke:#28a745,stroke-width:2px
+    style V1 fill:#d4edda,stroke:#28a745
+    style V2 fill:#d4edda,stroke:#28a745
+    style V3 fill:#d4edda,stroke:#28a745
+    style K1 fill:#d4edda,stroke:#28a745
+    style K2 fill:#f8d7da,stroke:#dc3545
 ```
 
 ### Reranking: The Second Filter
 
 Initial retrieval casts a wide net — top 10-20 results. A **reranker** then scores each result for relevance to the specific question and reorders them.
 
-```
-Initial retrieval (top 5):           After reranking:
-1. Revenue data (score: 0.82)        1. Book-to-bill ratio (score: 0.95) ↑
-2. Headcount data (score: 0.78)      2. Revenue data (score: 0.88)
-3. Book-to-bill ratio (score: 0.75)  3. Backlog data (score: 0.82) ↑
-4. Client satisfaction (score: 0.73) 4. Headcount data (score: 0.45) ↓
-5. Backlog data (score: 0.71)        5. Client satisfaction (score: 0.31) ↓
+```mermaid
+graph LR
+    subgraph BEFORE["🔍 Initial Retrieval — top 5"]
+        B1["1. Revenue data — 0.82"]
+        B2["2. Headcount data — 0.78"]
+        B3["3. Book-to-bill ratio — 0.75"]
+        B4["4. Client satisfaction — 0.73"]
+        B5["5. Backlog data — 0.71"]
+    end
+
+    BEFORE -->|"🎯 Rerank"| AFTER
+
+    subgraph AFTER["✅ After Reranking"]
+        A1["1. Book-to-bill ratio — 0.95 ⬆️"]
+        A2["2. Revenue data — 0.88"]
+        A3["3. Backlog data — 0.82 ⬆️"]
+        A4["4. Headcount data — 0.45 ⬇️"]
+        A5["5. Client satisfaction — 0.31 ⬇️"]
+    end
+
+    style BEFORE fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style AFTER fill:#d4edda,stroke:#28a745,stroke-width:2px
+    style A1 fill:#d4edda,stroke:#28a745
+    style A2 fill:#d4edda,stroke:#28a745
+    style A3 fill:#d4edda,stroke:#28a745
+    style A4 fill:#f8d7da,stroke:#dc3545
+    style A5 fill:#f8d7da,stroke:#dc3545
 ```
 
 **Why reranking matters:** Initial retrieval uses fast but approximate similarity (bi-encoder). Reranking uses slower but more precise cross-attention (cross-encoder) that reads the query and document together. This catches cases where a chunk is similar in topic but not actually relevant to the specific question.
@@ -313,39 +367,44 @@ The final step before the LLM: assembling all retrieved context into a well-stru
 
 ### The Anatomy of a RAG Prompt
 
-```
-┌──────────────────────────────────────────────────┐
-│ SYSTEM PROMPT                                     │
-│ "You are a senior analyst. Answer based ONLY on   │
-│  the provided context. Cite sources. If the data  │
-│  isn't in the context, say 'I don't have that.'"  │
-├──────────────────────────────────────────────────┤
-│ RETRIEVED CONTEXT                                 │
-│ [Source: Q3 Financial Summary]                    │
-│ Total revenue for Q3 reached $42.3 million...     │
-│                                                   │
-│ [Source: Q3 Client Report]                        │
-│ The firm onboarded 12 new clients in Q3...        │
-├──────────────────────────────────────────────────┤
-│ USER QUESTION                                     │
-│ "How did financial performance relate to new       │
-│  client acquisition in Q3?"                       │
-└──────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph PROMPT["📋 RAG Prompt Assembly"]
+        S["🛡️ SYSTEM PROMPT\n'You are a senior analyst. Answer based ONLY on\nthe provided context. Cite sources. If the data\nisn't in the context, say I don't have that.'"]
+        C["📁 RETRIEVED CONTEXT\n[Source: Q3 Financial Summary]\nTotal revenue for Q3 reached $42.3 million...\n\n[Source: Q3 Client Report]\nThe firm onboarded 12 new clients in Q3..."]
+        U["❓ USER QUESTION\n'How did financial performance relate to new\nclient acquisition in Q3?'"]
+
+        S --> C --> U
+    end
+
+    style PROMPT fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style S fill:#f8d7da,stroke:#dc3545
+    style C fill:#e2d5f1,stroke:#6f42c1
+    style U fill:#fff3cd,stroke:#ffc107
 ```
 
 ### Token Budget Management
 
 The context window has a fixed size. You need to allocate it wisely:
 
-```
-Context window budget (example: 128K tokens):
+```mermaid
+graph TD
+    subgraph BUDGET["🧠 Context Window Budget — 128K tokens"]
+        A["📋 System prompt\n~500 tokens — fixed"]
+        B["📁 Retrieved context\n~2,000 tokens — variable"]
+        C["❓ User question\n~100 tokens — small"]
+        D["🤖 Response space\n~1,000 tokens — reserved"]
+        E["✅ Available for context\n~124,400 tokens — plenty of room"]
 
-  System prompt:        ~500 tokens  (fixed)
-  Retrieved context:   ~2,000 tokens (variable — more chunks = more tokens)
-  User question:         ~100 tokens (small)
-  Response space:      ~1,000 tokens (reserved for the answer)
-  ─────────────────────────────────
-  Available for context: ~124,400 tokens (plenty of room)
+        A --> B --> C --> D --> E
+    end
+
+    style BUDGET fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style A fill:#f8d7da,stroke:#dc3545
+    style B fill:#e2d5f1,stroke:#6f42c1
+    style C fill:#fff3cd,stroke:#ffc107
+    style D fill:#d4edda,stroke:#28a745
+    style E fill:#d4edda,stroke:#28a745,stroke-width:2px
 ```
 
 At 128K tokens, budget is rarely an issue. But at 4K-8K tokens (older models, cheaper tiers), you must be strategic: fewer chunks, shorter system prompts, compressed context.
@@ -375,22 +434,35 @@ Building the pipeline is half the work. Measuring whether it actually works well
 
 ## Decision Framework: Should You Build RAG?
 
-```
-Do you need the AI to answer questions about private/current data?
-├── No → Standard LLM with good prompting is sufficient
-└── Yes
-    ├── Is your data < 100 documents and < 100K tokens total?
-    │   └── Yes → Consider long context first (simpler)
-    │   └── No → RAG is the right choice
-    │
-    ├── Does the data change frequently (daily/weekly)?
-    │   └── Yes → RAG (update index incrementally)
-    │
-    ├── Do you need sub-second response times?
-    │   └── Yes → RAG (long context = 30-60s at 1M tokens)
-    │
-    └── Is your data measured in terabytes?
-        └── Yes → RAG is the only viable option
+```mermaid
+graph TD
+    Q1{"🤔 Need AI to answer questions\nabout private/current data?"}
+    Q1 -->|No| A1["✅ Standard LLM with\ngood prompting is sufficient"]
+    Q1 -->|Yes| Q2{"📏 Data < 100 docs\nand < 100K tokens?"}
+
+    Q2 -->|Yes| A2["✅ Consider long context\nfirst — simpler"]
+    Q2 -->|No| A3["🎯 RAG is the right choice"]
+
+    Q1 -->|Yes| Q3{"🔄 Data changes\nfrequently — daily/weekly?"}
+    Q3 -->|Yes| A4["🎯 RAG — update index\nincrementally"]
+
+    Q1 -->|Yes| Q4{"⚡ Need sub-second\nresponse times?"}
+    Q4 -->|Yes| A5["🎯 RAG — long context\n= 30–60s at 1M tokens"]
+
+    Q1 -->|Yes| Q5{"💾 Data measured\nin terabytes?"}
+    Q5 -->|Yes| A6["🎯 RAG is the\nonly viable option"]
+
+    style Q1 fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style Q2 fill:#fff3cd,stroke:#ffc107
+    style Q3 fill:#fff3cd,stroke:#ffc107
+    style Q4 fill:#fff3cd,stroke:#ffc107
+    style Q5 fill:#fff3cd,stroke:#ffc107
+    style A1 fill:#f0f4ff,stroke:#2E86C1
+    style A2 fill:#f0f4ff,stroke:#2E86C1
+    style A3 fill:#d4edda,stroke:#28a745
+    style A4 fill:#d4edda,stroke:#28a745
+    style A5 fill:#d4edda,stroke:#28a745
+    style A6 fill:#d4edda,stroke:#28a745
 ```
 
 ---

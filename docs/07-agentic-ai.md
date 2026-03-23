@@ -60,46 +60,32 @@ Agents can evaluate their own outputs and retry when something fails. If a datab
 
 ## Agent Architecture
 
-```
-                    ┌─────────────┐
-                    │    GOAL     │
-                    │  "Prepare   │
-                    │  Q3 deck"   │
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-              ┌────►│   PLANNER   │◄────┐
-              │     │ Break goal  │     │
-              │     │ into steps  │     │
-              │     └──────┬──────┘     │
-              │            │            │
-              │            ▼            │
-              │     ┌─────────────┐     │
-              │     │  EXECUTOR   │     │
-              │     │ Run current │     │
-              │     │ step using  │     │
-              │     │ tools       │     │
-              │     └──────┬──────┘     │
-              │            │            │
-              │            ▼            │
-              │     ┌─────────────┐     │
-              │     │  EVALUATOR  │     │
-              │     │ Did it work?│     │
-              │     │ Good enough?│     │
-              │     └──────┬──────┘     │
-              │            │            │
-              │       ┌────┴────┐       │
-              │       ▼         ▼       │
-              │    [Success]  [Fail]    │
-              │       │         │       │
-              │       ▼         └───────┘
-              │  ┌──────────┐   (retry/replan)
-              │  │ NEXT STEP│
-              │  └────┬─────┘
-              │       │
-              └───────┘
-              (until all steps done)
+```mermaid
+graph TD
+    Goal["🎯 GOAL<br/>Prepare Q3 deck"]
+    Planner["🧠 PLANNER<br/>Break goal into steps"]
+    Executor["🔧 EXECUTOR<br/>Run current step using tools"]
+    Evaluator["🔍 EVALUATOR<br/>Did it work? Good enough?"]
+    Success["✅ Success"]
+    Fail["❌ Fail"]
+    NextStep["➡️ NEXT STEP"]
+
+    Goal --> Planner
+    Planner --> Executor
+    Executor --> Evaluator
+    Evaluator --> Success
+    Evaluator --> Fail
+    Fail -- "retry/replan" --> Planner
+    Success --> NextStep
+    NextStep -- "until all steps done" --> Planner
+
+    style Goal fill:#fff3cd,stroke:#ffc107,color:#000
+    style Planner fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Executor fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Evaluator fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Success fill:#d4edda,stroke:#28a745,color:#000
+    style Fail fill:#f8d7da,stroke:#dc3545,color:#000
+    style NextStep fill:#f0f4ff,stroke:#2E86C1,color:#000
 ```
 
 ---
@@ -112,18 +98,28 @@ When complex tasks require multiple specialized agents working together, you nee
 
 Agents execute in a fixed, linear order. Each agent's output becomes the next agent's input.
 
-```
-┌────────────┐     ┌────────────┐     ┌────────────┐     ┌────────────┐
-│    DATA    │     │  ANALYSIS  │     │   CHART    │     │   REPORT   │
-│   AGENT    │────►│   AGENT    │────►│   AGENT    │────►│   AGENT    │
-│            │     │            │     │            │     │            │
-│  Pull raw  │     │ Run analysis│     │ Generate   │     │ Assemble   │
-│  data from │     │ and compare │     │ visuals    │     │ final      │
-│  database  │     │ to targets  │     │ from data  │     │ report     │
-└────────────┘     └────────────┘     └────────────┘     └────────────┘
-       │                 │                  │                  │
-       └─────────────────┴──────────────────┴──────────────────┘
-               ▲ State is passed forward through each step ▲
+```mermaid
+graph LR
+    Data["📁 DATA AGENT<br/>Pull raw data<br/>from database"]
+    Analysis["📊 ANALYSIS AGENT<br/>Run analysis<br/>and compare to targets"]
+    Chart["📈 CHART AGENT<br/>Generate visuals<br/>from data"]
+    Report["📄 REPORT AGENT<br/>Assemble final<br/>report"]
+
+    Data --> Analysis --> Chart --> Report
+
+    subgraph State ["📦 State is passed forward through each step"]
+        direction LR
+        Data
+        Analysis
+        Chart
+        Report
+    end
+
+    style Data fill:#fff3cd,stroke:#ffc107,color:#000
+    style Analysis fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Chart fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Report fill:#d4edda,stroke:#28a745,color:#000
+    style State fill:#f9f9f9,stroke:#ccc,color:#000
 ```
 
 **When to use:** Clear linear dependencies where each step needs the previous step's output. Document processing pipelines, data transformation workflows.
@@ -136,26 +132,30 @@ Agents execute in a fixed, linear order. Each agent's output becomes the next ag
 
 Multiple agents work independently on different sub-tasks. Results are aggregated when all complete.
 
-```
-                    ┌─────────────┐
-                    │ Coordinator │
-                    └──────┬──────┘
-                    ┌──────┼──────┐
-                    ▼      ▼      ▼
-              [Financial] [HR]  [Client]
-              [Agent]   [Agent] [Agent]
-                    │      │      │
-                    ▼      ▼      ▼
-              Revenue   Headcount  Client
-              data      data       satisfaction
-                    │      │      │
-                    └──────┼──────┘
-                           ▼
-                    ┌─────────────┐
-                    │  Aggregator │
-                    │  Combine    │
-                    │  all results│
-                    └─────────────┘
+```mermaid
+graph TD
+    Coord["🎯 Coordinator"]
+    Fin["💰 Financial Agent"]
+    HR["👥 HR Agent"]
+    Client["🤝 Client Agent"]
+    FinData["Revenue data"]
+    HRData["Headcount data"]
+    ClientData["Client satisfaction"]
+    Agg["📊 Aggregator<br/>Combine all results"]
+
+    Coord --> Fin & HR & Client
+    Fin --> FinData --> Agg
+    HR --> HRData --> Agg
+    Client --> ClientData --> Agg
+
+    style Coord fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style HR fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Client fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style FinData fill:#fff3cd,stroke:#ffc107,color:#000
+    style HRData fill:#fff3cd,stroke:#ffc107,color:#000
+    style ClientData fill:#fff3cd,stroke:#ffc107,color:#000
+    style Agg fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 **When to use:** Independent sub-tasks that don't depend on each other. Data collection from multiple sources, multi-market analysis.
@@ -168,19 +168,22 @@ Multiple agents work independently on different sub-tasks. Results are aggregate
 
 A central "supervisor" agent delegates tasks to specialized workers based on the request type.
 
-```
-                    ┌──────────────┐
-            ┌──────►│  SUPERVISOR  │◄──────┐
-            │       │  Routes to   │       │
-            │       │  right agent │       │
-            │       └──────┬───────┘       │
-            │       ┌──────┼───────┐       │
-            │       ▼      ▼       ▼       │
-            │   [Finance] [Tech]  [HR]     │
-            │   [Expert]  [Expert][Expert] │
-            │       │      │       │       │
-            └───────┴──────┴───────┘       │
-            (results sent back to supervisor)
+```mermaid
+graph TD
+    Sup["🤖 SUPERVISOR<br/>Routes to right agent"]
+    Fin["💰 Finance Expert"]
+    Tech["💻 Tech Expert"]
+    HR["👥 HR Expert"]
+
+    Sup --> Fin & Tech & HR
+    Fin -- "results" --> Sup
+    Tech -- "results" --> Sup
+    HR -- "results" --> Sup
+
+    style Sup fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Tech fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style HR fill:#f0f4ff,stroke:#2E86C1,color:#000
 ```
 
 **When to use:** Diverse query types that require different expertise. A C-suite dashboard where questions could be about finance, HR, clients, or technology — each routed to a specialized agent.
@@ -191,14 +194,17 @@ A central "supervisor" agent delegates tasks to specialized workers based on the
 
 Agents handle different phases of a workflow, passing context at transition points.
 
-```
-[Intake Agent] ──handoff──► [Research Agent] ──handoff──► [Action Agent]
-     │                            │                            │
-     ▼                            ▼                            ▼
- Understand               Research and            Execute the
- the request,             analyze data,           recommended
- classify,                generate options,       action with
- gather context           make recommendation     human approval
+```mermaid
+graph LR
+    Intake["📥 Intake Agent<br/>Understand the request,<br/>classify, gather context"]
+    Research["🔍 Research Agent<br/>Research and analyze data,<br/>generate options,<br/>make recommendation"]
+    Action["⚡ Action Agent<br/>Execute the recommended<br/>action with human approval"]
+
+    Intake -- "handoff" --> Research -- "handoff" --> Action
+
+    style Intake fill:#fff3cd,stroke:#ffc107,color:#000
+    style Research fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Action fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 **When to use:** Workflow phases that require fundamentally different capabilities. Customer service (intake → investigation → resolution), document review (classify → analyze → summarize).
@@ -213,29 +219,21 @@ In enterprise environments — especially in government and financial services �
 
 **The trust ladder:**
 
-```
-╔══════════════════════════════════════════════════════════════════╗
-║                      THE TRUST LADDER                           ║
-║                                                                 ║
-║  ┌────────────────────────────────────────────────────────────┐  ║
-║  │  Level 4: AUTOMATE                                    ▲   │  ║
-║  │  Agent handles end-to-end for low-risk tasks          │   │  ║
-║  │  Human monitors via dashboards                  More      │  ║
-║  ├────────────────────────────────────────────── autonomy ──┤  ║
-║  │  Level 3: ACT                                     │   │  ║
-║  │  Agent executes routine actions autonomously      │   │  ║
-║  │  Human reviews after the fact                     │   │  ║
-║  ├───────────────────────────────────────────────────────────┤  ║
-║  │  Level 2: RECOMMEND                               │   │  ║
-║  │  Agent analyzes data and recommends action        │   │  ║
-║  │  Human approves or rejects                        │   │  ║
-║  ├───────────────────────────────────────────────────────────┤  ║
-║  │  Level 1: INFORM                                  │   │  ║
-║  │  Agent finds data and presents it           More  ▼   │  ║
-║  │  Human makes all decisions                  human     │  ║
-║  │  ← START HERE                               control   │  ║
-║  └────────────────────────────────────────────────────────────┘  ║
-╚══════════════════════════════════════════════════════════════════╝
+```mermaid
+graph TD
+    L4["🚀 Level 4: AUTOMATE<br/>Agent handles end-to-end for low-risk tasks<br/>Human monitors via dashboards"]
+    L3["⚡ Level 3: ACT<br/>Agent executes routine actions autonomously<br/>Human reviews after the fact"]
+    L2["💡 Level 2: RECOMMEND<br/>Agent analyzes data and recommends action<br/>Human approves or rejects"]
+    L1["📋 Level 1: INFORM ← START HERE<br/>Agent finds data and presents it<br/>Human makes all decisions"]
+
+    L1 -- "⬆️ More autonomy" --> L2
+    L2 -- "⬆️ More autonomy" --> L3
+    L3 -- "⬆️ More autonomy" --> L4
+
+    style L4 fill:#d4edda,stroke:#28a745,color:#000
+    style L3 fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style L2 fill:#fff3cd,stroke:#ffc107,color:#000
+    style L1 fill:#f8d7da,stroke:#dc3545,color:#000
 ```
 
 **The principle:** Start at Level 1. Earn trust through accuracy and reliability. Gradually move up the ladder. Never skip levels for high-stakes operations.
@@ -262,36 +260,36 @@ For the C-suite dashboard: the GenAI chat interface should be Level 1-2. It info
 
 ## The Agentic AI Stack
 
-```
-┌────────────────────────────────────────────────────┐
-│  ▲  USER INTERFACE                                 │
-│  │  Chat, dashboard, Slack, email                  │
-├──┼─────────────────────────────────────────────────┤
-│  │  AGENT RUNTIME                                  │
-│  │  Microsoft Agent Framework, LangGraph,          │
-│  │  n8n, CrewAI                                    │
-├──┼─────────────────────────────────────────────────┤  ─┐
-│     TOOLS & INTEGRATIONS                           │   │
-│  A  MCP servers, APIs, databases, file systems     │   │
-├──P─────────────────────────────────────────────────┤   ├ Operational
-│  P  KNOWLEDGE LAYER                                │   │   Layers
-│  L  RAG pipeline, vector databases, memory         │   │
-├──I─────────────────────────────────────────────────┤   │
-│  C  MODELS                                         │   │
-│  A  GPT-5, Claude, Codex — routed by task type     │   │
-│  T                                                 │  ─┘
-│  I                                                 │
-│  O                                                 │
-│  N                                                 │
-╠════════════════════════════════════════════════════╣  ─┐
-║  ▼  GOVERNANCE                                     ║   │
-║     Access controls, audit logging, guardrails,    ║   ├ Foundation
-║     compliance policies                            ║   │   Layers
-╠════════════════════════════════════════════════════╣   │
-║     INFRASTRUCTURE                                 ║   │
-║     Azure AI Foundry, containerized execution,     ║   │
-║     virtual networks, FedRAMP compliance           ║  ─┘
-╚════════════════════════════════════════════════════╝
+```mermaid
+graph TD
+    subgraph App ["🖥️ APPLICATION"]
+        UI["💬 USER INTERFACE<br/>Chat, dashboard, Slack, email"]
+        Runtime["🤖 AGENT RUNTIME<br/>Microsoft Agent Framework, LangGraph, n8n, CrewAI"]
+    end
+
+    subgraph Ops ["⚙️ OPERATIONAL LAYERS"]
+        Tools["🔧 TOOLS & INTEGRATIONS<br/>MCP servers, APIs, databases, file systems"]
+        Knowledge["📚 KNOWLEDGE LAYER<br/>RAG pipeline, vector databases, memory"]
+        Models["🧠 MODELS<br/>GPT-5, Claude, Codex — routed by task type"]
+    end
+
+    subgraph Foundation ["🏗️ FOUNDATION LAYERS"]
+        Gov["🛡️ GOVERNANCE<br/>Access controls, audit logging,<br/>guardrails, compliance policies"]
+        Infra["☁️ INFRASTRUCTURE<br/>Azure AI Foundry, containerized execution,<br/>virtual networks, FedRAMP compliance"]
+    end
+
+    UI --> Runtime --> Tools --> Knowledge --> Models --> Gov --> Infra
+
+    style UI fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Runtime fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Tools fill:#fff3cd,stroke:#ffc107,color:#000
+    style Knowledge fill:#fff3cd,stroke:#ffc107,color:#000
+    style Models fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Gov fill:#f8d7da,stroke:#dc3545,color:#000
+    style Infra fill:#f8d7da,stroke:#dc3545,color:#000
+    style App fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Ops fill:#fff3cd,stroke:#ffc107,color:#000
+    style Foundation fill:#f8d7da,stroke:#dc3545,color:#000
 ```
 
 ---

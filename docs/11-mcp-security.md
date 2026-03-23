@@ -18,37 +18,31 @@ This guide expands on the [four security gaps](08-mcp.md) introduced in the MCP 
 
 Before building defenses, you need to understand what you're defending against.
 
-```
-┌────────────────────────────────────────────────────────────┐
-│                    MCP THREAT MODEL                         │
-│                                                            │
-│  ┌──────────┐    ┌──────────┐    ┌───────────┐            │
-│  │ PROMPT   │    │CREDENTIAL│    │   DATA    │            │
-│  │INJECTION │    │  THEFT   │    │EXFILTRATION│            │
-│  │          │    │          │    │           │            │
-│  │ Attacker │    │ Attacker │    │ Attacker  │            │
-│  │ plants   │    │ extracts │    │ uses tool │            │
-│  │ instruc- │    │ API keys │    │ calls to  │            │
-│  │ tions in │    │ from MCP │    │ send data │            │
-│  │ documents│    │ config   │    │ to external│            │
-│  │ that RAG │    │ via      │    │ endpoints │            │
-│  │ retrieves│    │ prompt   │    │           │            │
-│  └──────────┘    └──────────┘    └───────────┘            │
-│                                                            │
-│  ┌──────────┐    ┌──────────┐                              │
-│  │UNAUTHED  │    │  SHADOW  │                              │
-│  │  TOOL    │    │  MCP     │                              │
-│  │  USE     │    │ SERVERS  │                              │
-│  │          │    │          │                              │
-│  │ AI calls │    │ Unvetted │                              │
-│  │ tools    │    │ servers  │                              │
-│  │ that the │    │ installed│                              │
-│  │ user     │    │ without  │                              │
-│  │ shouldn't│    │ security │                              │
-│  │ have     │    │ review   │                              │
-│  │ access to│    │          │                              │
-│  └──────────┘    └──────────┘                              │
-└────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph threats["🛡️ MCP THREAT MODEL"]
+        direction LR
+        subgraph row1[" "]
+            direction LR
+            T1["💉 <b>PROMPT INJECTION</b><br/><br/>Attacker plants<br/>instructions in<br/>documents that<br/>RAG retrieves"]
+            T2["🔑 <b>CREDENTIAL THEFT</b><br/><br/>Attacker extracts<br/>API keys from MCP<br/>config via prompt"]
+            T3["📤 <b>DATA EXFILTRATION</b><br/><br/>Attacker uses tool<br/>calls to send data<br/>to external endpoints"]
+        end
+        subgraph row2[" "]
+            direction LR
+            T4["🚪 <b>UNAUTHED TOOL USE</b><br/><br/>AI calls tools that<br/>the user should not<br/>have access to"]
+            T5["👻 <b>SHADOW MCP SERVERS</b><br/><br/>Unvetted servers<br/>installed without<br/>security review"]
+        end
+    end
+
+    style T1 fill:#f8d7da,stroke:#dc3545,color:#000
+    style T2 fill:#f8d7da,stroke:#dc3545,color:#000
+    style T3 fill:#f8d7da,stroke:#dc3545,color:#000
+    style T4 fill:#f8d7da,stroke:#dc3545,color:#000
+    style T5 fill:#f8d7da,stroke:#dc3545,color:#000
+    style threats fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#000
+    style row1 fill:transparent,stroke:none
+    style row2 fill:transparent,stroke:none
 ```
 
 ---
@@ -63,31 +57,20 @@ Default MCP connects via a single service account. Every user's request flows th
 
 Every MCP request must carry the user's identity and be verified against authorization policies.
 
-```
-┌──────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────┐
-│  USER    │    │  MCP CLIENT  │    │   AUTH       │    │   MCP    │
-│ (with    │    │  (AI app)    │    │   GATEWAY    │    │  SERVER  │
-│  identity│    │              │    │              │    │  (tool)  │
-│  token)  │    │              │    │              │    │          │
-└────┬─────┘    └──────┬───────┘    └──────┬───────┘    └────┬─────┘
-     │                 │                   │                  │
-     │ query +         │                   │                  │
-     │ JWT token       │                   │                  │
-     ├────────────────►│                   │                  │
-     │                 │ tool call +       │                  │
-     │                 │ user token        │                  │
-     │                 ├──────────────────►│                  │
-     │                 │                   │ verify:          │
-     │                 │                   │ • user identity  │
-     │                 │                   │ • requested tool │
-     │                 │                   │ • data scope     │
-     │                 │                   │ • time/context   │
-     │                 │                   ├─────────────────►│
-     │                 │                   │                  │ execute
-     │                 │                   │◄─────────────────┤ with
-     │                 │◄──────────────────┤ filtered result  │ user's
-     │◄────────────────┤                   │                  │ scope
-     │ answer          │                   │                  │
+```mermaid
+sequenceDiagram
+    participant U as 👤 USER<br/>(with identity token)
+    participant C as 🖥️ MCP CLIENT<br/>(AI app)
+    participant G as 🔐 AUTH GATEWAY
+    participant S as 🔧 MCP SERVER<br/>(tool)
+
+    U->>C: query + JWT token
+    C->>G: tool call + user token
+    Note over G: Verify:<br/>• user identity<br/>• requested tool<br/>• data scope<br/>• time/context
+    G->>S: authorized request
+    S->>G: result (user's scope)
+    G->>C: filtered result
+    C->>U: answer
 ```
 
 ### Authorization Model: RBAC + ABAC
@@ -126,33 +109,26 @@ and connection strings are in the response.
 
 Credentials must never be accessible from the AI's context — not in config files, not in environment variables, not anywhere the LLM could reference.
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                SECURE CREDENTIAL FLOW                     │
-│                                                           │
-│  ┌──────────┐         ┌──────────────────┐               │
-│  │   AI     │ request │  CREDENTIAL      │               │
-│  │  RUNTIME │────────►│  BROKER          │               │
-│  │          │         │                  │               │
-│  │ Has NO   │         │  • Retrieves     │               │
-│  │ direct   │         │    creds from    │               │
-│  │ access   │         │    OS keychain   │               │
-│  │ to creds │         │  • Injects into  │               │
-│  │          │         │    MCP request   │               │
-│  │          │◄────────│  • Strips from   │               │
-│  │          │ result  │    response      │               │
-│  └──────────┘ (clean) └────────┬─────────┘               │
-│                                │                          │
-│                        ┌───────▼────────┐                │
-│                        │  OS KEYCHAIN   │                │
-│                        │  (macOS Keychain│                │
-│                        │   Windows DPAPI │                │
-│                        │   Linux Secret  │                │
-│                        │   Service)      │                │
-│                        └────────────────┘                │
-│                                                           │
-│  The AI never sees credentials. The broker handles auth.  │
-└──────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph cred_flow["🔒 SECURE CREDENTIAL FLOW"]
+        AI["🤖 <b>AI RUNTIME</b><br/><br/>Has NO direct<br/>access to creds"]
+        BROKER["🔑 <b>CREDENTIAL BROKER</b><br/><br/>• Retrieves creds from OS keychain<br/>• Injects into MCP request<br/>• Strips from response"]
+        KEYCHAIN["🗄️ <b>OS KEYCHAIN</b><br/><br/>macOS Keychain<br/>Windows DPAPI<br/>Linux Secret Service"]
+
+        AI -- "request" --> BROKER
+        BROKER -- "result (clean)" --> AI
+        BROKER --> KEYCHAIN
+    end
+
+    NOTE["The AI never sees credentials. The broker handles auth."]
+    cred_flow --> NOTE
+
+    style AI fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style BROKER fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style KEYCHAIN fill:#fff3cd,stroke:#ffc107,color:#000
+    style cred_flow fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style NOTE fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 **Implementation options:**
@@ -235,30 +211,18 @@ MCP servers are easy to install — `npx @mcp/server-filesystem` and you have an
 
 A formal vetting pipeline ensures only approved, reviewed MCP servers run in production.
 
-```
-┌─────────────┐    ┌──────────────┐    ┌──────────────┐
-│  DEVELOPER  │    │   SECURITY   │    │  CONTAINER   │
-│  REQUEST    │───►│   REVIEW     │───►│  SCANNING    │
-│  "I need    │    │              │    │              │
-│   a DB MCP" │    │  • Code audit│    │  • Vuln scan │
-│             │    │  • Dependency│    │  • SBOM      │
-│             │    │    analysis  │    │    generation│
-│             │    │  • License   │    │  • Malware   │
-│             │    │    check     │    │    check     │
-└─────────────┘    └──────┬───────┘    └──────┬───────┘
-                          │                   │
-                          ▼                   ▼
-                   ┌──────────────┐    ┌──────────────┐
-                   │  APPROVAL    │    │  REGISTRY    │
-                   │  BOARD       │───►│  (Approved)  │
-                   │              │    │              │
-                   │  • Security  │    │  • Version-  │
-                   │    sign-off  │    │    pinned    │
-                   │  • Compliance│    │  • Image     │
-                   │    sign-off  │    │    digest    │
-                   │  • Business  │    │  • Network   │
-                   │    sponsor   │    │    policy    │
-                   └──────────────┘    └──────────────┘
+```mermaid
+graph LR
+    DEV["👨‍💻 <b>DEVELOPER REQUEST</b><br/><br/>I need a DB MCP"] --> SEC["🔍 <b>SECURITY REVIEW</b><br/><br/>• Code audit<br/>• Dependency analysis<br/>• License check"]
+    SEC --> SCAN["🐳 <b>CONTAINER SCANNING</b><br/><br/>• Vuln scan<br/>• SBOM generation<br/>• Malware check"]
+    SCAN --> BOARD["✅ <b>APPROVAL BOARD</b><br/><br/>• Security sign-off<br/>• Compliance sign-off<br/>• Business sponsor"]
+    BOARD --> REG["📦 <b>REGISTRY (Approved)</b><br/><br/>• Version-pinned<br/>• Image digest<br/>• Network policy"]
+
+    style DEV fill:#fff3cd,stroke:#ffc107,color:#000
+    style SEC fill:#f8d7da,stroke:#dc3545,color:#000
+    style SCAN fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style BOARD fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style REG fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 ### Runtime Enforcement
@@ -280,41 +244,34 @@ Approved MCP servers run in isolated containers with strict controls:
 
 Apply Zero Trust principles to every layer of the MCP architecture:
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                 ZERO TRUST MCP ARCHITECTURE                   │
-│                                                              │
-│  PRINCIPLE 1: NEVER TRUST, ALWAYS VERIFY                     │
-│  ┌────────────────────────────────────────────┐              │
-│  │ Every MCP request is authenticated and     │              │
-│  │ authorized, regardless of source network.  │              │
-│  └────────────────────────────────────────────┘              │
-│                                                              │
-│  PRINCIPLE 2: LEAST PRIVILEGE                                │
-│  ┌────────────────────────────────────────────┐              │
-│  │ MCP servers get minimum permissions needed.│              │
-│  │ Read-only unless write is explicitly needed.│              │
-│  └────────────────────────────────────────────┘              │
-│                                                              │
-│  PRINCIPLE 3: ASSUME BREACH                                  │
-│  ┌────────────────────────────────────────────┐              │
-│  │ Log everything. Segment networks. Limit    │              │
-│  │ blast radius. Rotate credentials.          │              │
-│  └────────────────────────────────────────────┘              │
-│                                                              │
-│  ┌──────┐   ┌──────────┐   ┌──────┐   ┌──────────┐         │
-│  │ USER ├──►│IDENTITY  ├──►│ AUTH ├──►│  MCP     │         │
-│  │      │   │PROVIDER  │   │GATEWAY│   │ SERVER   │         │
-│  │      │   │(Azure AD)│   │      │   │(isolated)│         │
-│  └──────┘   └──────────┘   └───┬──┘   └────┬─────┘         │
-│                                │            │               │
-│                                ▼            ▼               │
-│                         ┌──────────┐ ┌──────────┐           │
-│                         │  AUDIT   │ │ MONITOR  │           │
-│                         │  LOG     │ │ (SIEM)   │           │
-│                         │(immutable)│ │          │           │
-│                         └──────────┘ └──────────┘           │
-└──────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph zt["🛡️ ZERO TRUST MCP ARCHITECTURE"]
+        subgraph principles[" "]
+            direction TB
+            P1["🔒 <b>PRINCIPLE 1: NEVER TRUST, ALWAYS VERIFY</b><br/>Every MCP request is authenticated and authorized,<br/>regardless of source network."]
+            P2["🔑 <b>PRINCIPLE 2: LEAST PRIVILEGE</b><br/>MCP servers get minimum permissions needed.<br/>Read-only unless write is explicitly needed."]
+            P3["💥 <b>PRINCIPLE 3: ASSUME BREACH</b><br/>Log everything. Segment networks.<br/>Limit blast radius. Rotate credentials."]
+        end
+
+        USER["👤 USER"] --> IDP["🏢 IDENTITY<br/>PROVIDER<br/>(Azure AD)"]
+        IDP --> GW["🔐 AUTH<br/>GATEWAY"]
+        GW --> MCP["🔧 MCP SERVER<br/>(isolated)"]
+        GW --> AUDIT["📝 AUDIT LOG<br/>(immutable)"]
+        MCP --> MON["📊 MONITOR<br/>(SIEM)"]
+    end
+
+    style P1 fill:#f8d7da,stroke:#dc3545,color:#000
+    style P2 fill:#fff3cd,stroke:#ffc107,color:#000
+    style P3 fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style USER fill:#fff3cd,stroke:#ffc107,color:#000
+    style IDP fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style GW fill:#f8d7da,stroke:#dc3545,color:#000
+    style MCP fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style AUDIT fill:#d4edda,stroke:#28a745,color:#000
+    style MON fill:#d4edda,stroke:#28a745,color:#000
+    style zt fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style principles fill:transparent,stroke:none
 ```
 
 ---

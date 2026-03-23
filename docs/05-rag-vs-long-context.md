@@ -20,26 +20,32 @@ This guide breaks down exactly when each approach wins, when it loses, and why t
 
 Load all your data directly into the prompt. The model reads everything and answers from the full corpus.
 
-```
-╔══════════════════════════════════════════════════════╗
-║              LONG CONTEXT WINDOW                     ║
-║                                                      ║
-║  ┌────────────────────────────────────────────────┐  ║
-║  │ System prompt                          ~500 tk │  ║
-║  ├────────────────────────────────────────────────┤  ║
-║  │ Document 1 (full text)...............5,000 tk  │  ║
-║  │ Document 2 (full text)...............8,000 tk  │  ║
-║  │ Document 3 (full text)...............3,000 tk  │  ║
-║  │ Document 4 (full text)...............6,000 tk  │  ║
-║  │ ░░░░░░ every document you have ░░░░░░░░░░░░░  │  ║
-║  │ Document N (full text)..............12,000 tk  │  ║
-║  ├────────────────────────────────────────────────┤  ║
-║  │ User question                        ~100 tk   │  ║
-║  └────────────────────────────────────────────────┘  ║
-║                                                      ║
-║  Total: potentially 100K - 2M tokens                 ║
-║  Model reads ALL of it. Every single query.          ║
-╚══════════════════════════════════════════════════════╝
+```mermaid
+graph TD
+    subgraph LC["🧠 LONG CONTEXT WINDOW"]
+        S["📋 System prompt ~500 tk"]
+        D1["📄 Document 1 — full text — 5,000 tk"]
+        D2["📄 Document 2 — full text — 8,000 tk"]
+        D3["📄 Document 3 — full text — 3,000 tk"]
+        D4["📄 Document 4 — full text — 6,000 tk"]
+        DN["📄 ... every document you have ...\nDocument N — full text — 12,000 tk"]
+        UQ["❓ User question ~100 tk"]
+
+        S --> D1 --> D2 --> D3 --> D4 --> DN --> UQ
+    end
+
+    T["📊 Total: potentially 100K–2M tokens\nModel reads ALL of it. Every single query."]
+    UQ --> T
+
+    style LC fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style S fill:#f0f4ff,stroke:#2E86C1
+    style D1 fill:#fff3cd,stroke:#ffc107
+    style D2 fill:#fff3cd,stroke:#ffc107
+    style D3 fill:#fff3cd,stroke:#ffc107
+    style D4 fill:#fff3cd,stroke:#ffc107
+    style DN fill:#fff3cd,stroke:#ffc107
+    style UQ fill:#e2d5f1,stroke:#6f42c1
+    style T fill:#f8d7da,stroke:#dc3545
 ```
 
 **The appeal:** Zero infrastructure. No chunking, no embeddings, no vector database, no retrieval pipeline. Just paste and ask.
@@ -48,23 +54,28 @@ Load all your data directly into the prompt. The model reads everything and answ
 
 Retrieve only the specific pieces relevant to each question. The model reads a focused subset.
 
-```
-╔══════════════════════════════════════════════════════╗
-║              RAG CONTEXT WINDOW                      ║
-║                                                      ║
-║  ┌────────────────────────────────────────────────┐  ║
-║  │ System prompt                          ~500 tk │  ║
-║  ├────────────────────────────────────────────────┤  ║
-║  │ ✓ [Retrieved] Chunk 7: Revenue by practice...  │  ║
-║  │ ✓ [Retrieved] Chunk 12: Q3 vs Q2 comparison... │  ║
-║  │ ✓ [Retrieved] Chunk 3: Financial summary...    │  ║
-║  ├────────────────────────────────────────────────┤  ║
-║  │ User question                          ~100 tk │  ║
-║  └────────────────────────────────────────────────┘  ║
-║                                                      ║
-║  Total: ~3,000 - 5,000 tokens                        ║
-║  Model reads ONLY what's relevant. Focused.          ║
-╚══════════════════════════════════════════════════════╝
+```mermaid
+graph TD
+    subgraph RAG["🎯 RAG CONTEXT WINDOW"]
+        S["📋 System prompt ~500 tk"]
+        C7["✅ Retrieved Chunk 7: Revenue by practice..."]
+        C12["✅ Retrieved Chunk 12: Q3 vs Q2 comparison..."]
+        C3["✅ Retrieved Chunk 3: Financial summary..."]
+        UQ["❓ User question ~100 tk"]
+
+        S --> C7 --> C12 --> C3 --> UQ
+    end
+
+    T["📊 Total: ~3,000–5,000 tokens\nModel reads ONLY what's relevant. Focused."]
+    UQ --> T
+
+    style RAG fill:#d4edda,stroke:#28a745,stroke-width:2px
+    style S fill:#f0f4ff,stroke:#2E86C1
+    style C7 fill:#d4edda,stroke:#28a745
+    style C12 fill:#d4edda,stroke:#28a745
+    style C3 fill:#d4edda,stroke:#28a745
+    style UQ fill:#e2d5f1,stroke:#6f42c1
+    style T fill:#d4edda,stroke:#28a745
 ```
 
 **The appeal:** Fast, cheap, scales to any data size, and the model focuses on exactly what matters.
@@ -113,29 +124,15 @@ At scale, RAG is roughly **1,250x cheaper per query**. For the consulting firm's
 
 As context grows, LLM accuracy degrades — especially for information buried in the middle of the context. Stanford's "Lost in the Middle" research found a **U-shaped accuracy curve**: models perform well with information at the beginning or end, but accuracy drops 30%+ for information in the middle.
 
+```mermaid
+xychart-beta
+    title "Accuracy vs. Position in Context (Lost in the Middle)"
+    x-axis ["Start", "", "", "", "Middle", "", "", "", "End"]
+    y-axis "Accuracy %" 50 --> 100
+    line [97, 93, 88, 78, 62, 65, 78, 90, 97]
 ```
-┌──────────────────────────────────────────────────────────┐
-│         Accuracy vs. Position in Context                  │
-│         (Stanford "Lost in the Middle" finding)           │
-│                                                          │
-│  100% ┤ ●●                                         ●●   │
-│       │    ●●                                   ●●       │
-│   90% ┤       ●●                             ●●          │
-│       │          ●●                       ●●             │
-│   80% ┤             ●●                 ●●                │
-│       │                ●●           ●●                   │
-│   70% ┤                   ●●     ●●                      │
-│       │                      ●●●   ◄── 30%+ accuracy    │
-│   60% ┤                    ●●●●●       drop in the      │
-│       │                                 middle           │
-│   50% ┤                                                  │
-│       └──────────┬──────────┬──────────┬──────────┤      │
-│              Beginning   Middle      End                 │
-│              of context             of context            │
-│                                                          │
-│  ████ = High accuracy    ░░░░ = Low accuracy (danger)    │
-└──────────────────────────────────────────────────────────┘
-```
+
+> The U-shaped curve shows ~30%+ accuracy drop for information in the middle of context. Beginning and end positions maintain high accuracy, while the middle is a danger zone.
 
 At 1M tokens, there is a **lot** of "middle." Even Gemini 2.0 Pro maintains only ~77% accuracy at full context load — meaning roughly 1 in 4 retrievals may miss. For a dashboard where executives need accurate numbers, that error rate is unacceptable.
 
@@ -161,37 +158,34 @@ For data that changes daily (CRM updates, project status, financial feeds), RAG'
 
 The 2026 consensus among production teams: **use RAG for retrieval, long context for reasoning.**
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                  HYBRID ARCHITECTURE                      │
-│                                                           │
-│  ┌─────────────┐                                          │
-│  │  FULL DATA  │  Terabytes of enterprise data            │
-│  │  CORPUS     │  (financial, HR, client, tech)           │
-│  └──────┬──────┘                                          │
-│         │                                                 │
-│         ▼                                                 │
-│  ┌─────────────┐                                          │
-│  │  RAG LAYER  │  Vector search finds the 10-20 most     │
-│  │  (Retrieve) │  relevant chunks from the entire corpus  │
-│  └──────┬──────┘                                          │
-│         │                                                 │
-│         ▼                                                 │
-│  ┌─────────────────────────────────────────────────┐      │
-│  │         GENEROUS CONTEXT WINDOW                  │      │
-│  │                                                  │      │
-│  │  System prompt + guardrails                      │      │
-│  │  Retrieved chunks (full sections, not fragments) │      │
-│  │  Conversation history                            │      │
-│  │  User question                                   │      │
-│  │                                                  │      │
-│  │  The model has enough context to reason deeply   │      │
-│  │  across the retrieved information.               │      │
-│  └──────────────────────────────────────────────────┘      │
-│                                                           │
-│  RAG handles: "Find the needle" (precision)               │
-│  Long context handles: "Understand the section" (depth)   │
-└──────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph HYBRID["🏗️ HYBRID ARCHITECTURE"]
+        DC["💾 FULL DATA CORPUS\nTerabytes of enterprise data\nfinancial, HR, client, tech"]
+        RL["🔍 RAG LAYER — Retrieve\nVector search finds the 10–20 most\nrelevant chunks from the entire corpus"]
+
+        subgraph CTX["🧠 GENEROUS CONTEXT WINDOW"]
+            S["🛡️ System prompt + guardrails"]
+            CH["📁 Retrieved chunks — full sections, not fragments"]
+            HI["💬 Conversation history"]
+            UQ["❓ User question"]
+        end
+
+        DC --> RL --> CTX
+    end
+
+    P["🎯 RAG handles: 'Find the needle' — precision\n🧠 Long context handles: 'Understand the section' — depth"]
+    CTX --> P
+
+    style HYBRID fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style DC fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style RL fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
+    style CTX fill:#d4edda,stroke:#28a745,stroke-width:2px
+    style S fill:#f8d7da,stroke:#dc3545
+    style CH fill:#d4edda,stroke:#28a745
+    style HI fill:#f0f4ff,stroke:#2E86C1
+    style UQ fill:#fff3cd,stroke:#ffc107
+    style P fill:#d4edda,stroke:#28a745
 ```
 
 **How it works in practice:**
@@ -205,29 +199,40 @@ This combination outperforms either approach alone. RAG provides precision (find
 
 ## Decision Framework
 
-```
-How large is your dataset?
-├── < 100K tokens (< 75 pages)
-│   └── Start with long context. Simpler, sufficient.
-│       Migrate to RAG when data grows.
-│
-├── 100K - 2M tokens (75 - 1,500 pages)
-│   ├── Queries need cross-document reasoning?
-│   │   └── Yes → Hybrid (RAG retrieval + long context reasoning)
-│   └── Queries are factual lookups?
-│       └── RAG. Faster, cheaper, more accurate.
-│
-└── > 2M tokens (> 1,500 pages)
-    └── RAG is the only option. No context window fits this.
+```mermaid
+graph TD
+    Q1{"📏 How large is your dataset?"}
 
-Additional factors:
-─────────────────
-Data changes daily?        → RAG (incremental updates)
-Sub-second responses?      → RAG (long context = 30-60s)
-Cost-sensitive at scale?   → RAG (1,250x cheaper per query)
-Need whole-doc reasoning?  → Long context or hybrid
-Building first prototype?  → Long context (simpler to ship)
-Regulated environment?     → Hybrid with audit trail on retrieval
+    Q1 -->|"< 100K tokens\n< 75 pages"| A1["✅ Start with long context\nSimpler, sufficient\nMigrate to RAG when data grows"]
+
+    Q1 -->|"100K–2M tokens\n75–1,500 pages"| Q2{"🔍 Query type?"}
+    Q2 -->|"Cross-document reasoning"| A2["🔀 Hybrid\nRAG retrieval + long context reasoning"]
+    Q2 -->|"Factual lookups"| A3["🎯 RAG\nFaster, cheaper, more accurate"]
+
+    Q1 -->|"> 2M tokens\n> 1,500 pages"| A4["🎯 RAG is the only option\nNo context window fits this"]
+
+    subgraph FACTORS["📋 Additional Factors"]
+        F1["🔄 Data changes daily? → RAG"]
+        F2["⚡ Sub-second responses? → RAG"]
+        F3["💰 Cost-sensitive at scale? → RAG"]
+        F4["📖 Need whole-doc reasoning? → Long context or hybrid"]
+        F5["🚀 Building first prototype? → Long context"]
+        F6["🛡️ Regulated environment? → Hybrid with audit trail"]
+    end
+
+    style Q1 fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style Q2 fill:#fff3cd,stroke:#ffc107
+    style A1 fill:#f0f4ff,stroke:#2E86C1
+    style A2 fill:#e2d5f1,stroke:#6f42c1
+    style A3 fill:#d4edda,stroke:#28a745
+    style A4 fill:#d4edda,stroke:#28a745
+    style FACTORS fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style F1 fill:#d4edda,stroke:#28a745
+    style F2 fill:#d4edda,stroke:#28a745
+    style F3 fill:#d4edda,stroke:#28a745
+    style F4 fill:#f0f4ff,stroke:#2E86C1
+    style F5 fill:#f0f4ff,stroke:#2E86C1
+    style F6 fill:#e2d5f1,stroke:#6f42c1
 ```
 
 ---

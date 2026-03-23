@@ -147,21 +147,16 @@ This is where prompt engineering alone breaks down — and why Context Engineeri
 
 Every LLM has a **knowledge cutoff date** — the point at which its training data ends. After that date, the model knows nothing. It doesn't know today's stock price, last quarter's revenue, your company's policies, or the email your CEO sent this morning.
 
-```
-┌─────────────────────────── THE KNOWLEDGE GAP ───────────────────────────┐
-│                                                                         │
-│  ┌─────────────────────────┐   ┌──────────────────┐   ┌─────────────┐  │
-│  │     TRAINING DATA       │   │  KNOWLEDGE       │   │    TODAY    │  │
-│  │                         │   │  CUTOFF          │   │             │  │
-│  │  ✅ Books, internet,    │   │  ❌ Model knows  │   │  ❓ Your    │  │
-│  │     code, Wikipedia,    │   │     NOTHING after │   │   questions │  │
-│  │     research papers     │   │     this date     │   │   are about │  │
-│  │                         │   │                  │   │   THIS      │  │
-│  │  "Knows everything"     │   │  ◄── FROZEN ──► │   │             │  │
-│  └─────────────────────────┘   └──────────────────┘   └─────────────┘  │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
-│  ◄──────── Model's knowledge ─────────►◄──── Gap ────►◄── Need ────►  │
-└─────────────────────────────────────────────────────────────────────────┘
+```mermaid
+block-beta
+    columns 3
+    A["🟢 TRAINING DATA\nBooks, internet, code,\nWikipedia, research papers\n\nKnows everything"]:1
+    B["🔴 KNOWLEDGE CUTOFF\nModel knows NOTHING\nafter this date\n\n← FROZEN →"]:1
+    C["🟡 TODAY\nYour questions\nare about THIS\n\nNeeds context injection"]:1
+
+    style A fill:#d4edda,stroke:#28a745
+    style B fill:#f8d7da,stroke:#dc3545
+    style C fill:#fff3cd,stroke:#ffc107
 ```
 
 **This creates two problems for enterprise AI:**
@@ -210,35 +205,37 @@ If prompt engineering is "how to ask a good question," context engineering is "h
 
 ### The Components of Context Engineering
 
+```mermaid
+graph TB
+    subgraph CE["CONTEXT ENGINEERING"]
+        direction TB
+        subgraph row1[" "]
+            SP["🎯 SYSTEM PROMPT\nRole, rules, constraints\n(Prompt Engineering)"]
+            MM["🧠 MEMORY MANAGEMENT\nShort-term · Long-term · Working"]
+        end
+        subgraph row2[" "]
+            RAG["📄 RAG\nRetrieved documents\nand data chunks"]
+            SM["📊 STATE MANAGEMENT\nWorkflow tracking\nWhat's done, what's next"]
+        end
+        subgraph row3[" "]
+            TOOLS["🔧 TOOLS\nAPIs, DBs, functions\nvia MCP"]
+            GUARD["🛡️ GUARDRAILS\nAccess controls, safety\nboundaries, output rules"]
+        end
+    end
+
+    style CE fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style row1 fill:transparent,stroke:none
+    style row2 fill:transparent,stroke:none
+    style row3 fill:transparent,stroke:none
+    style SP fill:#d4edda,stroke:#28a745
+    style MM fill:#d1ecf1,stroke:#17a2b8
+    style RAG fill:#fff3cd,stroke:#ffc107
+    style SM fill:#e2d5f1,stroke:#6f42c1
+    style TOOLS fill:#fce4d6,stroke:#fd7e14
+    style GUARD fill:#f8d7da,stroke:#dc3545
 ```
-┌──────────────────────────────────────────────────┐
-│              CONTEXT ENGINEERING                  │
-│                                                  │
-│  ┌──────────────┐  ┌──────────────────────────┐  │
-│  │ SYSTEM PROMPT │  │     MEMORY MANAGEMENT    │  │
-│  │ Role, rules,  │  │  Short-term (this chat)  │  │
-│  │ constraints   │  │  Long-term (past chats)  │  │
-│  │ (Prompt Eng.) │  │  Working (current task)  │  │
-│  └──────────────┘  └──────────────────────────┘  │
-│                                                  │
-│  ┌──────────────┐  ┌──────────────────────────┐  │
-│  │     RAG      │  │    STATE MANAGEMENT      │  │
-│  │  Retrieved   │  │  Where am I in a multi-  │  │
-│  │  documents,  │  │  step workflow? What's    │  │
-│  │  data chunks │  │  been done? What's next?  │  │
-│  └──────────────┘  └──────────────────────────┘  │
-│                                                  │
-│  ┌──────────────┐  ┌──────────────────────────┐  │
-│  │    TOOLS     │  │      GUARDRAILS          │  │
-│  │  APIs, DBs,  │  │  What AI can/can't do,   │  │
-│  │  functions   │  │  access controls, safety  │  │
-│  │  via MCP     │  │  boundaries, output rules │  │
-│  └──────────────┘  └──────────────────────────┘  │
-│                                                  │
-│  Prompt engineering lives INSIDE context          │
-│  engineering — it's one component, not the whole  │
-└──────────────────────────────────────────────────┘
-```
+
+> Prompt engineering lives **inside** context engineering — it's one component, not the whole.
 
 ### Component 1: Memory Management
 
@@ -355,76 +352,31 @@ The context window isn't infinite. Even at 1M tokens, you have to be strategic a
 
 ### The RAG Pipeline: From Document to Answer
 
-```
-YOUR DATA                           USER'S QUESTION
-   │                                      │
-   ▼                                      ▼
-┌────────┐                          ┌───────────┐
-│Document│                          │  "What was │
-│  Store │                          │  Q3 revenue│
-│(PDFs,  │                          │  by area?" │
-│ DBs,   │                          └─────┬─────┘
-│ APIs)  │                                │
-└───┬────┘                                │
-    │                                     │
-    ▼                                     ▼
-┌────────┐                          ┌───────────┐
-│CHUNKING│                          │ EMBEDDING │
-│Split    │                          │ Convert   │
-│docs into│                          │ question  │
-│small    │                          │ to vector │
-│pieces   │                          └─────┬─────┘
-└───┬────┘                                │
-    │                                     │
-    ▼                                     │
-┌────────┐                                │
-│EMBEDDING│                               │
-│Convert  │                               │
-│chunks to│                               │
-│vectors  │                               │
-└───┬────┘                                │
-    │                                     │
-    ▼                                     ▼
-┌────────────────────────────────────────────┐
-│              VECTOR DATABASE               │
-│  Store vectors    ←→   Search by meaning   │
-│  (one-time)            (every query)       │
-└──────────────────────┬─────────────────────┘
-                       │
-                       ▼
-                ┌──────────────┐
-                │  TOP RESULTS │
-                │  (3-10 most  │
-                │   relevant   │
-                │   chunks)    │
-                └──────┬───────┘
-                       │
-                       ▼
-              ┌──────────────────┐
-              │   AUGMENTED      │
-              │   PROMPT         │
-              │                  │
-              │ System prompt +  │
-              │ Retrieved chunks │
-              │ + User question  │
-              └────────┬─────────┘
-                       │
-                       ▼
-                 ┌───────────┐
-                 │    LLM    │
-                 │ Generates │
-                 │  answer   │
-                 │ grounded  │
-                 │ in data   │
-                 └─────┬─────┘
-                       │
-                       ▼
-                ┌──────────────┐
-                │   RESPONSE   │
-                │  "Q3 revenue │
-                │  by practice │
-                │  area was..."│
-                └──────────────┘
+```mermaid
+graph TD
+    subgraph indexing["📥 INDEXING PATH (one-time)"]
+        D["📁 Document Store\nPDFs, DBs, APIs"] --> CH["✂️ Chunking\nSplit docs into\nsmall pieces"]
+        CH --> EMB1["🔢 Embedding\nConvert chunks\nto vectors"]
+        EMB1 --> VDB
+    end
+
+    subgraph query["🔍 QUERY PATH (every question)"]
+        Q["❓ User Question\nWhat was Q3 revenue\nby area?"] --> EMB2["🔢 Embedding\nConvert question\nto vector"]
+        EMB2 --> VDB
+    end
+
+    VDB[("🗄️ VECTOR DATABASE\nStore & search by meaning")]
+
+    VDB --> TOP["🎯 Top Results\n3-10 most relevant chunks"]
+    TOP --> AUG["📋 Augmented Prompt\nSystem prompt + Retrieved chunks\n+ User question"]
+    AUG --> LLM["🤖 LLM\nGenerates answer\ngrounded in data"]
+    LLM --> RESP["💬 Response\nQ3 revenue by practice\narea was..."]
+
+    style indexing fill:#f0f4ff,stroke:#2E86C1
+    style query fill:#fff8e1,stroke:#ffc107
+    style VDB fill:#e8f5e9,stroke:#28a745,stroke-width:2px
+    style LLM fill:#e2d5f1,stroke:#6f42c1
+    style RESP fill:#d4edda,stroke:#28a745
 ```
 
 ### Step 1: Documents
@@ -564,48 +516,37 @@ For the C-suite dashboard?
 
 ### How Everything Connects
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    USER INTERFACE                        │
-│          C-Suite Dashboard (React + Chat UI)             │
-└─────────────────────────┬───────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│               CONTEXT ENGINEERING LAYER                  │
-│                                                         │
-│  ┌─────────┐ ┌───────────┐ ┌──────────┐ ┌───────────┐  │
-│  │ System  │ │  Memory   │ │   RAG    │ │  Tools    │  │
-│  │ Prompt  │ │ Management│ │ Pipeline │ │  (MCP)    │  │
-│  │ (Role,  │ │ (History, │ │(Retrieve │ │(Query DBs,│  │
-│  │ rules)  │ │  prefs)   │ │ relevant │ │ run calcs)│  │
-│  └────┬────┘ └─────┬─────┘ │  data)   │ └─────┬─────┘  │
-│       │            │       └────┬─────┘       │        │
-│       │            │            │              │        │
-│       ▼            ▼            ▼              ▼        │
-│  ┌─────────────────────────────────────────────────┐    │
-│  │           ASSEMBLED CONTEXT                      │    │
-│  │  System prompt + Memory + Retrieved data +       │    │
-│  │  Tool results + User question + Guardrails       │    │
-│  └──────────────────────┬──────────────────────────┘    │
-│                         │                               │
-│                    GUARDRAILS                            │
-│          (Input sanitization, access controls,          │
-│           output validation, safety boundaries)          │
-└─────────────────────────┬───────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│                   LLM (via Azure OpenAI)                 │
-│            Generates response grounded in context        │
-└─────────────────────────┬───────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│                   OUTPUT VALIDATION                      │
-│     Check for hallucinations, verify data accuracy,      │
-│     enforce access controls, format for C-suite          │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    UI["🖥️ USER INTERFACE\nC-Suite Dashboard · React + Chat UI"]
+
+    UI --> CEL
+
+    subgraph CEL["CONTEXT ENGINEERING LAYER"]
+        direction TB
+        SP["🎯 System Prompt\nRole, rules"]
+        MEM["🧠 Memory\nHistory, prefs"]
+        RAGP["📄 RAG Pipeline\nRetrieve relevant data"]
+        MCP["🔧 Tools · MCP\nQuery DBs, run calcs"]
+
+        SP --> ASM
+        MEM --> ASM
+        RAGP --> ASM
+        MCP --> ASM
+
+        ASM["📋 ASSEMBLED CONTEXT\nSystem prompt + Memory + Retrieved data +\nTool results + User question"]
+        ASM --> GR["🛡️ GUARDRAILS\nInput sanitization · Access controls\nOutput validation · Safety boundaries"]
+    end
+
+    GR --> LLM["🤖 LLM (via Azure OpenAI)\nGenerates response grounded in context"]
+    LLM --> OUT["✅ OUTPUT VALIDATION\nHallucination check · Data accuracy\nAccess controls · C-suite formatting"]
+
+    style UI fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
+    style CEL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style ASM fill:#d1ecf1,stroke:#17a2b8
+    style GR fill:#f8d7da,stroke:#dc3545
+    style LLM fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style OUT fill:#d4edda,stroke:#28a745
 ```
 
 ### Key Takeaway for the Director Interview

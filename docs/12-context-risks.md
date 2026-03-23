@@ -56,43 +56,34 @@ the model may use either number — unpredictably.
 
 ### Prevention Architecture
 
-```
-┌───────────────────────────────────────────────────────────┐
-│              CONTEXT POISONING DEFENSES                    │
-│                                                           │
-│  LAYER 1: INPUT SANITIZATION                              │
-│  ┌─────────────────────────────────────────────────┐      │
-│  │ Scan all documents before indexing for:          │      │
-│  │ • Embedded instructions ("ignore", "override")  │      │
-│  │ • Unusual formatting (hidden text, zero-width)   │      │
-│  │ • Content that contradicts known facts           │      │
-│  └─────────────────────────────────────────────────┘      │
-│                                                           │
-│  LAYER 2: TRUSTED SOURCE REGISTRY                         │
-│  ┌─────────────────────────────────────────────────┐      │
-│  │ Only index documents from approved sources:      │      │
-│  │ • Official reports (financial system exports)    │      │
-│  │ • Approved databases (HR system, CRM)            │      │
-│  │ • Vetted MCP servers (from trusted registry)     │      │
-│  └─────────────────────────────────────────────────┘      │
-│                                                           │
-│  LAYER 3: CONTENT VALIDATION                              │
-│  ┌─────────────────────────────────────────────────┐      │
-│  │ Before injecting into the prompt:                │      │
-│  │ • Cross-reference retrieved data against         │      │
-│  │   known baselines                                │      │
-│  │ • Flag anomalies (revenue doubled overnight?)    │      │
-│  │ • Tag source and timestamp for the LLM           │      │
-│  └─────────────────────────────────────────────────┘      │
-│                                                           │
-│  LAYER 4: OUTPUT VERIFICATION                             │
-│  ┌─────────────────────────────────────────────────┐      │
-│  │ After LLM generates response:                    │      │
-│  │ • Check that cited numbers match retrieved data  │      │
-│  │ • Detect hallucinated entities or figures         │      │
-│  │ • Flag responses that deviate from source data   │      │
-│  └─────────────────────────────────────────────────┘      │
-└───────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph defenses["🛡️ CONTEXT POISONING DEFENSES"]
+        subgraph L1["🧹 LAYER 1: INPUT SANITIZATION"]
+            L1D["Scan all documents before indexing for:<br/>• Embedded instructions — ignore, override<br/>• Unusual formatting — hidden text, zero-width<br/>• Content that contradicts known facts"]
+        end
+        subgraph L2["✅ LAYER 2: TRUSTED SOURCE REGISTRY"]
+            L2D["Only index documents from approved sources:<br/>• Official reports — financial system exports<br/>• Approved databases — HR system, CRM<br/>• Vetted MCP servers — from trusted registry"]
+        end
+        subgraph L3["🔍 LAYER 3: CONTENT VALIDATION"]
+            L3D["Before injecting into the prompt:<br/>• Cross-reference retrieved data against baselines<br/>• Flag anomalies — revenue doubled overnight?<br/>• Tag source and timestamp for the LLM"]
+        end
+        subgraph L4["📋 LAYER 4: OUTPUT VERIFICATION"]
+            L4D["After LLM generates response:<br/>• Check that cited numbers match retrieved data<br/>• Detect hallucinated entities or figures<br/>• Flag responses that deviate from source data"]
+        end
+
+        L1 --> L2 --> L3 --> L4
+    end
+
+    style L1 fill:#f8d7da,stroke:#dc3545,color:#000
+    style L2 fill:#fff3cd,stroke:#ffc107,color:#000
+    style L3 fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style L4 fill:#d4edda,stroke:#28a745,color:#000
+    style L1D fill:#f8d7da,stroke:#dc3545,color:#000
+    style L2D fill:#fff3cd,stroke:#ffc107,color:#000
+    style L3D fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style L4D fill:#d4edda,stroke:#28a745,color:#000
+    style defenses fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
 ---
@@ -107,27 +98,21 @@ Too much irrelevant information in the context window causes the model to lose f
 
 Stanford's research demonstrated that LLM accuracy follows a U-shaped curve based on where relevant information appears in the context:
 
-```
-┌──────────────────────────────────────────────────────────┐
-│     Accuracy vs. Position of Relevant Information        │
-│     (Stanford "Lost in the Middle" finding)              │
-│                                                          │
-│  100% ┤ ●●                                         ●●   │
-│       │    ●●                                   ●●       │
-│   90% ┤       ●●                             ●●          │
-│       │          ●●                       ●●             │
-│   80% ┤             ●●                 ●●                │
-│       │                ●●           ●●                   │
-│   70% ┤                   ●●     ●●                      │
-│       │                      ●●●   ◄── 30%+ accuracy    │
-│   60% ┤                    ●●●●●       drop here         │
-│       │                                                  │
-│   50% ┤                                                  │
-│       └──────────┬──────────┬──────────┬──────────┤      │
-│              Beginning   Middle      End                 │
-│                                                          │
-│  ✅ Strong accuracy       ❌ Weak accuracy (danger zone) │
-└──────────────────────────────────────────────────────────┘
+```mermaid
+graph LR
+    subgraph chart["📊 Accuracy vs. Position of Relevant Information<br/><i>Stanford — Lost in the Middle finding</i>"]
+        direction LR
+        B["✅ <b>BEGINNING</b><br/><br/>~95-100% accuracy<br/>Strong performance"]
+        M["❌ <b>MIDDLE</b><br/><br/>~60-65% accuracy<br/>30%+ accuracy drop<br/><i>Danger zone</i>"]
+        E["✅ <b>END</b><br/><br/>~95-100% accuracy<br/>Strong performance"]
+
+        B -.->|"accuracy drops"| M -.->|"accuracy recovers"| E
+    end
+
+    style B fill:#d4edda,stroke:#28a745,color:#000
+    style M fill:#f8d7da,stroke:#dc3545,color:#000
+    style E fill:#d4edda,stroke:#28a745,color:#000
+    style chart fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
 ### How RAG Chunk Count Affects Distraction
@@ -218,34 +203,31 @@ When the total context (system prompt + memory + retrieved data + conversation h
 
 ### Context Budget Allocation
 
-```
-┌──────────────────────────────────────────────────────┐
-│          CONTEXT WINDOW BUDGET (128K tokens)          │
-│                                                       │
-│  ┌─────────────────────────────────┐ ~500 tokens      │
-│  │ SYSTEM PROMPT (fixed)           │ (guardrails,     │
-│  │                                 │  role, rules)    │
-│  ├─────────────────────────────────┤                  │
-│  │ RETRIEVED CONTEXT (variable)    │ ~2,000-8,000     │
-│  │ RAG chunks, MCP tool results    │ tokens           │
-│  ├─────────────────────────────────┤                  │
-│  │ CONVERSATION HISTORY (growing)  │ ~1,000-10,000    │
-│  │ Previous messages in this chat  │ tokens           │
-│  ├─────────────────────────────────┤                  │
-│  │ USER QUESTION (small)           │ ~50-200 tokens   │
-│  ├─────────────────────────────────┤                  │
-│  │ RESPONSE SPACE (reserved)       │ ~500-2,000       │
-│  │ Room for the LLM to generate    │ tokens           │
-│  ├─────────────────────────────────┤                  │
-│  │ BUFFER (safety margin)          │ ~1,000 tokens    │
-│  └─────────────────────────────────┘                  │
-│                                                       │
-│  Priority when trimming:                              │
-│  1. Never trim system prompt or current question      │
-│  2. Summarize old conversation history first          │
-│  3. Reduce retrieved context (fewer chunks) second    │
-│  4. Never reduce response space                       │
-└──────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph budget["📐 CONTEXT WINDOW BUDGET — 128K tokens"]
+        direction TB
+        S["🔒 <b>SYSTEM PROMPT</b> — fixed<br/>~500 tokens — guardrails, role, rules"]
+        R["📚 <b>RETRIEVED CONTEXT</b> — variable<br/>~2,000-8,000 tokens — RAG chunks, MCP tool results"]
+        H["💬 <b>CONVERSATION HISTORY</b> — growing<br/>~1,000-10,000 tokens — previous messages in this chat"]
+        Q["❓ <b>USER QUESTION</b> — small<br/>~50-200 tokens"]
+        RS["✍️ <b>RESPONSE SPACE</b> — reserved<br/>~500-2,000 tokens — room for the LLM to generate"]
+        B["🛡️ <b>BUFFER</b> — safety margin<br/>~1,000 tokens"]
+
+        S --> R --> H --> Q --> RS --> B
+    end
+
+    TRIM["⚠️ <b>Priority when trimming:</b><br/>1. Never trim system prompt or current question<br/>2. Summarize old conversation history first<br/>3. Reduce retrieved context — fewer chunks — second<br/>4. Never reduce response space"]
+    budget --> TRIM
+
+    style S fill:#f8d7da,stroke:#dc3545,color:#000
+    style R fill:#fff3cd,stroke:#ffc107,color:#000
+    style H fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style Q fill:#fff3cd,stroke:#ffc107,color:#000
+    style RS fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style B fill:#d4edda,stroke:#28a745,color:#000
+    style TRIM fill:#fff3cd,stroke:#ffc107,color:#000
+    style budget fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
 ### Compression Strategies
@@ -264,45 +246,44 @@ When the total context (system prompt + memory + retrieved data + conversation h
 
 All four risks require a unified defense. Here's how the layers work together:
 
-```
-┌────────────────────────────────────────────────────────────┐
-│              CONTEXT SECURITY ARCHITECTURE                  │
-│                                                            │
-│  ┌────────────────────────────────────────────────┐        │
-│  │ 1. DATA INGESTION                               │        │
-│  │    Input sanitization → Trusted source check →  │        │
-│  │    Deduplication → Timestamp tagging             │        │
-│  └──────────────────────┬─────────────────────────┘        │
-│                         ▼                                  │
-│  ┌────────────────────────────────────────────────┐        │
-│  │ 2. RETRIEVAL                                    │        │
-│  │    Hybrid search → Relevance threshold →        │        │
-│  │    Reranking → Chunk count limit                │        │
-│  └──────────────────────┬─────────────────────────┘        │
-│                         ▼                                  │
-│  ┌────────────────────────────────────────────────┐        │
-│  │ 3. CONTEXT ASSEMBLY                             │        │
-│  │    Budget allocation → Strategic placement →    │        │
-│  │    Conflict detection → Source attribution      │        │
-│  └──────────────────────┬─────────────────────────┘        │
-│                         ▼                                  │
-│  ┌────────────────────────────────────────────────┐        │
-│  │ 4. GUARDRAILS                                   │        │
-│  │    System prompt constraints → Access filtering→│        │
-│  │    PII redaction → Instruction detection        │        │
-│  └──────────────────────┬─────────────────────────┘        │
-│                         ▼                                  │
-│  ┌────────────────────────────────────────────────┐        │
-│  │ 5. LLM GENERATION                              │        │
-│  │    Model processes cleaned, structured context  │        │
-│  └──────────────────────┬─────────────────────────┘        │
-│                         ▼                                  │
-│  ┌────────────────────────────────────────────────┐        │
-│  │ 6. OUTPUT VALIDATION                            │        │
-│  │    Fact-check against sources → PII scan →      │        │
-│  │    Hallucination detection → Audit logging      │        │
-│  └────────────────────────────────────────────────┘        │
-└────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph arch["🏗️ CONTEXT SECURITY ARCHITECTURE"]
+        subgraph L1_ing["📥 1. DATA INGESTION"]
+            I1["Input sanitization → Trusted source check →<br/>Deduplication → Timestamp tagging"]
+        end
+        subgraph L2_ret["🔎 2. RETRIEVAL"]
+            I2["Hybrid search → Relevance threshold →<br/>Reranking → Chunk count limit"]
+        end
+        subgraph L3_asm["🧩 3. CONTEXT ASSEMBLY"]
+            I3["Budget allocation → Strategic placement →<br/>Conflict detection → Source attribution"]
+        end
+        subgraph L4_guard["🛡️ 4. GUARDRAILS"]
+            I4["System prompt constraints → Access filtering →<br/>PII redaction → Instruction detection"]
+        end
+        subgraph L5_llm["🤖 5. LLM GENERATION"]
+            I5["Model processes cleaned, structured context"]
+        end
+        subgraph L6_val["✅ 6. OUTPUT VALIDATION"]
+            I6["Fact-check against sources → PII scan →<br/>Hallucination detection → Audit logging"]
+        end
+
+        L1_ing --> L2_ret --> L3_asm --> L4_guard --> L5_llm --> L6_val
+    end
+
+    style L1_ing fill:#fff3cd,stroke:#ffc107,color:#000
+    style L2_ret fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style L3_asm fill:#fff3cd,stroke:#ffc107,color:#000
+    style L4_guard fill:#f8d7da,stroke:#dc3545,color:#000
+    style L5_llm fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style L6_val fill:#d4edda,stroke:#28a745,color:#000
+    style I1 fill:#fff3cd,stroke:#ffc107,color:#000
+    style I2 fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style I3 fill:#fff3cd,stroke:#ffc107,color:#000
+    style I4 fill:#f8d7da,stroke:#dc3545,color:#000
+    style I5 fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style I6 fill:#d4edda,stroke:#28a745,color:#000
+    style arch fill:#f9f9f9,stroke:#333,stroke-width:2px
 ```
 
 ---

@@ -32,22 +32,27 @@ Different frameworks care about different things. Here's what each requires when
 
 ## The AI Governance Framework: Five Pillars
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                   AI GOVERNANCE FRAMEWORK                     │
-│                                                              │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────┐ ┌──────┐│
-│  │   DATA   │ │  MODEL   │ │  ACCESS  │ │ AUDIT  │ │ RISK ││
-│  │GOVERNANCE│ │GOVERNANCE│ │GOVERNANCE│ │   &    │ │MGMT  ││
-│  │          │ │          │ │          │ │COMPLY  │ │      ││
-│  │ Classify │ │ Approve  │ │ Who sees │ │ Log    │ │ What ││
-│  │ Protect  │ │ Version  │ │ what     │ │ Prove  │ │ could││
-│  │ Retain   │ │ Test     │ │ when     │ │ Report │ │ fail ││
-│  └──────────┘ └──────────┘ └──────────┘ └────────┘ └──────┘│
-│                                                              │
-│  Each pillar addresses a different dimension of AI risk.     │
-│  All five must work together for compliance.                 │
-└──────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph framework["🏛️ AI GOVERNANCE FRAMEWORK"]
+        direction LR
+        P1["📊 <b>DATA<br/>GOVERNANCE</b><br/><br/>Classify<br/>Protect<br/>Retain"]
+        P2["🤖 <b>MODEL<br/>GOVERNANCE</b><br/><br/>Approve<br/>Version<br/>Test"]
+        P3["🔐 <b>ACCESS<br/>GOVERNANCE</b><br/><br/>Who sees<br/>what<br/>when"]
+        P4["📋 <b>AUDIT &<br/>COMPLIANCE</b><br/><br/>Log<br/>Prove<br/>Report"]
+        P5["⚠️ <b>RISK<br/>MANAGEMENT</b><br/><br/>What<br/>could<br/>fail"]
+    end
+
+    note["Each pillar addresses a different dimension of AI risk.<br/>All five must work together for compliance."]
+    framework --> note
+
+    style P1 fill:#fff3cd,stroke:#ffc107,color:#000
+    style P2 fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style P3 fill:#f8d7da,stroke:#dc3545,color:#000
+    style P4 fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style P5 fill:#fff3cd,stroke:#ffc107,color:#000
+    style framework fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style note fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 ---
@@ -106,21 +111,25 @@ In a traditional application, access controls are straightforward — users have
 
 **The tiered access model:**
 
-```
-╔═════════════════════════════════════════════════════════════════╗
-║  🟢 PARTNER asks: "Show me all practice area revenue"          ║
-║     → AI returns: Revenue for ALL practice areas               ║
-║       (Defense $15.2M, FinServ $12.8M, Health $8.1M, E&I $6.2M)║
-╠═════════════════════════════════════════════════════════════════╣
-║  🟡 DIRECTOR asks: "Show me all practice area revenue"         ║
-║     → AI returns: Revenue for THEIR practice area only         ║
-║       (Defense $15.2M — other practices: [Access Restricted])  ║
-╠═════════════════════════════════════════════════════════════════╣
-║  🔴 JUNIOR ANALYST asks: "Show me all practice area revenue"   ║
-║     → AI returns: "This data requires Director-level access.   ║
-║       Please contact your practice lead."                      ║
-╚═════════════════════════════════════════════════════════════════╝
-     ▲ Full access         ▲ Filtered access      ▲ Denied
+```mermaid
+graph TD
+    Q["🔍 Query: <i>Show me all practice area revenue</i>"]
+
+    Q --> P["🟢 <b>PARTNER</b><br/>Full Access"]
+    Q --> D["🟡 <b>DIRECTOR</b><br/>Filtered Access"]
+    Q --> A["🔴 <b>JUNIOR ANALYST</b><br/>Access Denied"]
+
+    P --> PR["✅ Revenue for ALL practice areas<br/>Defense $15.2M, FinServ $12.8M,<br/>Health $8.1M, E&I $6.2M"]
+    D --> DR["⚠️ Revenue for THEIR practice area only<br/>Defense $15.2M<br/>Other practices: Access Restricted"]
+    A --> AR["🚫 This data requires Director-level access.<br/>Please contact your practice lead."]
+
+    style Q fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style P fill:#d4edda,stroke:#28a745,color:#000
+    style D fill:#fff3cd,stroke:#ffc107,color:#000
+    style A fill:#f8d7da,stroke:#dc3545,color:#000
+    style PR fill:#d4edda,stroke:#28a745,color:#000
+    style DR fill:#fff3cd,stroke:#ffc107,color:#000
+    style AR fill:#f8d7da,stroke:#dc3545,color:#000
 ```
 
 **Implementation:** Per-operation authorization through the MCP layer. Every query carries the user's identity token. The RAG retrieval pipeline filters results based on the user's clearance level. The system prompt includes role-specific constraints. See [MCP Security for Enterprise](11-mcp-security.md) for the technical architecture.
@@ -147,27 +156,18 @@ In a traditional application, access controls are straightforward — users have
 
 **The audit pipeline:**
 
-```
-┌──────────────┐    ┌──────────────┐    ┌────────────────┐    ┌──────────────┐
-│              │    │              │    │                │    │              │
-│     USER     │    │  AI SYSTEM   │    │   AUDIT LOG    │    │     SIEM     │
-│    ACTION    │───►│  processes   │───►│  (immutable)   │───►│   Analysis   │
-│              │    │   request    │    │                │    │              │
-│  Query,      │    │  Retrieval,  │    │  Write-once    │    │  Alerts,     │
-│  Tool call   │    │  Generation  │    │  storage only  │    │  Reports     │
-│              │    │              │    │                │    │              │
-└──────────────┘    └──────────────┘    └───────┬────────┘    └──────────────┘
-                                                │
-                                                ▼
-                                     ┌────────────────────┐
-                                     │     COMPLIANCE     │
-                                     │     DASHBOARD      │
-                                     │                    │
-                                     │  • Auditor access  │
-                                     │  • GRC reporting   │
-                                     │  • Query history   │
-                                     │  • Risk indicators │
-                                     └────────────────────┘
+```mermaid
+graph LR
+    U["👤 <b>USER ACTION</b><br/><br/>Query,<br/>Tool call"] --> AI["🤖 <b>AI SYSTEM</b><br/><br/>Retrieval,<br/>Generation"]
+    AI --> LOG["📝 <b>AUDIT LOG</b><br/><i>immutable</i><br/><br/>Write-once<br/>storage only"]
+    LOG --> SIEM["🔔 <b>SIEM</b><br/><br/>Alerts,<br/>Reports"]
+    LOG --> DASH["📊 <b>COMPLIANCE<br/>DASHBOARD</b><br/><br/>Auditor access<br/>GRC reporting<br/>Query history<br/>Risk indicators"]
+
+    style U fill:#fff3cd,stroke:#ffc107,color:#000
+    style AI fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style LOG fill:#f0f4ff,stroke:#2E86C1,color:#000
+    style SIEM fill:#f8d7da,stroke:#dc3545,color:#000
+    style DASH fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 **Critical requirement:** Audit logs must be **immutable**. Once written, they cannot be modified or deleted (even by administrators). Use write-once storage (Azure Immutable Blob, AWS S3 Object Lock) to prevent tampering.

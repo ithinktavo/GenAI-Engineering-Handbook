@@ -12,20 +12,33 @@ The Model Context Protocol (MCP) is an open standard for connecting AI models to
 
 **MCP's solution:** One standard protocol that both AI tools and enterprise systems speak. Build one MCP server for your database, and every MCP-compatible AI client (Claude, ChatGPT, Copilot, etc.) can use it. Build one MCP client in your AI app, and it can connect to any MCP server.
 
-```
-BEFORE MCP:                          WITH MCP:
-                                     
-AI Tool A ──custom──► System 1       AI Tool A ─┐
-AI Tool A ──custom──► System 2                  │
-AI Tool A ──custom──► System 3       AI Tool B ─┤    ┌── System 1
-AI Tool B ──custom──► System 1                  ├─MCP┤
-AI Tool B ──custom──► System 2       AI Tool C ─┤    ├── System 2
-AI Tool B ──custom──► System 3                  │    │
-AI Tool C ──custom──► System 1                  └────├── System 3
-AI Tool C ──custom──► System 2                       │
-AI Tool C ──custom──► System 3                       └── System 4
-                                     
-9 custom integrations               1 standard protocol
+```mermaid
+graph LR
+    subgraph Before ["❌ BEFORE MCP — 9 custom integrations"]
+        A1["🤖 AI Tool A"] -- "custom" --> S1a["System 1"]
+        A1 -- "custom" --> S2a["System 2"]
+        A1 -- "custom" --> S3a["System 3"]
+        B1["🤖 AI Tool B"] -- "custom" --> S1b["System 1"]
+        B1 -- "custom" --> S2b["System 2"]
+        B1 -- "custom" --> S3b["System 3"]
+        C1["🤖 AI Tool C"] -- "custom" --> S1c["System 1"]
+        C1 -- "custom" --> S2c["System 2"]
+        C1 -- "custom" --> S3c["System 3"]
+    end
+
+    subgraph After ["✅ WITH MCP — 1 standard protocol"]
+        A2["🤖 AI Tool A"] --> MCP["🔌 MCP Protocol"]
+        B2["🤖 AI Tool B"] --> MCP
+        C2["🤖 AI Tool C"] --> MCP
+        MCP --> S1["System 1"]
+        MCP --> S2["System 2"]
+        MCP --> S3["System 3"]
+        MCP --> S4["System 4"]
+    end
+
+    style MCP fill:#d4edda,stroke:#28a745,color:#000
+    style Before fill:#f8d7da,stroke:#dc3545,color:#000
+    style After fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 ---
@@ -34,19 +47,20 @@ AI Tool C ──custom──► System 3                       └── System 
 
 MCP uses a client-server architecture built on JSON-RPC 2.0:
 
-```
-┌──────────────┐         ┌──────────────┐         ┌──────────────┐
-│   USER       │         │  MCP CLIENT  │         │  MCP SERVER  │
-│              │ prompt  │  (AI app)    │ JSON-RPC│  (tool/data) │
-│  "What's Q3  │────────►│              │────────►│              │
-│   revenue?"  │         │  Sends query │         │  Queries DB  │
-│              │         │  to LLM +    │◄────────│  Returns     │
-│              │◄────────│  tools info  │  result │  data        │
-│  "$42M, up   │ answer  │              │         │              │
-│   12% YoY"   │         │  LLM decides │         │              │
-│              │         │  which tool  │         │              │
-│              │         │  to call     │         │              │
-└──────────────┘         └──────────────┘         └──────────────┘
+```mermaid
+graph LR
+    User["👤 USER<br/>What's Q3 revenue?"]
+    Client["🤖 MCP CLIENT<br/>AI app<br/>Sends query to LLM +<br/>tools info<br/>LLM decides which<br/>tool to call"]
+    Server["🔧 MCP SERVER<br/>tool/data<br/>Queries DB<br/>Returns data"]
+
+    User -- "prompt" --> Client
+    Client -- "JSON-RPC" --> Server
+    Server -- "result" --> Client
+    Client -- "answer: $42M, up 12% YoY" --> User
+
+    style User fill:#fff3cd,stroke:#ffc107,color:#000
+    style Client fill:#e2d5f1,stroke:#6f42c1,color:#000
+    style Server fill:#f0f4ff,stroke:#2E86C1,color:#000
 ```
 
 **Step by step:**
