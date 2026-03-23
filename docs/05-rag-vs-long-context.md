@@ -37,15 +37,15 @@ graph TD
     T["Total: 100K-2M tokens. Model reads ALL of it every query."]
     UQ --> T
 
-    style LC fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style S fill:#f0f4ff,stroke:#2E86C1
-    style D1 fill:#fff3cd,stroke:#ffc107
-    style D2 fill:#fff3cd,stroke:#ffc107
-    style D3 fill:#fff3cd,stroke:#ffc107
-    style D4 fill:#fff3cd,stroke:#ffc107
-    style DN fill:#fff3cd,stroke:#ffc107
-    style UQ fill:#e2d5f1,stroke:#6f42c1
-    style T fill:#f8d7da,stroke:#dc3545
+    style LC fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style S fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style D1 fill:#fff3cd,stroke:#ffc107,color:#333
+    style D2 fill:#fff3cd,stroke:#ffc107,color:#333
+    style D3 fill:#fff3cd,stroke:#ffc107,color:#333
+    style D4 fill:#fff3cd,stroke:#ffc107,color:#333
+    style DN fill:#fff3cd,stroke:#ffc107,color:#333
+    style UQ fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style T fill:#f8d7da,stroke:#dc3545,color:#333
 ```
 
 **The appeal:** Zero infrastructure. No chunking, no embeddings, no vector database, no retrieval pipeline. Just paste and ask.
@@ -69,13 +69,13 @@ graph TD
     T["Total: ~3,000-5,000 tokens. Model reads ONLY what's relevant."]
     UQ --> T
 
-    style RAG fill:#d4edda,stroke:#28a745,stroke-width:2px
-    style S fill:#f0f4ff,stroke:#2E86C1
-    style C7 fill:#d4edda,stroke:#28a745
-    style C12 fill:#d4edda,stroke:#28a745
-    style C3 fill:#d4edda,stroke:#28a745
-    style UQ fill:#e2d5f1,stroke:#6f42c1
-    style T fill:#d4edda,stroke:#28a745
+    style RAG fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#333
+    style S fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style C7 fill:#d4edda,stroke:#28a745,color:#333
+    style C12 fill:#d4edda,stroke:#28a745,color:#333
+    style C3 fill:#d4edda,stroke:#28a745,color:#333
+    style UQ fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style T fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 **The appeal:** Fast, cheap, scales to any data size, and the model focuses on exactly what matters.
@@ -186,15 +186,15 @@ graph TD
     P["RAG = Find the needle. Long context = Understand the section."]
     CTX --> P
 
-    style HYBRID fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style DC fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style RL fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
-    style CTX fill:#d4edda,stroke:#28a745,stroke-width:2px
-    style S fill:#f8d7da,stroke:#dc3545
-    style CH fill:#d4edda,stroke:#28a745
-    style HI fill:#f0f4ff,stroke:#2E86C1
-    style UQ fill:#fff3cd,stroke:#ffc107
-    style P fill:#d4edda,stroke:#28a745
+    style HYBRID fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style DC fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style RL fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px,color:#333
+    style CTX fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#333
+    style S fill:#f8d7da,stroke:#dc3545,color:#333
+    style CH fill:#d4edda,stroke:#28a745,color:#333
+    style HI fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style UQ fill:#fff3cd,stroke:#ffc107,color:#333
+    style P fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 **How it works in practice:**
@@ -229,19 +229,19 @@ graph TD
         F6["Regulated environment? Hybrid with audit trail"]
     end
 
-    style Q1 fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style Q2 fill:#fff3cd,stroke:#ffc107
-    style A1 fill:#f0f4ff,stroke:#2E86C1
-    style A2 fill:#e2d5f1,stroke:#6f42c1
-    style A3 fill:#d4edda,stroke:#28a745
-    style A4 fill:#d4edda,stroke:#28a745
-    style FACTORS fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style F1 fill:#d4edda,stroke:#28a745
-    style F2 fill:#d4edda,stroke:#28a745
-    style F3 fill:#d4edda,stroke:#28a745
-    style F4 fill:#f0f4ff,stroke:#2E86C1
-    style F5 fill:#f0f4ff,stroke:#2E86C1
-    style F6 fill:#e2d5f1,stroke:#6f42c1
+    style Q1 fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style Q2 fill:#fff3cd,stroke:#ffc107,color:#333
+    style A1 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style A2 fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style A3 fill:#d4edda,stroke:#28a745,color:#333
+    style A4 fill:#d4edda,stroke:#28a745,color:#333
+    style FACTORS fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style F1 fill:#d4edda,stroke:#28a745,color:#333
+    style F2 fill:#d4edda,stroke:#28a745,color:#333
+    style F3 fill:#d4edda,stroke:#28a745,color:#333
+    style F4 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style F5 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style F6 fill:#e2d5f1,stroke:#6f42c1,color:#333
 ```
 
 ---

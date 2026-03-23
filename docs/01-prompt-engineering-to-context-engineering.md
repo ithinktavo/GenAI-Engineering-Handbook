@@ -155,9 +155,9 @@ graph LR
 
     A --> B --> C
 
-    style A fill:#d4edda,stroke:#28a745
-    style B fill:#f8d7da,stroke:#dc3545
-    style C fill:#fff3cd,stroke:#ffc107
+    style A fill:#d4edda,stroke:#28a745,color:#333
+    style B fill:#f8d7da,stroke:#dc3545,color:#333
+    style C fill:#fff3cd,stroke:#ffc107,color:#333
 ```
 
 **This creates two problems for enterprise AI:**
@@ -224,16 +224,16 @@ graph TB
         end
     end
 
-    style CE fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
+    style CE fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
     style row1 fill:transparent,stroke:none
     style row2 fill:transparent,stroke:none
     style row3 fill:transparent,stroke:none
-    style SP fill:#d4edda,stroke:#28a745
-    style MM fill:#d1ecf1,stroke:#17a2b8
-    style RAG fill:#fff3cd,stroke:#ffc107
-    style SM fill:#e2d5f1,stroke:#6f42c1
-    style TOOLS fill:#fce4d6,stroke:#fd7e14
-    style GUARD fill:#f8d7da,stroke:#dc3545
+    style SP fill:#d4edda,stroke:#28a745,color:#333
+    style MM fill:#d1ecf1,stroke:#17a2b8,color:#333
+    style RAG fill:#fff3cd,stroke:#ffc107,color:#333
+    style SM fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style TOOLS fill:#fce4d6,stroke:#fd7e14,color:#333
+    style GUARD fill:#f8d7da,stroke:#dc3545,color:#333
 ```
 
 > Prompt engineering lives **inside** context engineering — it's one component, not the whole.
@@ -374,11 +374,11 @@ graph TD
     AUG --> LLM["LLM - Generates answer grounded in data"]
     LLM --> RESP["Response - Q3 revenue by practice area was..."]
 
-    style indexing fill:#f0f4ff,stroke:#2E86C1
-    style query fill:#fff8e1,stroke:#ffc107
-    style VDB fill:#e8f5e9,stroke:#28a745,stroke-width:2px
-    style LLM fill:#e2d5f1,stroke:#6f42c1
-    style RESP fill:#d4edda,stroke:#28a745
+    style indexing fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style query fill:#fff8e1,stroke:#ffc107,color:#333
+    style VDB fill:#e8f5e9,stroke:#28a745,stroke-width:2px,color:#333
+    style LLM fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style RESP fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 ### Step 1: Documents
@@ -543,12 +543,12 @@ graph TD
     GR --> LLM["LLM via Azure OpenAI - Response grounded in context"]
     LLM --> OUT["OUTPUT VALIDATION - Hallucination check, data accuracy"]
 
-    style UI fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
-    style CEL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style ASM fill:#d1ecf1,stroke:#17a2b8
-    style GR fill:#f8d7da,stroke:#dc3545
-    style LLM fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style OUT fill:#d4edda,stroke:#28a745
+    style UI fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px,color:#333
+    style CEL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style ASM fill:#d1ecf1,stroke:#17a2b8,color:#333
+    style GR fill:#f8d7da,stroke:#dc3545,color:#333
+    style LLM fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style OUT fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 ### Key Takeaway for the Director Interview

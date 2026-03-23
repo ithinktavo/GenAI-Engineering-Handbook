@@ -46,13 +46,13 @@ graph TD
     note["Each pillar addresses a different dimension of AI risk. All five must work together for compliance."]
     framework --> note
 
-    style P1 fill:#fff3cd,stroke:#ffc107
-    style P2 fill:#e2d5f1,stroke:#6f42c1
-    style P3 fill:#f8d7da,stroke:#dc3545
-    style P4 fill:#f0f4ff,stroke:#2E86C1
-    style P5 fill:#fff3cd,stroke:#ffc107
-    style framework fill:#f9f9f9,stroke:#333,stroke-width:2px
-    style note fill:#d4edda,stroke:#28a745
+    style P1 fill:#fff3cd,stroke:#ffc107,color:#333
+    style P2 fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style P3 fill:#f8d7da,stroke:#dc3545,color:#333
+    style P4 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style P5 fill:#fff3cd,stroke:#ffc107,color:#333
+    style framework fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#333
+    style note fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 ---
@@ -123,13 +123,13 @@ graph TD
     D --> DR["Revenue for THEIR practice area only"]
     A --> AR["Requires Director-level access"]
 
-    style Q fill:#f0f4ff,stroke:#2E86C1
-    style P fill:#d4edda,stroke:#28a745
-    style D fill:#fff3cd,stroke:#ffc107
-    style A fill:#f8d7da,stroke:#dc3545
-    style PR fill:#d4edda,stroke:#28a745
-    style DR fill:#fff3cd,stroke:#ffc107
-    style AR fill:#f8d7da,stroke:#dc3545
+    style Q fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style P fill:#d4edda,stroke:#28a745,color:#333
+    style D fill:#fff3cd,stroke:#ffc107,color:#333
+    style A fill:#f8d7da,stroke:#dc3545,color:#333
+    style PR fill:#d4edda,stroke:#28a745,color:#333
+    style DR fill:#fff3cd,stroke:#ffc107,color:#333
+    style AR fill:#f8d7da,stroke:#dc3545,color:#333
 ```
 
 **Implementation:** Per-operation authorization through the MCP layer. Every query carries the user's identity token. The RAG retrieval pipeline filters results based on the user's clearance level. The system prompt includes role-specific constraints. See [MCP Security for Enterprise](11-mcp-security.md) for the technical architecture.
@@ -163,11 +163,11 @@ graph LR
     LOG --> SIEM["SIEM - Alerts, Reports"]
     LOG --> DASH["COMPLIANCE DASHBOARD - Auditor access, GRC reporting"]
 
-    style U fill:#fff3cd,stroke:#ffc107
-    style AI fill:#e2d5f1,stroke:#6f42c1
-    style LOG fill:#f0f4ff,stroke:#2E86C1
-    style SIEM fill:#f8d7da,stroke:#dc3545
-    style DASH fill:#d4edda,stroke:#28a745
+    style U fill:#fff3cd,stroke:#ffc107,color:#333
+    style AI fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style LOG fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style SIEM fill:#f8d7da,stroke:#dc3545,color:#333
+    style DASH fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 **Critical requirement:** Audit logs must be **immutable**. Once written, they cannot be modified or deleted (even by administrators). Use write-once storage (Azure Immutable Blob, AWS S3 Object Lock) to prevent tampering.

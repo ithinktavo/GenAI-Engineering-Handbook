@@ -79,13 +79,13 @@ graph TD
     Success --> NextStep
     NextStep -- "until all steps done" --> Planner
 
-    style Goal fill:#fff3cd,stroke:#ffc107
-    style Planner fill:#e2d5f1,stroke:#6f42c1
-    style Executor fill:#f0f4ff,stroke:#2E86C1
-    style Evaluator fill:#f0f4ff,stroke:#2E86C1
-    style Success fill:#d4edda,stroke:#28a745
-    style Fail fill:#f8d7da,stroke:#dc3545
-    style NextStep fill:#f0f4ff,stroke:#2E86C1
+    style Goal fill:#fff3cd,stroke:#ffc107,color:#333
+    style Planner fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Executor fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Evaluator fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Success fill:#d4edda,stroke:#28a745,color:#333
+    style Fail fill:#f8d7da,stroke:#dc3545,color:#333
+    style NextStep fill:#f0f4ff,stroke:#2E86C1,color:#333
 ```
 
 ---
@@ -115,11 +115,11 @@ graph LR
         Report
     end
 
-    style Data fill:#fff3cd,stroke:#ffc107
-    style Analysis fill:#f0f4ff,stroke:#2E86C1
-    style Chart fill:#f0f4ff,stroke:#2E86C1
-    style Report fill:#d4edda,stroke:#28a745
-    style State fill:#f9f9f9,stroke:#ccc
+    style Data fill:#fff3cd,stroke:#ffc107,color:#333
+    style Analysis fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Chart fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Report fill:#d4edda,stroke:#28a745,color:#333
+    style State fill:#f9f9f9,stroke:#ccc,color:#333
 ```
 
 **When to use:** Clear linear dependencies where each step needs the previous step's output. Document processing pipelines, data transformation workflows.
@@ -148,14 +148,14 @@ graph TD
     HR --> HRData --> Agg
     Client --> ClientData --> Agg
 
-    style Coord fill:#e2d5f1,stroke:#6f42c1
-    style Fin fill:#f0f4ff,stroke:#2E86C1
-    style HR fill:#f0f4ff,stroke:#2E86C1
-    style Client fill:#f0f4ff,stroke:#2E86C1
-    style FinData fill:#fff3cd,stroke:#ffc107
-    style HRData fill:#fff3cd,stroke:#ffc107
-    style ClientData fill:#fff3cd,stroke:#ffc107
-    style Agg fill:#d4edda,stroke:#28a745
+    style Coord fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style HR fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Client fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style FinData fill:#fff3cd,stroke:#ffc107,color:#333
+    style HRData fill:#fff3cd,stroke:#ffc107,color:#333
+    style ClientData fill:#fff3cd,stroke:#ffc107,color:#333
+    style Agg fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 **When to use:** Independent sub-tasks that don't depend on each other. Data collection from multiple sources, multi-market analysis.
@@ -180,10 +180,10 @@ graph TD
     Tech -- "results" --> Sup
     HR -- "results" --> Sup
 
-    style Sup fill:#e2d5f1,stroke:#6f42c1
-    style Fin fill:#f0f4ff,stroke:#2E86C1
-    style Tech fill:#f0f4ff,stroke:#2E86C1
-    style HR fill:#f0f4ff,stroke:#2E86C1
+    style Sup fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Tech fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style HR fill:#f0f4ff,stroke:#2E86C1,color:#333
 ```
 
 **When to use:** Diverse query types that require different expertise. A C-suite dashboard where questions could be about finance, HR, clients, or technology — each routed to a specialized agent.
@@ -202,9 +202,9 @@ graph LR
 
     Intake -- "handoff" --> Research -- "handoff" --> Action
 
-    style Intake fill:#fff3cd,stroke:#ffc107
-    style Research fill:#f0f4ff,stroke:#2E86C1
-    style Action fill:#d4edda,stroke:#28a745
+    style Intake fill:#fff3cd,stroke:#ffc107,color:#333
+    style Research fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Action fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 **When to use:** Workflow phases that require fundamentally different capabilities. Customer service (intake → investigation → resolution), document review (classify → analyze → summarize).
@@ -230,10 +230,10 @@ graph TD
     L2 -- "More autonomy" --> L3
     L3 -- "More autonomy" --> L4
 
-    style L4 fill:#d4edda,stroke:#28a745
-    style L3 fill:#f0f4ff,stroke:#2E86C1
-    style L2 fill:#fff3cd,stroke:#ffc107
-    style L1 fill:#f8d7da,stroke:#dc3545
+    style L4 fill:#d4edda,stroke:#28a745,color:#333
+    style L3 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style L2 fill:#fff3cd,stroke:#ffc107,color:#333
+    style L1 fill:#f8d7da,stroke:#dc3545,color:#333
 ```
 
 **The principle:** Start at Level 1. Earn trust through accuracy and reliability. Gradually move up the ladder. Never skip levels for high-stakes operations.
@@ -280,16 +280,16 @@ graph TD
 
     UI --> Runtime --> Tools --> Knowledge --> Models --> Gov --> Infra
 
-    style UI fill:#f0f4ff,stroke:#2E86C1
-    style Runtime fill:#e2d5f1,stroke:#6f42c1
-    style Tools fill:#fff3cd,stroke:#ffc107
-    style Knowledge fill:#fff3cd,stroke:#ffc107
-    style Models fill:#e2d5f1,stroke:#6f42c1
-    style Gov fill:#f8d7da,stroke:#dc3545
-    style Infra fill:#f8d7da,stroke:#dc3545
-    style App fill:#f0f4ff,stroke:#2E86C1
-    style Ops fill:#fff3cd,stroke:#ffc107
-    style Foundation fill:#f8d7da,stroke:#dc3545
+    style UI fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Runtime fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Tools fill:#fff3cd,stroke:#ffc107,color:#333
+    style Knowledge fill:#fff3cd,stroke:#ffc107,color:#333
+    style Models fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Gov fill:#f8d7da,stroke:#dc3545,color:#333
+    style Infra fill:#f8d7da,stroke:#dc3545,color:#333
+    style App fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Ops fill:#fff3cd,stroke:#ffc107,color:#333
+    style Foundation fill:#f8d7da,stroke:#dc3545,color:#333
 ```
 
 ---

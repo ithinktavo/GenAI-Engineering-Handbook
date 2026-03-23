@@ -57,12 +57,12 @@ graph TD
         A --> B --> C --> D --> E
     end
 
-    style CW fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style A fill:#fff3cd,stroke:#ffc107,stroke-width:1px
-    style B fill:#fff3cd,stroke:#ffc107,stroke-width:1px
-    style C fill:#e2d5f1,stroke:#6f42c1,stroke-width:1px
-    style D fill:#fff3cd,stroke:#ffc107,stroke-width:1px
-    style E fill:#d4edda,stroke:#28a745,stroke-width:1px
+    style CW fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style A fill:#fff3cd,stroke:#ffc107,stroke-width:1px,color:#333
+    style B fill:#fff3cd,stroke:#ffc107,stroke-width:1px,color:#333
+    style C fill:#e2d5f1,stroke:#6f42c1,stroke-width:1px,color:#333
+    style D fill:#fff3cd,stroke:#ffc107,stroke-width:1px,color:#333
+    style E fill:#d4edda,stroke:#28a745,stroke-width:1px,color:#333
 ```
 
 **Context window sizes (2026):**

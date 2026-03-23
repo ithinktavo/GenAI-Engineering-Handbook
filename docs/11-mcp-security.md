@@ -35,12 +35,12 @@ graph TD
         end
     end
 
-    style T1 fill:#f8d7da,stroke:#dc3545
-    style T2 fill:#f8d7da,stroke:#dc3545
-    style T3 fill:#f8d7da,stroke:#dc3545
-    style T4 fill:#f8d7da,stroke:#dc3545
-    style T5 fill:#f8d7da,stroke:#dc3545
-    style threats fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+    style T1 fill:#f8d7da,stroke:#dc3545,color:#333
+    style T2 fill:#f8d7da,stroke:#dc3545,color:#333
+    style T3 fill:#f8d7da,stroke:#dc3545,color:#333
+    style T4 fill:#f8d7da,stroke:#dc3545,color:#333
+    style T5 fill:#f8d7da,stroke:#dc3545,color:#333
+    style threats fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
     style row1 fill:transparent,stroke:none
     style row2 fill:transparent,stroke:none
 ```
@@ -124,11 +124,11 @@ graph TD
     NOTE["The AI never sees credentials. The broker handles auth."]
     cred_flow --> NOTE
 
-    style AI fill:#e2d5f1,stroke:#6f42c1
-    style BROKER fill:#f0f4ff,stroke:#2E86C1
-    style KEYCHAIN fill:#fff3cd,stroke:#ffc107
-    style cred_flow fill:#f9f9f9,stroke:#333,stroke-width:2px
-    style NOTE fill:#d4edda,stroke:#28a745
+    style AI fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style BROKER fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style KEYCHAIN fill:#fff3cd,stroke:#ffc107,color:#333
+    style cred_flow fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#333
+    style NOTE fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 **Implementation options:**
@@ -218,11 +218,11 @@ graph LR
     SCAN --> BOARD["APPROVAL BOARD - Security, compliance, sponsor"]
     BOARD --> REG["REGISTRY - Version-pinned, signed, policies"]
 
-    style DEV fill:#fff3cd,stroke:#ffc107
-    style SEC fill:#f8d7da,stroke:#dc3545
-    style SCAN fill:#f0f4ff,stroke:#2E86C1
-    style BOARD fill:#e2d5f1,stroke:#6f42c1
-    style REG fill:#d4edda,stroke:#28a745
+    style DEV fill:#fff3cd,stroke:#ffc107,color:#333
+    style SEC fill:#f8d7da,stroke:#dc3545,color:#333
+    style SCAN fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style BOARD fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style REG fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 ### Runtime Enforcement
@@ -261,16 +261,16 @@ graph TD
         MCP --> MON["MONITOR - SIEM"]
     end
 
-    style P1 fill:#f8d7da,stroke:#dc3545
-    style P2 fill:#fff3cd,stroke:#ffc107
-    style P3 fill:#f0f4ff,stroke:#2E86C1
-    style USER fill:#fff3cd,stroke:#ffc107
-    style IDP fill:#e2d5f1,stroke:#6f42c1
-    style GW fill:#f8d7da,stroke:#dc3545
-    style MCP fill:#f0f4ff,stroke:#2E86C1
-    style AUDIT fill:#d4edda,stroke:#28a745
-    style MON fill:#d4edda,stroke:#28a745
-    style zt fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style P1 fill:#f8d7da,stroke:#dc3545,color:#333
+    style P2 fill:#fff3cd,stroke:#ffc107,color:#333
+    style P3 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style USER fill:#fff3cd,stroke:#ffc107,color:#333
+    style IDP fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style GW fill:#f8d7da,stroke:#dc3545,color:#333
+    style MCP fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style AUDIT fill:#d4edda,stroke:#28a745,color:#333
+    style MON fill:#d4edda,stroke:#28a745,color:#333
+    style zt fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#333
     style principles fill:transparent,stroke:none
 ```
 
