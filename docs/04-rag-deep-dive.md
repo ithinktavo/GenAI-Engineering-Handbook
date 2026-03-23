@@ -38,18 +38,18 @@ graph TD
 
     D4 -.->|similarity search| Q3
 
-    style INDEX fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style QUERY fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style D1 fill:#fff3cd,stroke:#ffc107
-    style D2 fill:#f0f4ff,stroke:#2E86C1
-    style D3 fill:#f0f4ff,stroke:#2E86C1
-    style D4 fill:#e2d5f1,stroke:#6f42c1
-    style Q1 fill:#fff3cd,stroke:#ffc107
-    style Q2 fill:#f0f4ff,stroke:#2E86C1
-    style Q3 fill:#f0f4ff,stroke:#2E86C1
-    style Q4 fill:#f0f4ff,stroke:#2E86C1
-    style Q5 fill:#f0f4ff,stroke:#2E86C1
-    style Q6 fill:#d4edda,stroke:#28a745
+    style INDEX fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style QUERY fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style D1 fill:#fff3cd,stroke:#ffc107,color:#333
+    style D2 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style D3 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style D4 fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Q1 fill:#fff3cd,stroke:#ffc107,color:#333
+    style Q2 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Q3 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Q4 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Q5 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Q6 fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 The indexing path runs when your data changes (daily, weekly, or on-demand). The query path runs in real-time for every user question. The key insight: **most of the engineering complexity is in the indexing path.** Get that right, and queries are fast and accurate.
@@ -109,13 +109,13 @@ graph TD
     DOC --> NO_OL
     DOC --> OL
 
-    style DOC fill:#fff3cd,stroke:#ffc107
-    style NO_OL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style OL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style A1 fill:#f0f4ff,stroke:#2E86C1
-    style A2 fill:#f0f4ff,stroke:#2E86C1
-    style B1 fill:#f0f4ff,stroke:#2E86C1
-    style B2 fill:#e2d5f1,stroke:#6f42c1
+    style DOC fill:#fff3cd,stroke:#ffc107,color:#333
+    style NO_OL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style OL fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style A1 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style A2 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style B1 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style B2 fill:#e2d5f1,stroke:#6f42c1,color:#333
 ```
 
 **Pros:** Simple, predictable chunk sizes, easy to implement.
@@ -152,11 +152,11 @@ graph TD
     P --> C3
     C2 -->|"Search matches"| R
 
-    style P fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style C1 fill:#f0f4ff,stroke:#2E86C1
-    style C2 fill:#d4edda,stroke:#28a745,stroke-width:2px
-    style C3 fill:#f0f4ff,stroke:#2E86C1
-    style R fill:#d4edda,stroke:#28a745
+    style P fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style C1 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style C2 fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#333
+    style C3 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style R fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 **Pros:** Best of both worlds — precise retrieval with broad context.
@@ -198,10 +198,10 @@ graph LR
 
     V1 <-.->|"High similarity"| V2
 
-    style T1 fill:#fff3cd,stroke:#ffc107
-    style T2 fill:#fff3cd,stroke:#ffc107
-    style V1 fill:#e2d5f1,stroke:#6f42c1
-    style V2 fill:#e2d5f1,stroke:#6f42c1
+    style T1 fill:#fff3cd,stroke:#ffc107,color:#333
+    style T2 fill:#fff3cd,stroke:#ffc107,color:#333
+    style V1 fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style V2 fill:#e2d5f1,stroke:#6f42c1,color:#333
 ```
 
 ### Model Comparison (2026)
@@ -250,14 +250,14 @@ graph TD
     C1 --> R
     C5 --> R
 
-    style Q fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style VDB fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
-    style C1 fill:#d4edda,stroke:#28a745
-    style C2 fill:#f8d7da,stroke:#dc3545
-    style C3 fill:#d4edda,stroke:#28a745,stroke-width:2px
-    style C4 fill:#f8d7da,stroke:#dc3545
-    style C5 fill:#d4edda,stroke:#28a745
-    style R fill:#d4edda,stroke:#28a745,stroke-width:2px
+    style Q fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style VDB fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px,color:#333
+    style C1 fill:#d4edda,stroke:#28a745,color:#333
+    style C2 fill:#f8d7da,stroke:#dc3545,color:#333
+    style C3 fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#333
+    style C4 fill:#f8d7da,stroke:#dc3545,color:#333
+    style C5 fill:#d4edda,stroke:#28a745,color:#333
+    style R fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#333
 ```
 
 ### Database Comparison
@@ -311,15 +311,15 @@ graph TD
     VS --> H["Hybrid: combines both - Best results"]
     KS --> H
 
-    style Q fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style VS fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px
-    style KS fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style H fill:#d4edda,stroke:#28a745,stroke-width:2px
-    style V1 fill:#d4edda,stroke:#28a745
-    style V2 fill:#d4edda,stroke:#28a745
-    style V3 fill:#d4edda,stroke:#28a745
-    style K1 fill:#d4edda,stroke:#28a745
-    style K2 fill:#f8d7da,stroke:#dc3545
+    style Q fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style VS fill:#e2d5f1,stroke:#6f42c1,stroke-width:2px,color:#333
+    style KS fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style H fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#333
+    style V1 fill:#d4edda,stroke:#28a745,color:#333
+    style V2 fill:#d4edda,stroke:#28a745,color:#333
+    style V3 fill:#d4edda,stroke:#28a745,color:#333
+    style K1 fill:#d4edda,stroke:#28a745,color:#333
+    style K2 fill:#f8d7da,stroke:#dc3545,color:#333
 ```
 
 ### Reranking: The Second Filter
@@ -346,13 +346,13 @@ graph LR
         A5["5. Client satisfaction - 0.31 DOWN"]
     end
 
-    style BEFORE fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style AFTER fill:#d4edda,stroke:#28a745,stroke-width:2px
-    style A1 fill:#d4edda,stroke:#28a745
-    style A2 fill:#d4edda,stroke:#28a745
-    style A3 fill:#d4edda,stroke:#28a745
-    style A4 fill:#f8d7da,stroke:#dc3545
-    style A5 fill:#f8d7da,stroke:#dc3545
+    style BEFORE fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style AFTER fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#333
+    style A1 fill:#d4edda,stroke:#28a745,color:#333
+    style A2 fill:#d4edda,stroke:#28a745,color:#333
+    style A3 fill:#d4edda,stroke:#28a745,color:#333
+    style A4 fill:#f8d7da,stroke:#dc3545,color:#333
+    style A5 fill:#f8d7da,stroke:#dc3545,color:#333
 ```
 
 **Why reranking matters:** Initial retrieval uses fast but approximate similarity (bi-encoder). Reranking uses slower but more precise cross-attention (cross-encoder) that reads the query and document together. This catches cases where a chunk is similar in topic but not actually relevant to the specific question.
@@ -377,10 +377,10 @@ graph TD
         S --> C --> U
     end
 
-    style PROMPT fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style S fill:#f8d7da,stroke:#dc3545
-    style C fill:#e2d5f1,stroke:#6f42c1
-    style U fill:#fff3cd,stroke:#ffc107
+    style PROMPT fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style S fill:#f8d7da,stroke:#dc3545,color:#333
+    style C fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style U fill:#fff3cd,stroke:#ffc107,color:#333
 ```
 
 ### Token Budget Management
@@ -399,12 +399,12 @@ graph TD
         A --> B --> C --> D --> E
     end
 
-    style BUDGET fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px
-    style A fill:#f8d7da,stroke:#dc3545
-    style B fill:#e2d5f1,stroke:#6f42c1
-    style C fill:#fff3cd,stroke:#ffc107
-    style D fill:#d4edda,stroke:#28a745
-    style E fill:#d4edda,stroke:#28a745,stroke-width:2px
+    style BUDGET fill:#f0f4ff,stroke:#2E86C1,stroke-width:2px,color:#333
+    style A fill:#f8d7da,stroke:#dc3545,color:#333
+    style B fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style C fill:#fff3cd,stroke:#ffc107,color:#333
+    style D fill:#d4edda,stroke:#28a745,color:#333
+    style E fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#333
 ```
 
 At 128K tokens, budget is rarely an issue. But at 4K-8K tokens (older models, cheaper tiers), you must be strategic: fewer chunks, shorter system prompts, compressed context.
@@ -452,17 +452,17 @@ graph TD
     Q5 -->|Yes| A6["RAG is the only viable option"]
     Q5 -->|No| A3["RAG is the right choice for most enterprise use cases"]
 
-    style Q1 fill:#fff3cd,stroke:#ffc107,stroke-width:2px
-    style Q2 fill:#fff3cd,stroke:#ffc107
-    style Q3 fill:#fff3cd,stroke:#ffc107
-    style Q4 fill:#fff3cd,stroke:#ffc107
-    style Q5 fill:#fff3cd,stroke:#ffc107
-    style A1 fill:#f0f4ff,stroke:#2E86C1
-    style A2 fill:#f0f4ff,stroke:#2E86C1
-    style A3 fill:#d4edda,stroke:#28a745
-    style A4 fill:#d4edda,stroke:#28a745
-    style A5 fill:#d4edda,stroke:#28a745
-    style A6 fill:#d4edda,stroke:#28a745
+    style Q1 fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#333
+    style Q2 fill:#fff3cd,stroke:#ffc107,color:#333
+    style Q3 fill:#fff3cd,stroke:#ffc107,color:#333
+    style Q4 fill:#fff3cd,stroke:#ffc107,color:#333
+    style Q5 fill:#fff3cd,stroke:#ffc107,color:#333
+    style A1 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style A2 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style A3 fill:#d4edda,stroke:#28a745,color:#333
+    style A4 fill:#d4edda,stroke:#28a745,color:#333
+    style A5 fill:#d4edda,stroke:#28a745,color:#333
+    style A6 fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 ---

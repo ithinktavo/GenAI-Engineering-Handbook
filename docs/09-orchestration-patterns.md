@@ -29,11 +29,11 @@ graph LR
 
     Data --> Analysis --> Chart --> Report
 
-    style Data fill:#fff3cd,stroke:#ffc107
-    style Analysis fill:#f0f4ff,stroke:#2E86C1
-    style Chart fill:#f0f4ff,stroke:#2E86C1
-    style Report fill:#d4edda,stroke:#28a745
-    style Pipeline fill:#f9f9f9,stroke:#ccc
+    style Data fill:#fff3cd,stroke:#ffc107,color:#333
+    style Analysis fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Chart fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Report fill:#d4edda,stroke:#28a745,color:#333
+    style Pipeline fill:#f9f9f9,stroke:#ccc,color:#333
 ```
 
 ### Error Handling in Sequential Pipelines
@@ -52,11 +52,11 @@ graph TD
     S3 --> Retry["Retry? Retry 1x then fallback"]
     S3 --> Fallback["Fallback? Use simpler chart type"]
 
-    style S1 fill:#d4edda,stroke:#28a745
-    style S2 fill:#d4edda,stroke:#28a745
-    style S3 fill:#f8d7da,stroke:#dc3545
-    style Retry fill:#fff3cd,stroke:#ffc107
-    style Fallback fill:#fff3cd,stroke:#ffc107
+    style S1 fill:#d4edda,stroke:#28a745,color:#333
+    style S2 fill:#d4edda,stroke:#28a745,color:#333
+    style S3 fill:#f8d7da,stroke:#dc3545,color:#333
+    style Retry fill:#fff3cd,stroke:#ffc107,color:#333
+    style Fallback fill:#fff3cd,stroke:#ffc107,color:#333
 ```
 
 **Enterprise principle:** Never silently swallow errors. Every failure must be logged, and the final output must indicate if any step used a fallback. An executive reading a report with degraded charts needs to know.
@@ -87,11 +87,11 @@ graph TD
     HR -- "1.8s" --> Agg
     Client -- "3.2s" --> Agg
 
-    style Coord fill:#e2d5f1,stroke:#6f42c1
-    style Fin fill:#f0f4ff,stroke:#2E86C1
-    style HR fill:#f0f4ff,stroke:#2E86C1
-    style Client fill:#f0f4ff,stroke:#2E86C1
-    style Agg fill:#d4edda,stroke:#28a745
+    style Coord fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style HR fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Client fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Agg fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 ### Handling Partial Failures
@@ -134,12 +134,12 @@ graph TD
     HR --> Sup2
     Client --> Sup2
 
-    style User fill:#fff3cd,stroke:#ffc107
-    style Sup1 fill:#e2d5f1,stroke:#6f42c1
-    style Sup2 fill:#e2d5f1,stroke:#6f42c1
-    style Fin fill:#f0f4ff,stroke:#2E86C1
-    style HR fill:#f0f4ff,stroke:#2E86C1
-    style Client fill:#f0f4ff,stroke:#2E86C1
+    style User fill:#fff3cd,stroke:#ffc107,color:#333
+    style Sup1 fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Sup2 fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Fin fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style HR fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Client fill:#f0f4ff,stroke:#2E86C1,color:#333
 ```
 
 ### The Routing Decision
@@ -204,12 +204,12 @@ graph LR
     Intake -- "context: parsed intent + data needs" --> Research
     Research -- "context: findings + recommendation" --> Action
 
-    style Intake fill:#fff3cd,stroke:#ffc107
-    style Research fill:#f0f4ff,stroke:#2E86C1
-    style Action fill:#d4edda,stroke:#28a745
-    style P1 fill:#f9f9f9,stroke:#2E86C1
-    style P2 fill:#f9f9f9,stroke:#2E86C1
-    style P3 fill:#f9f9f9,stroke:#2E86C1
+    style Intake fill:#fff3cd,stroke:#ffc107,color:#333
+    style Research fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Action fill:#d4edda,stroke:#28a745,color:#333
+    style P1 fill:#f9f9f9,stroke:#2E86C1,color:#333
+    style P2 fill:#f9f9f9,stroke:#2E86C1,color:#333
+    style P3 fill:#f9f9f9,stroke:#2E86C1,color:#333
 ```
 
 ### The Handoff Protocol
@@ -283,22 +283,22 @@ graph TD
     HRSup --> HC & Attr & Utl
     CliSup --> NPS & Pip & Retn
 
-    style Lead fill:#e2d5f1,stroke:#6f42c1
-    style FinSup fill:#f0f4ff,stroke:#2E86C1
-    style HRSup fill:#f0f4ff,stroke:#2E86C1
-    style CliSup fill:#f0f4ff,stroke:#2E86C1
-    style Rev fill:#fff3cd,stroke:#ffc107
-    style Mrgn fill:#fff3cd,stroke:#ffc107
-    style Bklg fill:#fff3cd,stroke:#ffc107
-    style HC fill:#fff3cd,stroke:#ffc107
-    style Attr fill:#fff3cd,stroke:#ffc107
-    style Utl fill:#fff3cd,stroke:#ffc107
-    style NPS fill:#fff3cd,stroke:#ffc107
-    style Pip fill:#fff3cd,stroke:#ffc107
-    style Retn fill:#fff3cd,stroke:#ffc107
-    style T1 fill:#f3e8ff,stroke:#6f42c1
-    style T2 fill:#f0f4ff,stroke:#2E86C1
-    style T3 fill:#fff3cd,stroke:#ffc107
+    style Lead fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style FinSup fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style HRSup fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style CliSup fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Rev fill:#fff3cd,stroke:#ffc107,color:#333
+    style Mrgn fill:#fff3cd,stroke:#ffc107,color:#333
+    style Bklg fill:#fff3cd,stroke:#ffc107,color:#333
+    style HC fill:#fff3cd,stroke:#ffc107,color:#333
+    style Attr fill:#fff3cd,stroke:#ffc107,color:#333
+    style Utl fill:#fff3cd,stroke:#ffc107,color:#333
+    style NPS fill:#fff3cd,stroke:#ffc107,color:#333
+    style Pip fill:#fff3cd,stroke:#ffc107,color:#333
+    style Retn fill:#fff3cd,stroke:#ffc107,color:#333
+    style T1 fill:#f3e8ff,stroke:#6f42c1,color:#333
+    style T2 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style T3 fill:#fff3cd,stroke:#ffc107,color:#333
 ```
 
 **When to use:** Enterprise-scale workflows where the complexity exceeds what a single supervisor can manage. The lead agent never interacts with individual workers — it works through department-level supervisors who each manage their domain.
@@ -326,13 +326,13 @@ graph TD
     Checkpoint["checkpoint: 2025-10-14T14:23:00Z - resume from step_3"]
     S3 -.- Checkpoint
 
-    style S1 fill:#d4edda,stroke:#28a745
-    style S2 fill:#d4edda,stroke:#28a745
-    style S3 fill:#fff3cd,stroke:#ffc107
-    style S4 fill:#f9f9f9,stroke:#ccc
-    style S5 fill:#f9f9f9,stroke:#ccc
-    style Checkpoint fill:#f0f4ff,stroke:#2E86C1
-    style State fill:#f9f9f9,stroke:#333
+    style S1 fill:#d4edda,stroke:#28a745,color:#333
+    style S2 fill:#d4edda,stroke:#28a745,color:#333
+    style S3 fill:#fff3cd,stroke:#ffc107,color:#333
+    style S4 fill:#f9f9f9,stroke:#ccc,color:#333
+    style S5 fill:#f9f9f9,stroke:#ccc,color:#333
+    style Checkpoint fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style State fill:#f9f9f9,stroke:#333,color:#333
 ```
 
 ### Checkpointing
@@ -396,18 +396,18 @@ graph TD
     CB --> Fallback
     CB --> Human
 
-    style Call fill:#f0f4ff,stroke:#2E86C1
-    style Ok1 fill:#d4edda,stroke:#28a745
-    style Ok2 fill:#d4edda,stroke:#28a745
-    style Ok3 fill:#d4edda,stroke:#28a745
-    style F1 fill:#f8d7da,stroke:#dc3545
-    style F2 fill:#f8d7da,stroke:#dc3545
-    style F3 fill:#f8d7da,stroke:#dc3545
-    style R1 fill:#fff3cd,stroke:#ffc107
-    style R2 fill:#fff3cd,stroke:#ffc107
-    style CB fill:#f8d7da,stroke:#dc3545
-    style Fallback fill:#fff3cd,stroke:#ffc107
-    style Human fill:#e2d5f1,stroke:#6f42c1
+    style Call fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Ok1 fill:#d4edda,stroke:#28a745,color:#333
+    style Ok2 fill:#d4edda,stroke:#28a745,color:#333
+    style Ok3 fill:#d4edda,stroke:#28a745,color:#333
+    style F1 fill:#f8d7da,stroke:#dc3545,color:#333
+    style F2 fill:#f8d7da,stroke:#dc3545,color:#333
+    style F3 fill:#f8d7da,stroke:#dc3545,color:#333
+    style R1 fill:#fff3cd,stroke:#ffc107,color:#333
+    style R2 fill:#fff3cd,stroke:#ffc107,color:#333
+    style CB fill:#f8d7da,stroke:#dc3545,color:#333
+    style Fallback fill:#fff3cd,stroke:#ffc107,color:#333
+    style Human fill:#e2d5f1,stroke:#6f42c1,color:#333
 ```
 
 ---

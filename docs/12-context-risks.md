@@ -75,15 +75,15 @@ graph TD
         L1 --> L2 --> L3 --> L4
     end
 
-    style L1 fill:#f8d7da,stroke:#dc3545
-    style L2 fill:#fff3cd,stroke:#ffc107
-    style L3 fill:#f0f4ff,stroke:#2E86C1
-    style L4 fill:#d4edda,stroke:#28a745
-    style L1D fill:#f8d7da,stroke:#dc3545
-    style L2D fill:#fff3cd,stroke:#ffc107
-    style L3D fill:#f0f4ff,stroke:#2E86C1
-    style L4D fill:#d4edda,stroke:#28a745
-    style defenses fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style L1 fill:#f8d7da,stroke:#dc3545,color:#333
+    style L2 fill:#fff3cd,stroke:#ffc107,color:#333
+    style L3 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style L4 fill:#d4edda,stroke:#28a745,color:#333
+    style L1D fill:#f8d7da,stroke:#dc3545,color:#333
+    style L2D fill:#fff3cd,stroke:#ffc107,color:#333
+    style L3D fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style L4D fill:#d4edda,stroke:#28a745,color:#333
+    style defenses fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#333
 ```
 
 ---
@@ -109,10 +109,10 @@ graph LR
         B -.->|"accuracy drops"| M -.->|"accuracy recovers"| E
     end
 
-    style B fill:#d4edda,stroke:#28a745
-    style M fill:#f8d7da,stroke:#dc3545
-    style E fill:#d4edda,stroke:#28a745
-    style chart fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style B fill:#d4edda,stroke:#28a745,color:#333
+    style M fill:#f8d7da,stroke:#dc3545,color:#333
+    style E fill:#d4edda,stroke:#28a745,color:#333
+    style chart fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#333
 ```
 
 ### How RAG Chunk Count Affects Distraction
@@ -220,14 +220,14 @@ graph TD
     TRIM["Trim priority: 1. Never trim system prompt 2. Summarize history 3. Reduce chunks 4. Keep response space"]
     budget --> TRIM
 
-    style S fill:#f8d7da,stroke:#dc3545
-    style R fill:#fff3cd,stroke:#ffc107
-    style H fill:#f0f4ff,stroke:#2E86C1
-    style Q fill:#fff3cd,stroke:#ffc107
-    style RS fill:#e2d5f1,stroke:#6f42c1
-    style B fill:#d4edda,stroke:#28a745
-    style TRIM fill:#fff3cd,stroke:#ffc107
-    style budget fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style S fill:#f8d7da,stroke:#dc3545,color:#333
+    style R fill:#fff3cd,stroke:#ffc107,color:#333
+    style H fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style Q fill:#fff3cd,stroke:#ffc107,color:#333
+    style RS fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style B fill:#d4edda,stroke:#28a745,color:#333
+    style TRIM fill:#fff3cd,stroke:#ffc107,color:#333
+    style budget fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#333
 ```
 
 ### Compression Strategies
@@ -271,19 +271,19 @@ graph TD
         L1_ing --> L2_ret --> L3_asm --> L4_guard --> L5_llm --> L6_val
     end
 
-    style L1_ing fill:#fff3cd,stroke:#ffc107
-    style L2_ret fill:#f0f4ff,stroke:#2E86C1
-    style L3_asm fill:#fff3cd,stroke:#ffc107
-    style L4_guard fill:#f8d7da,stroke:#dc3545
-    style L5_llm fill:#e2d5f1,stroke:#6f42c1
-    style L6_val fill:#d4edda,stroke:#28a745
-    style I1 fill:#fff3cd,stroke:#ffc107
-    style I2 fill:#f0f4ff,stroke:#2E86C1
-    style I3 fill:#fff3cd,stroke:#ffc107
-    style I4 fill:#f8d7da,stroke:#dc3545
-    style I5 fill:#e2d5f1,stroke:#6f42c1
-    style I6 fill:#d4edda,stroke:#28a745
-    style arch fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style L1_ing fill:#fff3cd,stroke:#ffc107,color:#333
+    style L2_ret fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style L3_asm fill:#fff3cd,stroke:#ffc107,color:#333
+    style L4_guard fill:#f8d7da,stroke:#dc3545,color:#333
+    style L5_llm fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style L6_val fill:#d4edda,stroke:#28a745,color:#333
+    style I1 fill:#fff3cd,stroke:#ffc107,color:#333
+    style I2 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style I3 fill:#fff3cd,stroke:#ffc107,color:#333
+    style I4 fill:#f8d7da,stroke:#dc3545,color:#333
+    style I5 fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style I6 fill:#d4edda,stroke:#28a745,color:#333
+    style arch fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#333
 ```
 
 ---

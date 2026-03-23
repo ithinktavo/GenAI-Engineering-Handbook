@@ -36,9 +36,9 @@ graph LR
         MCP --> S4["System 4"]
     end
 
-    style MCP fill:#d4edda,stroke:#28a745
-    style Before fill:#f8d7da,stroke:#dc3545
-    style After fill:#d4edda,stroke:#28a745
+    style MCP fill:#d4edda,stroke:#28a745,color:#333
+    style Before fill:#f8d7da,stroke:#dc3545,color:#333
+    style After fill:#d4edda,stroke:#28a745,color:#333
 ```
 
 ---
@@ -58,9 +58,9 @@ graph LR
     Server -- "result" --> Client
     Client -- "answer: $42M, up 12% YoY" --> User
 
-    style User fill:#fff3cd,stroke:#ffc107
-    style Client fill:#e2d5f1,stroke:#6f42c1
-    style Server fill:#f0f4ff,stroke:#2E86C1
+    style User fill:#fff3cd,stroke:#ffc107,color:#333
+    style Client fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style Server fill:#f0f4ff,stroke:#2E86C1,color:#333
 ```
 
 **Step by step:**
