@@ -49,9 +49,9 @@ MCP uses a client-server architecture built on JSON-RPC 2.0:
 
 ```mermaid
 graph LR
-    User["👤 USER<br/>What's Q3 revenue?"]
-    Client["🤖 MCP CLIENT<br/>AI app<br/>Sends query to LLM +<br/>tools info<br/>LLM decides which<br/>tool to call"]
-    Server["🔧 MCP SERVER<br/>tool/data<br/>Queries DB<br/>Returns data"]
+    User["👤 USER\nWhat's Q3 revenue?"]
+    Client["🤖 MCP CLIENT\nAI app\nSends query to LLM +\ntools info\nLLM decides which\ntool to call"]
+    Server["🔧 MCP SERVER\ntool/data\nQueries DB\nReturns data"]
 
     User -- "prompt" --> Client
     Client -- "JSON-RPC" --> Server

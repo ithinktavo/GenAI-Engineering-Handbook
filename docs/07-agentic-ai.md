@@ -62,10 +62,10 @@ Agents can evaluate their own outputs and retry when something fails. If a datab
 
 ```mermaid
 graph TD
-    Goal["🎯 GOAL<br/>Prepare Q3 deck"]
-    Planner["🧠 PLANNER<br/>Break goal into steps"]
-    Executor["🔧 EXECUTOR<br/>Run current step using tools"]
-    Evaluator["🔍 EVALUATOR<br/>Did it work? Good enough?"]
+    Goal["🎯 GOAL\nPrepare Q3 deck"]
+    Planner["🧠 PLANNER\nBreak goal into steps"]
+    Executor["🔧 EXECUTOR\nRun current step using tools"]
+    Evaluator["🔍 EVALUATOR\nDid it work? Good enough?"]
     Success["✅ Success"]
     Fail["❌ Fail"]
     NextStep["➡️ NEXT STEP"]
@@ -100,10 +100,10 @@ Agents execute in a fixed, linear order. Each agent's output becomes the next ag
 
 ```mermaid
 graph LR
-    Data["📁 DATA AGENT<br/>Pull raw data<br/>from database"]
-    Analysis["📊 ANALYSIS AGENT<br/>Run analysis<br/>and compare to targets"]
-    Chart["📈 CHART AGENT<br/>Generate visuals<br/>from data"]
-    Report["📄 REPORT AGENT<br/>Assemble final<br/>report"]
+    Data["📁 DATA AGENT\nPull raw data\nfrom database"]
+    Analysis["📊 ANALYSIS AGENT\nRun analysis\nand compare to targets"]
+    Chart["📈 CHART AGENT\nGenerate visuals\nfrom data"]
+    Report["📄 REPORT AGENT\nAssemble final\nreport"]
 
     Data --> Analysis --> Chart --> Report
 
@@ -141,7 +141,7 @@ graph TD
     FinData["Revenue data"]
     HRData["Headcount data"]
     ClientData["Client satisfaction"]
-    Agg["📊 Aggregator<br/>Combine all results"]
+    Agg["📊 Aggregator\nCombine all results"]
 
     Coord --> Fin & HR & Client
     Fin --> FinData --> Agg
@@ -170,7 +170,7 @@ A central "supervisor" agent delegates tasks to specialized workers based on the
 
 ```mermaid
 graph TD
-    Sup["🤖 SUPERVISOR<br/>Routes to right agent"]
+    Sup["🤖 SUPERVISOR\nRoutes to right agent"]
     Fin["💰 Finance Expert"]
     Tech["💻 Tech Expert"]
     HR["👥 HR Expert"]
@@ -196,9 +196,9 @@ Agents handle different phases of a workflow, passing context at transition poin
 
 ```mermaid
 graph LR
-    Intake["📥 Intake Agent<br/>Understand the request,<br/>classify, gather context"]
-    Research["🔍 Research Agent<br/>Research and analyze data,<br/>generate options,<br/>make recommendation"]
-    Action["⚡ Action Agent<br/>Execute the recommended<br/>action with human approval"]
+    Intake["📥 Intake Agent\nUnderstand the request,\nclassify, gather context"]
+    Research["🔍 Research Agent\nResearch and analyze data,\ngenerate options,\nmake recommendation"]
+    Action["⚡ Action Agent\nExecute the recommended\naction with human approval"]
 
     Intake -- "handoff" --> Research -- "handoff" --> Action
 
@@ -221,10 +221,10 @@ In enterprise environments — especially in government and financial services �
 
 ```mermaid
 graph TD
-    L4["🚀 Level 4: AUTOMATE<br/>Agent handles end-to-end for low-risk tasks<br/>Human monitors via dashboards"]
-    L3["⚡ Level 3: ACT<br/>Agent executes routine actions autonomously<br/>Human reviews after the fact"]
-    L2["💡 Level 2: RECOMMEND<br/>Agent analyzes data and recommends action<br/>Human approves or rejects"]
-    L1["📋 Level 1: INFORM ← START HERE<br/>Agent finds data and presents it<br/>Human makes all decisions"]
+    L4["🚀 Level 4: AUTOMATE\nAgent handles end-to-end for low-risk tasks\nHuman monitors via dashboards"]
+    L3["⚡ Level 3: ACT\nAgent executes routine actions autonomously\nHuman reviews after the fact"]
+    L2["💡 Level 2: RECOMMEND\nAgent analyzes data and recommends action\nHuman approves or rejects"]
+    L1["📋 Level 1: INFORM ← START HERE\nAgent finds data and presents it\nHuman makes all decisions"]
 
     L1 -- "⬆️ More autonomy" --> L2
     L2 -- "⬆️ More autonomy" --> L3
@@ -263,19 +263,19 @@ For the C-suite dashboard: the GenAI chat interface should be Level 1-2. It info
 ```mermaid
 graph TD
     subgraph App ["🖥️ APPLICATION"]
-        UI["💬 USER INTERFACE<br/>Chat, dashboard, Slack, email"]
-        Runtime["🤖 AGENT RUNTIME<br/>Microsoft Agent Framework, LangGraph, n8n, CrewAI"]
+        UI["💬 USER INTERFACE\nChat, dashboard, Slack, email"]
+        Runtime["🤖 AGENT RUNTIME\nMicrosoft Agent Framework, LangGraph, n8n, CrewAI"]
     end
 
     subgraph Ops ["⚙️ OPERATIONAL LAYERS"]
-        Tools["🔧 TOOLS & INTEGRATIONS<br/>MCP servers, APIs, databases, file systems"]
-        Knowledge["📚 KNOWLEDGE LAYER<br/>RAG pipeline, vector databases, memory"]
-        Models["🧠 MODELS<br/>GPT-5, Claude, Codex — routed by task type"]
+        Tools["🔧 TOOLS & INTEGRATIONS\nMCP servers, APIs, databases, file systems"]
+        Knowledge["📚 KNOWLEDGE LAYER\nRAG pipeline, vector databases, memory"]
+        Models["🧠 MODELS\nGPT-5, Claude, Codex — routed by task type"]
     end
 
     subgraph Foundation ["🏗️ FOUNDATION LAYERS"]
-        Gov["🛡️ GOVERNANCE<br/>Access controls, audit logging,<br/>guardrails, compliance policies"]
-        Infra["☁️ INFRASTRUCTURE<br/>Azure AI Foundry, containerized execution,<br/>virtual networks, FedRAMP compliance"]
+        Gov["🛡️ GOVERNANCE\nAccess controls, audit logging,\nguardrails, compliance policies"]
+        Infra["☁️ INFRASTRUCTURE\nAzure AI Foundry, containerized execution,\nvirtual networks, FedRAMP compliance"]
     end
 
     UI --> Runtime --> Tools --> Knowledge --> Models --> Gov --> Infra

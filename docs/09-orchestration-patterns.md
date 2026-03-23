@@ -21,10 +21,10 @@ Agents execute in a fixed, linear order. Each agent's output becomes the next ag
 ```mermaid
 graph LR
     subgraph Pipeline ["📦 STATE passed forward through each step"]
-        Data["📁 DATA AGENT<br/>Pull Q3 data from<br/>data warehouse"]
-        Analysis["📊 ANALYSIS AGENT<br/>Compare to Q2<br/>and YoY benchmarks"]
-        Chart["📈 CHART AGENT<br/>Generate visualizations<br/>from analysis"]
-        Report["📄 REPORT AGENT<br/>Assemble final<br/>deck with narrative"]
+        Data["📁 DATA AGENT\nPull Q3 data from\ndata warehouse"]
+        Analysis["📊 ANALYSIS AGENT\nCompare to Q2\nand YoY benchmarks"]
+        Chart["📈 CHART AGENT\nGenerate visualizations\nfrom analysis"]
+        Report["📄 REPORT AGENT\nAssemble final\ndeck with narrative"]
     end
 
     Data --> Analysis --> Chart --> Report
@@ -49,8 +49,8 @@ What happens when Step 3 fails? Three strategies:
 ```mermaid
 graph TD
     S1["Step 1"] --> S2["Step 2"] --> S3["❌ Step 3 FAILS"]
-    S3 --> Retry["🔄 Retry?<br/>Retry 1x then fallback"]
-    S3 --> Fallback["🔀 Fallback?<br/>Use simpler chart type<br/>and continue"]
+    S3 --> Retry["🔄 Retry?\nRetry 1x then fallback"]
+    S3 --> Fallback["🔀 Fallback?\nUse simpler chart type\nand continue"]
 
     style S1 fill:#d4edda,stroke:#28a745,color:#000
     style S2 fill:#d4edda,stroke:#28a745,color:#000
@@ -76,11 +76,11 @@ Multiple agents work independently on different sub-tasks. Results are aggregate
 
 ```mermaid
 graph TD
-    Coord["🎯 COORDINATOR<br/>Split task into parts"]
-    Fin["💰 FINANCIAL AGENT<br/>Pull Q3 revenue,<br/>margin, backlog"]
-    HR["👥 HR AGENT<br/>Pull Q3 headcount,<br/>attrition, hiring"]
-    Client["🤝 CLIENT AGENT<br/>Pull Q3 pipeline,<br/>NPS, retention"]
-    Agg["📊 AGGREGATOR<br/>Combine all results<br/>Wait: 3.2s (slowest)"]
+    Coord["🎯 COORDINATOR\nSplit task into parts"]
+    Fin["💰 FINANCIAL AGENT\nPull Q3 revenue,\nmargin, backlog"]
+    HR["👥 HR AGENT\nPull Q3 headcount,\nattrition, hiring"]
+    Client["🤝 CLIENT AGENT\nPull Q3 pipeline,\nNPS, retention"]
+    Agg["📊 AGGREGATOR\nCombine all results\nWait: 3.2s (slowest)"]
 
     Coord --> Fin & HR & Client
     Fin -- "2.1s" --> Agg
@@ -123,11 +123,11 @@ A central "supervisor" agent receives every request, analyzes it, and delegates 
 ```mermaid
 graph TD
     User["👤 User query"] --> Sup1
-    Sup1["🤖 SUPERVISOR<br/>Analyzes intent<br/>Routes to right specialist"]
-    Fin["💰 FINANCE EXPERT<br/>Revenue, Margin, Backlog"]
-    HR["👥 HR EXPERT<br/>Headcount, Attrition, Hiring"]
-    Client["🤝 CLIENT EXPERT<br/>Pipeline, NPS, Retention"]
-    Sup2["🤖 SUPERVISOR<br/>Receives result<br/>Formats for user<br/>May route again"]
+    Sup1["🤖 SUPERVISOR\nAnalyzes intent\nRoutes to right specialist"]
+    Fin["💰 FINANCE EXPERT\nRevenue, Margin, Backlog"]
+    HR["👥 HR EXPERT\nHeadcount, Attrition, Hiring"]
+    Client["🤝 CLIENT EXPERT\nPipeline, NPS, Retention"]
+    Sup2["🤖 SUPERVISOR\nReceives result\nFormats for user\nMay route again"]
 
     Sup1 --> Fin & HR & Client
     Fin --> Sup2
@@ -190,19 +190,19 @@ Agents handle different **phases** of a workflow, explicitly passing context at 
 ```mermaid
 graph LR
     subgraph P1 ["🔷 PHASE 1"]
-        Intake["📥 INTAKE AGENT<br/>Understand the request<br/>Classify type<br/>Gather data requirements"]
+        Intake["📥 INTAKE AGENT\nUnderstand the request\nClassify type\nGather data requirements"]
     end
 
     subgraph P2 ["🔷 PHASE 2"]
-        Research["🔍 RESEARCH AGENT<br/>Analyze data<br/>Generate options<br/>Make recommendation"]
+        Research["🔍 RESEARCH AGENT\nAnalyze data\nGenerate options\nMake recommendation"]
     end
 
     subgraph P3 ["🔷 PHASE 3"]
-        Action["⚡ ACTION AGENT<br/>Draft output<br/>Format for audience<br/>Get human approval ⏸️"]
+        Action["⚡ ACTION AGENT\nDraft output\nFormat for audience\nGet human approval ⏸️"]
     end
 
-    Intake -- "context:<br/>parsed intent<br/>+ data needs" --> Research
-    Research -- "context:<br/>findings<br/>+ recommendation" --> Action
+    Intake -- "context:\nparsed intent\n+ data needs" --> Research
+    Research -- "context:\nfindings\n+ recommendation" --> Action
 
     style Intake fill:#fff3cd,stroke:#ffc107,color:#000
     style Research fill:#f0f4ff,stroke:#2E86C1,color:#000
@@ -257,13 +257,13 @@ A lead agent delegates to department-level supervisors, who each manage their ow
 ```mermaid
 graph TD
     subgraph T1 ["👑 TIER 1: EXECUTIVE"]
-        Lead["🎯 LEAD AGENT<br/>Delegates to department heads"]
+        Lead["🎯 LEAD AGENT\nDelegates to department heads"]
     end
 
     subgraph T2 ["📋 TIER 2: SUPERVISORS"]
-        FinSup["💰 FINANCE<br/>SUPERVISOR"]
-        HRSup["👥 HR<br/>SUPERVISOR"]
-        CliSup["🤝 CLIENT<br/>SUPERVISOR"]
+        FinSup["💰 FINANCE\nSUPERVISOR"]
+        HRSup["👥 HR\nSUPERVISOR"]
+        CliSup["🤝 CLIENT\nSUPERVISOR"]
     end
 
     subgraph T3 ["⚙️ TIER 3: WORKERS"]
@@ -314,16 +314,16 @@ Agents need to track where they are, what's been done, and what's next. Without 
 ```mermaid
 graph TD
     subgraph State ["📋 WORKFLOW STATE — q3-report-2025 — in_progress — step 3 of 5"]
-        S1["✅ 1. pull_financial_data<br/>completed (2.1s)"]
-        S2["✅ 2. pull_hr_data<br/>completed (1.8s)"]
-        S3["🔄 3. generate_analysis<br/>in_progress"]
-        S4["⏳ 4. create_charts<br/>pending"]
-        S5["⏳ 5. assemble_report<br/>pending"]
+        S1["✅ 1. pull_financial_data\ncompleted (2.1s)"]
+        S2["✅ 2. pull_hr_data\ncompleted (1.8s)"]
+        S3["🔄 3. generate_analysis\nin_progress"]
+        S4["⏳ 4. create_charts\npending"]
+        S5["⏳ 5. assemble_report\npending"]
     end
 
     S1 --> S2 --> S3 --> S4 --> S5
 
-    Checkpoint["💾 checkpoint: 2025-10-14T14:23:00Z<br/>can_resume_from: step_3"]
+    Checkpoint["💾 checkpoint: 2025-10-14T14:23:00Z\ncan_resume_from: step_3"]
     S3 -.- Checkpoint
 
     style S1 fill:#d4edda,stroke:#28a745,color:#000
@@ -384,8 +384,8 @@ graph TD
     Ok3["✅ Success — continue"]
     F3["❌ Failure (attempt 3)"]
     CB["🚫 Circuit breaker opens"]
-    Fallback["🔀 Fallback agent available?<br/>Use fallback"]
-    Human["👤 Human escalation<br/>Step 3 failed after 3 retries.<br/>Proceed without chart generation?"]
+    Fallback["🔀 Fallback agent available?\nUse fallback"]
+    Human["👤 Human escalation\nStep 3 failed after 3 retries.\nProceed without chart generation?"]
 
     Call --> Ok1
     Call --> F1 --> R1

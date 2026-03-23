@@ -24,14 +24,14 @@ graph TD
         direction LR
         subgraph row1[" "]
             direction LR
-            T1["💉 <b>PROMPT INJECTION</b><br/><br/>Attacker plants<br/>instructions in<br/>documents that<br/>RAG retrieves"]
-            T2["🔑 <b>CREDENTIAL THEFT</b><br/><br/>Attacker extracts<br/>API keys from MCP<br/>config via prompt"]
-            T3["📤 <b>DATA EXFILTRATION</b><br/><br/>Attacker uses tool<br/>calls to send data<br/>to external endpoints"]
+            T1["💉 PROMPT INJECTION\n\nAttacker plants\ninstructions in\ndocuments that\nRAG retrieves"]
+            T2["🔑 CREDENTIAL THEFT\n\nAttacker extracts\nAPI keys from MCP\nconfig via prompt"]
+            T3["📤 DATA EXFILTRATION\n\nAttacker uses tool\ncalls to send data\nto external endpoints"]
         end
         subgraph row2[" "]
             direction LR
-            T4["🚪 <b>UNAUTHED TOOL USE</b><br/><br/>AI calls tools that<br/>the user should not<br/>have access to"]
-            T5["👻 <b>SHADOW MCP SERVERS</b><br/><br/>Unvetted servers<br/>installed without<br/>security review"]
+            T4["🚪 UNAUTHED TOOL USE\n\nAI calls tools that\nthe user should not\nhave access to"]
+            T5["👻 SHADOW MCP SERVERS\n\nUnvetted servers\ninstalled without\nsecurity review"]
         end
     end
 
@@ -59,14 +59,14 @@ Every MCP request must carry the user's identity and be verified against authori
 
 ```mermaid
 sequenceDiagram
-    participant U as 👤 USER<br/>(with identity token)
-    participant C as 🖥️ MCP CLIENT<br/>(AI app)
+    participant U as 👤 USER (with identity token)
+    participant C as 🖥️ MCP CLIENT (AI app)
     participant G as 🔐 AUTH GATEWAY
-    participant S as 🔧 MCP SERVER<br/>(tool)
+    participant S as 🔧 MCP SERVER (tool)
 
     U->>C: query + JWT token
     C->>G: tool call + user token
-    Note over G: Verify:<br/>• user identity<br/>• requested tool<br/>• data scope<br/>• time/context
+    Note over G: Verify:\n• user identity\n• requested tool\n• data scope\n• time/context
     G->>S: authorized request
     S->>G: result (user's scope)
     G->>C: filtered result
@@ -112,9 +112,9 @@ Credentials must never be accessible from the AI's context — not in config fil
 ```mermaid
 graph TD
     subgraph cred_flow["🔒 SECURE CREDENTIAL FLOW"]
-        AI["🤖 <b>AI RUNTIME</b><br/><br/>Has NO direct<br/>access to creds"]
-        BROKER["🔑 <b>CREDENTIAL BROKER</b><br/><br/>• Retrieves creds from OS keychain<br/>• Injects into MCP request<br/>• Strips from response"]
-        KEYCHAIN["🗄️ <b>OS KEYCHAIN</b><br/><br/>macOS Keychain<br/>Windows DPAPI<br/>Linux Secret Service"]
+        AI["🤖 AI RUNTIME\n\nHas NO direct\naccess to creds"]
+        BROKER["🔑 CREDENTIAL BROKER\n\n• Retrieves creds from OS keychain\n• Injects into MCP request\n• Strips from response"]
+        KEYCHAIN["🗄️ OS KEYCHAIN\n\nmacOS Keychain\nWindows DPAPI\nLinux Secret Service"]
 
         AI -- "request" --> BROKER
         BROKER -- "result (clean)" --> AI
@@ -213,10 +213,10 @@ A formal vetting pipeline ensures only approved, reviewed MCP servers run in pro
 
 ```mermaid
 graph LR
-    DEV["👨‍💻 <b>DEVELOPER REQUEST</b><br/><br/>I need a DB MCP"] --> SEC["🔍 <b>SECURITY REVIEW</b><br/><br/>• Code audit<br/>• Dependency analysis<br/>• License check"]
-    SEC --> SCAN["🐳 <b>CONTAINER SCANNING</b><br/><br/>• Vuln scan<br/>• SBOM generation<br/>• Malware check"]
-    SCAN --> BOARD["✅ <b>APPROVAL BOARD</b><br/><br/>• Security sign-off<br/>• Compliance sign-off<br/>• Business sponsor"]
-    BOARD --> REG["📦 <b>REGISTRY (Approved)</b><br/><br/>• Version-pinned<br/>• Image digest<br/>• Network policy"]
+    DEV["👨‍💻 DEVELOPER REQUEST\n\nI need a DB MCP"] --> SEC["🔍 SECURITY REVIEW\n\n• Code audit\n• Dependency analysis\n• License check"]
+    SEC --> SCAN["🐳 CONTAINER SCANNING\n\n• Vuln scan\n• SBOM generation\n• Malware check"]
+    SCAN --> BOARD["✅ APPROVAL BOARD\n\n• Security sign-off\n• Compliance sign-off\n• Business sponsor"]
+    BOARD --> REG["📦 REGISTRY (Approved)\n\n• Version-pinned\n• Image digest\n• Network policy"]
 
     style DEV fill:#fff3cd,stroke:#ffc107,color:#000
     style SEC fill:#f8d7da,stroke:#dc3545,color:#000
@@ -249,16 +249,16 @@ graph TD
     subgraph zt["🛡️ ZERO TRUST MCP ARCHITECTURE"]
         subgraph principles[" "]
             direction TB
-            P1["🔒 <b>PRINCIPLE 1: NEVER TRUST, ALWAYS VERIFY</b><br/>Every MCP request is authenticated and authorized,<br/>regardless of source network."]
-            P2["🔑 <b>PRINCIPLE 2: LEAST PRIVILEGE</b><br/>MCP servers get minimum permissions needed.<br/>Read-only unless write is explicitly needed."]
-            P3["💥 <b>PRINCIPLE 3: ASSUME BREACH</b><br/>Log everything. Segment networks.<br/>Limit blast radius. Rotate credentials."]
+            P1["🔒 PRINCIPLE 1: NEVER TRUST, ALWAYS VERIFY\nEvery MCP request is authenticated and authorized,\nregardless of source network."]
+            P2["🔑 PRINCIPLE 2: LEAST PRIVILEGE\nMCP servers get minimum permissions needed.\nRead-only unless write is explicitly needed."]
+            P3["💥 PRINCIPLE 3: ASSUME BREACH\nLog everything. Segment networks.\nLimit blast radius. Rotate credentials."]
         end
 
-        USER["👤 USER"] --> IDP["🏢 IDENTITY<br/>PROVIDER<br/>(Azure AD)"]
-        IDP --> GW["🔐 AUTH<br/>GATEWAY"]
-        GW --> MCP["🔧 MCP SERVER<br/>(isolated)"]
-        GW --> AUDIT["📝 AUDIT LOG<br/>(immutable)"]
-        MCP --> MON["📊 MONITOR<br/>(SIEM)"]
+        USER["👤 USER"] --> IDP["🏢 IDENTITY\nPROVIDER\n(Azure AD)"]
+        IDP --> GW["🔐 AUTH\nGATEWAY"]
+        GW --> MCP["🔧 MCP SERVER\n(isolated)"]
+        GW --> AUDIT["📝 AUDIT LOG\n(immutable)"]
+        MCP --> MON["📊 MONITOR\n(SIEM)"]
     end
 
     style P1 fill:#f8d7da,stroke:#dc3545,color:#000

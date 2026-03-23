@@ -36,14 +36,14 @@ Different frameworks care about different things. Here's what each requires when
 graph TD
     subgraph framework["🏛️ AI GOVERNANCE FRAMEWORK"]
         direction LR
-        P1["📊 <b>DATA<br/>GOVERNANCE</b><br/><br/>Classify<br/>Protect<br/>Retain"]
-        P2["🤖 <b>MODEL<br/>GOVERNANCE</b><br/><br/>Approve<br/>Version<br/>Test"]
-        P3["🔐 <b>ACCESS<br/>GOVERNANCE</b><br/><br/>Who sees<br/>what<br/>when"]
-        P4["📋 <b>AUDIT &<br/>COMPLIANCE</b><br/><br/>Log<br/>Prove<br/>Report"]
-        P5["⚠️ <b>RISK<br/>MANAGEMENT</b><br/><br/>What<br/>could<br/>fail"]
+        P1["📊 DATA\nGOVERNANCE\n\nClassify\nProtect\nRetain"]
+        P2["🤖 MODEL\nGOVERNANCE\n\nApprove\nVersion\nTest"]
+        P3["🔐 ACCESS\nGOVERNANCE\n\nWho sees\nwhat\nwhen"]
+        P4["📋 AUDIT &\nCOMPLIANCE\n\nLog\nProve\nReport"]
+        P5["⚠️ RISK\nMANAGEMENT\n\nWhat\ncould\nfail"]
     end
 
-    note["Each pillar addresses a different dimension of AI risk.<br/>All five must work together for compliance."]
+    note["Each pillar addresses a different dimension of AI risk.\nAll five must work together for compliance."]
     framework --> note
 
     style P1 fill:#fff3cd,stroke:#ffc107,color:#000
@@ -113,15 +113,15 @@ In a traditional application, access controls are straightforward — users have
 
 ```mermaid
 graph TD
-    Q["🔍 Query: <i>Show me all practice area revenue</i>"]
+    Q["🔍 Query: Show me all practice area revenue"]
 
-    Q --> P["🟢 <b>PARTNER</b><br/>Full Access"]
-    Q --> D["🟡 <b>DIRECTOR</b><br/>Filtered Access"]
-    Q --> A["🔴 <b>JUNIOR ANALYST</b><br/>Access Denied"]
+    Q --> P["🟢 PARTNER\nFull Access"]
+    Q --> D["🟡 DIRECTOR\nFiltered Access"]
+    Q --> A["🔴 JUNIOR ANALYST\nAccess Denied"]
 
-    P --> PR["✅ Revenue for ALL practice areas<br/>Defense $15.2M, FinServ $12.8M,<br/>Health $8.1M, E&I $6.2M"]
-    D --> DR["⚠️ Revenue for THEIR practice area only<br/>Defense $15.2M<br/>Other practices: Access Restricted"]
-    A --> AR["🚫 This data requires Director-level access.<br/>Please contact your practice lead."]
+    P --> PR["✅ Revenue for ALL practice areas\nDefense $15.2M, FinServ $12.8M,\nHealth $8.1M, E&I $6.2M"]
+    D --> DR["⚠️ Revenue for THEIR practice area only\nDefense $15.2M\nOther practices: Access Restricted"]
+    A --> AR["🚫 This data requires Director-level access.\nPlease contact your practice lead."]
 
     style Q fill:#f0f4ff,stroke:#2E86C1,color:#000
     style P fill:#d4edda,stroke:#28a745,color:#000
@@ -158,10 +158,10 @@ graph TD
 
 ```mermaid
 graph LR
-    U["👤 <b>USER ACTION</b><br/><br/>Query,<br/>Tool call"] --> AI["🤖 <b>AI SYSTEM</b><br/><br/>Retrieval,<br/>Generation"]
-    AI --> LOG["📝 <b>AUDIT LOG</b><br/><i>immutable</i><br/><br/>Write-once<br/>storage only"]
-    LOG --> SIEM["🔔 <b>SIEM</b><br/><br/>Alerts,<br/>Reports"]
-    LOG --> DASH["📊 <b>COMPLIANCE<br/>DASHBOARD</b><br/><br/>Auditor access<br/>GRC reporting<br/>Query history<br/>Risk indicators"]
+    U["👤 USER ACTION\n\nQuery,\nTool call"] --> AI["🤖 AI SYSTEM\n\nRetrieval,\nGeneration"]
+    AI --> LOG["📝 AUDIT LOG\nimmutable\n\nWrite-once\nstorage only"]
+    LOG --> SIEM["🔔 SIEM\n\nAlerts,\nReports"]
+    LOG --> DASH["📊 COMPLIANCE\nDASHBOARD\n\nAuditor access\nGRC reporting\nQuery history\nRisk indicators"]
 
     style U fill:#fff3cd,stroke:#ffc107,color:#000
     style AI fill:#e2d5f1,stroke:#6f42c1,color:#000

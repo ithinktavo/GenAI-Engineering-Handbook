@@ -60,16 +60,16 @@ the model may use either number — unpredictably.
 graph TD
     subgraph defenses["🛡️ CONTEXT POISONING DEFENSES"]
         subgraph L1["🧹 LAYER 1: INPUT SANITIZATION"]
-            L1D["Scan all documents before indexing for:<br/>• Embedded instructions — ignore, override<br/>• Unusual formatting — hidden text, zero-width<br/>• Content that contradicts known facts"]
+            L1D["Scan all documents before indexing for:\n• Embedded instructions — ignore, override\n• Unusual formatting — hidden text, zero-width\n• Content that contradicts known facts"]
         end
         subgraph L2["✅ LAYER 2: TRUSTED SOURCE REGISTRY"]
-            L2D["Only index documents from approved sources:<br/>• Official reports — financial system exports<br/>• Approved databases — HR system, CRM<br/>• Vetted MCP servers — from trusted registry"]
+            L2D["Only index documents from approved sources:\n• Official reports — financial system exports\n• Approved databases — HR system, CRM\n• Vetted MCP servers — from trusted registry"]
         end
         subgraph L3["🔍 LAYER 3: CONTENT VALIDATION"]
-            L3D["Before injecting into the prompt:<br/>• Cross-reference retrieved data against baselines<br/>• Flag anomalies — revenue doubled overnight?<br/>• Tag source and timestamp for the LLM"]
+            L3D["Before injecting into the prompt:\n• Cross-reference retrieved data against baselines\n• Flag anomalies — revenue doubled overnight?\n• Tag source and timestamp for the LLM"]
         end
         subgraph L4["📋 LAYER 4: OUTPUT VERIFICATION"]
-            L4D["After LLM generates response:<br/>• Check that cited numbers match retrieved data<br/>• Detect hallucinated entities or figures<br/>• Flag responses that deviate from source data"]
+            L4D["After LLM generates response:\n• Check that cited numbers match retrieved data\n• Detect hallucinated entities or figures\n• Flag responses that deviate from source data"]
         end
 
         L1 --> L2 --> L3 --> L4
@@ -100,11 +100,11 @@ Stanford's research demonstrated that LLM accuracy follows a U-shaped curve base
 
 ```mermaid
 graph LR
-    subgraph chart["📊 Accuracy vs. Position of Relevant Information<br/><i>Stanford — Lost in the Middle finding</i>"]
+    subgraph chart["📊 Accuracy vs. Position of Relevant Information\nStanford — Lost in the Middle finding"]
         direction LR
-        B["✅ <b>BEGINNING</b><br/><br/>~95-100% accuracy<br/>Strong performance"]
-        M["❌ <b>MIDDLE</b><br/><br/>~60-65% accuracy<br/>30%+ accuracy drop<br/><i>Danger zone</i>"]
-        E["✅ <b>END</b><br/><br/>~95-100% accuracy<br/>Strong performance"]
+        B["✅ BEGINNING\n\n~95-100% accuracy\nStrong performance"]
+        M["❌ MIDDLE\n\n~60-65% accuracy\n30%+ accuracy drop\nDanger zone"]
+        E["✅ END\n\n~95-100% accuracy\nStrong performance"]
 
         B -.->|"accuracy drops"| M -.->|"accuracy recovers"| E
     end
@@ -207,17 +207,17 @@ When the total context (system prompt + memory + retrieved data + conversation h
 graph TD
     subgraph budget["📐 CONTEXT WINDOW BUDGET — 128K tokens"]
         direction TB
-        S["🔒 <b>SYSTEM PROMPT</b> — fixed<br/>~500 tokens — guardrails, role, rules"]
-        R["📚 <b>RETRIEVED CONTEXT</b> — variable<br/>~2,000-8,000 tokens — RAG chunks, MCP tool results"]
-        H["💬 <b>CONVERSATION HISTORY</b> — growing<br/>~1,000-10,000 tokens — previous messages in this chat"]
-        Q["❓ <b>USER QUESTION</b> — small<br/>~50-200 tokens"]
-        RS["✍️ <b>RESPONSE SPACE</b> — reserved<br/>~500-2,000 tokens — room for the LLM to generate"]
-        B["🛡️ <b>BUFFER</b> — safety margin<br/>~1,000 tokens"]
+        S["🔒 SYSTEM PROMPT — fixed\n~500 tokens — guardrails, role, rules"]
+        R["📚 RETRIEVED CONTEXT — variable\n~2,000-8,000 tokens — RAG chunks, MCP tool results"]
+        H["💬 CONVERSATION HISTORY — growing\n~1,000-10,000 tokens — previous messages in this chat"]
+        Q["❓ USER QUESTION — small\n~50-200 tokens"]
+        RS["✍️ RESPONSE SPACE — reserved\n~500-2,000 tokens — room for the LLM to generate"]
+        B["🛡️ BUFFER — safety margin\n~1,000 tokens"]
 
         S --> R --> H --> Q --> RS --> B
     end
 
-    TRIM["⚠️ <b>Priority when trimming:</b><br/>1. Never trim system prompt or current question<br/>2. Summarize old conversation history first<br/>3. Reduce retrieved context — fewer chunks — second<br/>4. Never reduce response space"]
+    TRIM["⚠️ Priority when trimming:\n1. Never trim system prompt or current question\n2. Summarize old conversation history first\n3. Reduce retrieved context — fewer chunks — second\n4. Never reduce response space"]
     budget --> TRIM
 
     style S fill:#f8d7da,stroke:#dc3545,color:#000
@@ -250,22 +250,22 @@ All four risks require a unified defense. Here's how the layers work together:
 graph TD
     subgraph arch["🏗️ CONTEXT SECURITY ARCHITECTURE"]
         subgraph L1_ing["📥 1. DATA INGESTION"]
-            I1["Input sanitization → Trusted source check →<br/>Deduplication → Timestamp tagging"]
+            I1["Input sanitization → Trusted source check →\nDeduplication → Timestamp tagging"]
         end
         subgraph L2_ret["🔎 2. RETRIEVAL"]
-            I2["Hybrid search → Relevance threshold →<br/>Reranking → Chunk count limit"]
+            I2["Hybrid search → Relevance threshold →\nReranking → Chunk count limit"]
         end
         subgraph L3_asm["🧩 3. CONTEXT ASSEMBLY"]
-            I3["Budget allocation → Strategic placement →<br/>Conflict detection → Source attribution"]
+            I3["Budget allocation → Strategic placement →\nConflict detection → Source attribution"]
         end
         subgraph L4_guard["🛡️ 4. GUARDRAILS"]
-            I4["System prompt constraints → Access filtering →<br/>PII redaction → Instruction detection"]
+            I4["System prompt constraints → Access filtering →\nPII redaction → Instruction detection"]
         end
         subgraph L5_llm["🤖 5. LLM GENERATION"]
             I5["Model processes cleaned, structured context"]
         end
         subgraph L6_val["✅ 6. OUTPUT VALIDATION"]
-            I6["Fact-check against sources → PII scan →<br/>Hallucination detection → Audit logging"]
+            I6["Fact-check against sources → PII scan →\nHallucination detection → Audit logging"]
         end
 
         L1_ing --> L2_ret --> L3_asm --> L4_guard --> L5_llm --> L6_val
