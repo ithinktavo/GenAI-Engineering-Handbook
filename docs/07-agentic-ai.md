@@ -11,7 +11,7 @@ Agentic AI refers to AI systems that can **plan, reason, and execute multi-step 
 **Chatbot interaction:**
 ```
 User:  "What was our Q3 revenue?"
-AI:    "$42 million, a 12% increase year-over-year."
+AI:    "$38 million, a 14% increase year-over-year."
        (done — single question, single answer)
 ```
 

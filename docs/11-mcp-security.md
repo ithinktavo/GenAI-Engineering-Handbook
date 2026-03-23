@@ -85,7 +85,7 @@ Combine **Role-Based Access Control** (RBAC) with **Attribute-Based Access Contr
 | **Action type** | Read, write, export, delete | Operation-level permissions |
 | **Request origin** | Corporate VPN, external network | Network-level trust |
 
-**Concrete example:** A Director in the Defense practice asks "Show me all practice revenue." The authorization gateway verifies their role (Director), practice (Defense), and returns **only Defense practice revenue** — other practices are filtered out before the response reaches the LLM.
+**Concrete example:** A Director in the Digital & Cloud practice asks "Show me all practice revenue." The authorization gateway verifies their role (Director), practice (Digital & Cloud), and returns **only Digital & Cloud practice revenue** — other practices are filtered out before the response reaches the LLM.
 
 ---
 
@@ -158,7 +158,7 @@ Every MCP tool call must be logged with full metadata to satisfy regulatory requ
   "user": {
     "id": "user_jsmith",
     "role": "Director",
-    "practice": "Defense",
+    "practice": "Digital & Cloud",
     "auth_method": "SSO_Azure_AD"
   },
   "mcp_server": "finance-db-prod",
@@ -169,7 +169,7 @@ Every MCP tool call must be logged with full metadata to satisfy regulatory requ
   },
   "authorization": {
     "decision": "PERMIT_FILTERED",
-    "filter_applied": "practice_area = 'Defense' only",
+    "filter_applied": "practice_area = 'Digital & Cloud' only",
     "policy": "role-based-practice-isolation"
   },
   "result": {

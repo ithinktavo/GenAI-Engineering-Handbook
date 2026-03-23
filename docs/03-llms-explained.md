@@ -25,7 +25,7 @@ LLMs don't process words — they process **tokens**. A token is a fragment of t
 ```
 "Hello, world!"        → ["Hello", ",", " world", "!"]           = 4 tokens
 "Artificial intelligence" → ["Art", "ificial", " intelligence"]  = 3 tokens  
-"$42,000,000"          → ["$", "42", ",", "000", ",", "000"]     = 6 tokens
+"$38,000,000"          → ["$", "38", ",", "000", ",", "000"]     = 6 tokens
 ```
 
 **Why tokens matter:**
@@ -99,15 +99,15 @@ Temperature controls how "random" the model's token selection is.
 ```
 Prompt: "Describe Q3 performance in one sentence."
 
-Temperature 0.0: "Q3 revenue of $42M represented a 12% year-over-year increase 
-                  driven by strong growth in the financial services practice."
+Temperature 0.0: "Q3 revenue of $38M represented a 14% year-over-year increase 
+                  driven by strong growth in the digital and cloud practice."
 
-Temperature 0.3: "Q3 revenue of $42M reflected solid growth of 12% compared to 
-                  the prior year, with financial services leading the way."
+Temperature 0.3: "Q3 revenue of $38M reflected solid growth of 14% compared to 
+                  the prior year, with digital and cloud leading the way."
 
-Temperature 0.9: "The third quarter was a breakout period — $42M in revenue 
+Temperature 0.9: "The third quarter was a breakout period — $38M in revenue 
                   shattered expectations and signaled that our strategic bets 
-                  in financial services are paying real dividends."
+                  in digital and cloud are paying real dividends."
 ```
 
 **For the C-suite dashboard:** Temperature should be LOW (0.0-0.2). Executives need consistent, reliable answers about financial data — not creative interpretations.
@@ -121,7 +121,7 @@ Hallucination is when the model generates confident, plausible-sounding text tha
 **Why it happens:** The model predicts the most likely next token. If the prompt asks "What was Q3 revenue?" and the model hasn't been given the actual data, it will generate a plausible-sounding number based on patterns in its training data. It doesn't know it's wrong. It doesn't have a concept of "wrong." It just produces the most statistically likely continuation.
 
 **Types of hallucination:**
-- **Factual fabrication:** Inventing numbers, dates, or events ("Q3 revenue was $47M" when it was actually $42M)
+- **Factual fabrication:** Inventing numbers, dates, or events ("Q3 revenue was $45M" when it was actually $38M)
 - **Source fabrication:** Citing documents or studies that don't exist
 - **Confident uncertainty:** Stating something definitively when the model should say "I don't know"
 - **Plausible reasoning:** Generating a logical-sounding but incorrect chain of reasoning

@@ -51,7 +51,7 @@ A compliance team reviewing 500 documents manually:
 - **Result:** Same output, 94% less time. Nobody was fired. The analysts now spend their time on the complex cases that actually need expertise.
 
 ### Why Framing Matters
-In government consulting — CorpX's primary market — "AI replaces workers" is politically toxic. Government clients are accountable to taxpayers and elected officials. The correct framing is always:
+In technology consulting — particularly in regulated and public sector markets — "AI replaces workers" is politically toxic. Government clients are accountable to taxpayers and elected officials. The correct framing is always:
 
 > "AI augments your workforce. It handles the routine work so your most experienced people can focus on the cases that require human judgment. You're not losing headcount — you're gaining capacity."
 
@@ -91,7 +91,7 @@ Data **quality** matters exponentially more than data **quantity**.
 ### What Bad Data Does to AI
 - **Duplicate data** → model over-emphasizes certain information, skewing responses
 - **Outdated data** → model confidently states information that's no longer true
-- **Inconsistent data** → model contradicts itself (one source says $42M, another says $38M)
+- **Inconsistent data** → model contradicts itself (one source says $38M, another says $35M)
 - **Poorly structured data** → embeddings don't capture meaning accurately, retrieval fails
 - **Irrelevant data** → context window filled with noise, drowning out the signal
 

@@ -47,8 +47,8 @@ It treats the manipulated data as ground truth.
 
 **Scenario 3: Stale data poisoning**
 ```
-A document from 2023 states: "The firm has 620 employees."
-Current headcount is 852.
+A document from 2023 states: "The firm has 480 employees."
+Current headcount is 620.
 
 If RAG retrieves the stale document and the current one,
 the model may use either number — unpredictably.
@@ -148,8 +148,8 @@ When different pieces of information in the context contradict each other, the m
 
 **Scenario 1: Temporal clash (stale vs. fresh)**
 ```
-Chunk A (from January report): "Headcount: 824 employees"
-Chunk B (from October report): "Headcount: 852 employees"
+Chunk A (from January report): "Headcount: 598 employees"
+Chunk B (from October report): "Headcount: 620 employees"
 
 The model sees both. Which number does it report?
 Without timestamp awareness, it's a coin flip.

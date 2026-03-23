@@ -6,7 +6,7 @@
 
 ## Why Governance Matters
 
-A Partner walks into your office and asks: "Can we deploy this AI dashboard for our DoD client?" The answer isn't yes or no — it's "yes, if we have the governance framework to prove it's compliant."
+A Partner walks into your office and asks: "Can we deploy this AI dashboard for our federal client?" The answer isn't yes or no — it's "yes, if we have the governance framework to prove it's compliant."
 
 In regulated industries — government, healthcare, financial services — the technology is the easy part. The hard part is proving to auditors, regulators, and risk committees that your AI system is safe, fair, traceable, and compliant. Without governance, you don't have a product. You have a liability.
 

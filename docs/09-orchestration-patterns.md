@@ -227,7 +227,7 @@ What gets passed between agents matters enormously. Too little context and the n
     "classification": "executive_reporting",
     "data_collected": { ... },
     "analysis_results": { ... },
-    "recommendation": "Focus on Defense growth, flag Health decline"
+    "recommendation": "Focus on Digital & Cloud growth, flag Energy decline"
   },
   "constraints": {
     "deadline": "2025-10-15T09:00:00Z",

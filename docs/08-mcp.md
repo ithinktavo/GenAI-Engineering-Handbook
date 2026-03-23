@@ -56,7 +56,7 @@ graph LR
     User -- "prompt" --> Client
     Client -- "JSON-RPC" --> Server
     Server -- "result" --> Client
-    Client -- "answer: $42M, up 12% YoY" --> User
+    Client -- "answer: $38M, up 14% YoY" --> User
 
     style User fill:#fff3cd,stroke:#ffc107,color:#333
     style Client fill:#e2d5f1,stroke:#6f42c1,color:#333

@@ -57,19 +57,19 @@ When answering questions:
 
 **Example without CoT:**
 ```
-Q: Our Q2 revenue was $42M and Q3 was $38M. Marketing spend
+Q: Our Q2 revenue was $40M and Q3 was $35M. Marketing spend
    increased 15%. Should we increase the marketing budget for Q4?
 A: No, you should decrease marketing spend. [Wrong — jumps to conclusion]
 ```
 
 **Example with CoT:**
 ```
-Q: Our Q2 revenue was $42M and Q3 was $38M. Marketing spend
+Q: Our Q2 revenue was $40M and Q3 was $35M. Marketing spend
    increased 15%. Think through this step by step before recommending
    whether to increase the Q4 marketing budget.
 
 A: Let me break this down:
-   Step 1: Revenue declined from $42M to $38M — a 9.5% drop.
+   Step 1: Revenue declined from $40M to $35M — a 12.5% drop.
    Step 2: Marketing spend increased 15% during the same period.
    Step 3: Higher marketing spend did not prevent revenue decline.
    Step 4: However, correlation ≠ causation — the decline could be
@@ -327,7 +327,7 @@ The system prompt is still critical. Chain of thought still improves reasoning. 
 
 **What it is:** When different pieces of information in the context contradict each other, and the model has to decide which to trust.
 
-**How it happens:** RAG retrieves a document from 2024 saying revenue was $42M and a more recent document saying it was $38M. Which does the model use? Or two different policies about expense approvals with conflicting limits.
+**How it happens:** RAG retrieves a document from 2024 saying revenue was $35M and a more recent document saying it was $38M. Which does the model use? Or two different policies about expense approvals with conflicting limits.
 
 **Mitigation:** Timestamp-aware retrieval (prefer newer documents), source authority ranking (official reports > email threads), and explicit instructions in the system prompt about how to handle contradictions ("If data sources conflict, prefer the most recent official report and flag the discrepancy").
 

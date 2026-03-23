@@ -94,16 +94,16 @@ Split text into chunks of N tokens with optional overlap.
 
 ```mermaid
 graph TD
-    DOC["Document: Revenue reached $42M in Q3..."]
+    DOC["Document: Revenue reached $38M in Q3..."]
 
     subgraph NO_OL["Fixed-size - 50 tokens, no overlap"]
-        A1["Chunk 1: Revenue reached $42M...defense grew 18%"]
-        A2["Chunk 2: Financial services slowed 5%...health +15%"]
+        A1["Chunk 1: Revenue reached $38M...cloud grew 16%"]
+        A2["Chunk 2: Advisory grew 6%...healthcare +12%"]
     end
 
     subgraph OL["Fixed-size - 50 tokens, 20% overlap"]
-        B1["Chunk 1: Revenue reached $42M...defense grew 18%"]
-        B2["Chunk 2 overlap: Defense grew 18%...services slowed 5%"]
+        B1["Chunk 1: Revenue reached $38M...cloud grew 16%"]
+        B2["Chunk 2 overlap: Cloud grew 16%...advisory grew 6%"]
     end
 
     DOC --> NO_OL
@@ -142,9 +142,9 @@ Two levels: parent chunks (full sections) and child chunks (paragraphs within se
 ```mermaid
 graph TD
     P["Parent chunk: Q3 2025 Financial Performance Summary"]
-    C1["Child 1: Total revenue for Q3 reached $42.3M..."]
-    C2["Child 2: Revenue by practice area: Defense..."]
-    C3["Child 3: Gross margin improved to 38.5%..."]
+    C1["Child 1: Total revenue for Q3 reached $38.4M..."]
+    C2["Child 2: Revenue by business unit: Digital & Cloud..."]
+    C3["Child 3: Gross margin improved to 37.2%..."]
     R["Return Child 2 + Parent for full context"]
 
     P --> C1
@@ -193,7 +193,7 @@ The embedding model determines how well your system understands meaning. It conv
 
 ```mermaid
 graph LR
-    T1["Q3 revenue was $42 million"] -->|Embed| V1["Vector: 0.023, -0.156, 0.891, ... - 384-3072 dims"]
+    T1["Q3 revenue was $38 million"] -->|Embed| V1["Vector: 0.023, -0.156, 0.891, ... - 384-3072 dims"]
     T2["Third quarter sales figures"] -->|Embed| V2["Vector: 0.019, -0.148, 0.887, ... - Similar meaning"]
 
     V1 <-.->|"High similarity"| V2
@@ -298,13 +298,13 @@ graph TD
     Q --> KS
 
     subgraph VS["Vector Search"]
-        V1["New bookings in Q3 totaled $38M"]
-        V2["Revenue reached $42.3 million"]
-        V3["Backlog stands at $127M"]
+        V1["New bookings in Q3 totaled $32M"]
+        V2["Revenue reached $38.4 million"]
+        V3["Backlog stands at $98M"]
     end
 
     subgraph KS["Keyword Search"]
-        K1["book-to-bill ratio of 0.90"]
+        K1["book-to-bill ratio of 0.88"]
         K2["only exact keyword matches"]
     end
 
