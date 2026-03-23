@@ -35,6 +35,7 @@ This handbook is organized as a progressive learning path — each section build
 | [Agentic AI Fundamentals](docs/07-agentic-ai.md) | What agents are, how they differ from chatbots, orchestration patterns (sequential, parallel, supervisor, handoff) |
 | [MCP (Model Context Protocol)](docs/08-mcp.md) | The universal connector for AI — what it does, how it works, and the security gaps in enterprise environments |
 | [Agent Orchestration Patterns](docs/09-orchestration-patterns.md) | Deep dive into multi-agent architectures, state management, and the Microsoft Agent Framework |
+| [MCP vs API](docs/13-mcp-vs-api.md) | When to use MCP and when traditional APIs are the better choice — enterprise decision framework with CorpX scenarios |
 
 ### 🔒 Part 4 — Enterprise & Governance
 | Guide | Description |
@@ -116,7 +117,8 @@ genai-engineering-handbook/
 │   ├── 09-orchestration-patterns.md
 │   ├── 10-governance.md
 │   ├── 11-mcp-security.md
-│   └── 12-context-risks.md
+│   ├── 12-context-risks.md
+│   └── 13-mcp-vs-api.md
 │
 ├── notebooks/                         ← Jupyter notebooks (hands-on)
 │   ├── 01-semantic-search-visualized.ipynb
@@ -157,7 +159,7 @@ Week 3: Building RAG Systems
 
 Week 4: Agents & Enterprise
 ├── Read: Agentic AI Fundamentals
-├── Read: MCP + MCP Security
+├── Read: MCP + MCP Security + MCP vs API
 ├── Read: AI Governance in Regulated Environments
 ├── Notebook: Build a Simple Agent
 └── Milestone: Can articulate agentic AI architecture and governance needs
