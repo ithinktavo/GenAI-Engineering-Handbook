@@ -36,6 +36,7 @@ This handbook is organized as a progressive learning path — each section build
 | [MCP (Model Context Protocol)](docs/08-mcp.md) | The universal connector for AI — what it does, how it works, and the security gaps in enterprise environments |
 | [Agent Orchestration Patterns](docs/09-orchestration-patterns.md) | Deep dive into multi-agent architectures, state management, and the Microsoft Agent Framework |
 | [MCP vs API](docs/13-mcp-vs-api.md) | When to use MCP and when traditional APIs are the better choice — enterprise decision framework with CorpX scenarios |
+| [AI Dashboard Architecture](docs/14-ai-dashboard-architecture.md) | End-to-end architecture for an AI-powered metrics dashboard — conceptual design, RAG pipeline, and full service mappings for Azure and AWS |
 
 ### 🔒 Part 4 — Enterprise & Governance
 | Guide | Description |
@@ -118,7 +119,8 @@ genai-engineering-handbook/
 │   ├── 10-governance.md
 │   ├── 11-mcp-security.md
 │   ├── 12-context-risks.md
-│   └── 13-mcp-vs-api.md
+│   ├── 13-mcp-vs-api.md
+│   └── 14-ai-dashboard-architecture.md
 │
 ├── notebooks/                         ← Jupyter notebooks (hands-on)
 │   ├── 01-semantic-search-visualized.ipynb
