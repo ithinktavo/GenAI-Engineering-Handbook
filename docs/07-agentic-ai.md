@@ -39,6 +39,60 @@ Agent: "I've prepared the Q3 board deck with 12 slides. Revenue,
 
 ---
 
+## "Agent" vs "Agentic" — The Distinction That Matters
+
+These terms get used interchangeably, and that creates real confusion in planning, architecture, and vendor conversations. They mean different things.
+
+### Agent = The Thing
+
+An **agent** is a concrete system — a piece of software that autonomously plans, reasons, uses tools, and executes multi-step workflows. It has an architecture (planner, executor, evaluator), it runs on infrastructure, and it takes actions in the world.
+
+When someone says "we built an agent," they mean: there's a running system that receives a goal and works toward it autonomously.
+
+### Agentic = The Behavior
+
+**Agentic** is an adjective — it describes a *degree* of autonomy in any AI system. A chatbot that can call one tool is slightly agentic. A RAG pipeline that reformulates queries before searching is somewhat agentic. A fully autonomous multi-step workflow executor is highly agentic.
+
+When someone says "we added agentic capabilities," they mean: we gave an existing system more autonomy, tool access, or decision-making ability.
+
+### The Spectrum
+
+This is not a binary. Systems exist on a spectrum from zero autonomy to full autonomy:
+
+```mermaid
+graph LR
+    subgraph SPECTRUM ["The Agentic Spectrum"]
+        direction LR
+        L1["Static Prompt\nZero autonomy\nUser asks, AI answers\nNo tools, no memory"]
+        L2["Tool-Augmented\nLow autonomy\nAI can call one tool\nRAG, search, calculator"]
+        L3["Agentic Workflow\nMedium autonomy\nAI chains multiple steps\nPlans, retries on failure"]
+        L4["Autonomous Agent\nHigh autonomy\nAI pursues goals independently\nMulti-tool, self-correcting"]
+    end
+
+    L1 --> L2 --> L3 --> L4
+
+    style SPECTRUM fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style L1 fill:#f0f4ff,stroke:#2E86C1,color:#333
+    style L2 fill:#fff3cd,stroke:#ffc107,color:#333
+    style L3 fill:#e2d5f1,stroke:#6f42c1,color:#333
+    style L4 fill:#f8d7da,stroke:#dc3545,color:#333
+```
+
+### Why This Matters for CorpX
+
+| What Leadership Says | What They Probably Mean | What Engineering Should Build |
+|---|---|---|
+| "We need an AI agent" | A system that does a specific job end-to-end | A scoped agent with guardrails and human approval |
+| "Make our dashboard agentic" | Add AI Q&A to the existing metrics app | RAG pipeline + chat interface (agentic features, not an agent) |
+| "Deploy agents across the org" | Give every team AI-powered automation | Start with agentic capabilities in existing tools, not standalone agents |
+| "We want fully autonomous agents" | They saw a demo and got excited | Start at Level 2 (recommend), prove trust, then graduate to Level 3 |
+
+**The practical rule:** Most enterprise use cases in 2025-2026 need **agentic capabilities** added to existing systems — not standalone autonomous agents. The AI-powered dashboard from [doc 14](14-ai-dashboard-architecture.md) is a perfect example: it's a React app with agentic Q&A features, not an autonomous agent.
+
+Full agents make sense when the workflow is complex, multi-step, and requires real-time decision-making across systems — like client onboarding that touches CRM, HR, billing, and project management.
+
+---
+
 ## The Five Characteristics of Agents
 
 ### 1. Goal-Oriented
