@@ -57,6 +57,7 @@ This handbook is organized as a progressive learning path — each section build
 | [Build a Simple Agent](notebooks/06-build-a-simple-agent.ipynb) | Create an agent that can reason, use tools, and execute multi-step tasks with human-in-the-loop |
 | [Prompt Engineering Techniques](notebooks/07-prompt-techniques.ipynb) | Interactive examples of zero-shot, few-shot, chain-of-thought, and their impact on output quality |
 | [Vector DB Explorer](notebooks/08-vector-db-explorer.ipynb) | Build a mini vector DB, compare similarity metrics, see deterministic vs non-deterministic retrieval, and visualize retrieval failures and fixes |
+| [Agent vs Agentic](notebooks/09-agent-vs-agentic.ipynb) | Build four systems — static to autonomous — to see exactly where agentic features end and a real agent begins |
 
 ---
 
@@ -133,7 +134,8 @@ genai-engineering-handbook/
 │   ├── 05-rag-vs-long-context.ipynb
 │   ├── 06-build-a-simple-agent.ipynb
 │   ├── 07-prompt-techniques.ipynb
-│   └── 08-vector-db-explorer.ipynb
+│   ├── 08-vector-db-explorer.ipynb
+│   └── 09-agent-vs-agentic.ipynb
 │
 └── assets/
     └── images/                        ← Diagrams and visuals
